@@ -1,4 +1,4 @@
-import std/[options, sets, hashes]
+import std/[options, hashes]
 import vmath
 import pixie
 
@@ -36,6 +36,8 @@ type
 
   RenderContext* = object
 
+  StackItem* = tuple[node: Node, visited: bool]
+
 const
   defaultPadding* = 4.0
   identityTransform*: Mat3 = mat3(
@@ -56,6 +58,8 @@ proc newNode*(): Node =
     name: "",
     size: vec2(0, 0)
   )
+
+proc markDirty*(node: Node)
 
 proc addChild*(parent: Node, child: Node) =
   doAssert child.parent.isNone or child.parent.get() != parent, "Node already has a different parent"
@@ -109,7 +113,7 @@ proc contains*(node: Node, point: Vec2): bool =
   point.x >= bounds.x and point.x < bounds.x + bounds.w and
   point.y >= bounds.y and point.y < bounds.y + bounds.h
 
-proc draw*(node: Node, ctx: RenderContext) {.base, raises: [].} =
+proc draw*(node: Node, ctx: RenderContext) {.raises: [].} =
   discard
 
 proc findChildByName*(node: Node, name: string): Option[Node] =
@@ -130,7 +134,7 @@ iterator traverse*(node: Node): Node =
       stack.add(child)
 
 iterator traversePostOrder*(node: Node): Node =
-  var stack: tuple[node: Node, visited: bool] = (node, false)
+  var stack: seq[StackItem] = @[(node, false)]
   var output: seq[Node] = @[]
   while stack.len > 0:
     let (current, visited) = stack.pop()
@@ -138,8 +142,8 @@ iterator traversePostOrder*(node: Node): Node =
       output.add(current)
     else:
       stack.add((current, true))
-      for child in current.children:
-        stack.add((child, false))
+      for i in countdown(current.children.high, 0):
+        stack.add((current.children[i], false))
   for n in output:
     yield n
 
