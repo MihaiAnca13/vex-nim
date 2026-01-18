@@ -637,3 +637,14 @@ time=2026-01-18T10:47:48.272+01:00 level=INFO msg="File change detected: %s" !BA
 time=2026-01-18T10:47:49.274+01:00 level=INFO msg="Import triggered by file change"
 time=2026-01-18T10:47:49.274+01:00 level=INFO msg="Starting %s..." !BADKEY=auto-import
 time=2026-01-18T10:47:49.275+01:00 level=INFO msg="Skipping %s: JSONL content unchanged" !BADKEY=auto-import
+time=2026-01-18T10:48:02.324+01:00 level=INFO msg="JSONL file created: %s" !BADKEY=/home/mihai/personal/vex-nim/.beads/issues.jsonl
+time=2026-01-18T10:48:02.324+01:00 level=INFO msg="File change detected: %s" !BADKEY=/home/mihai/personal/vex-nim/.beads/issues.jsonl
+time=2026-01-18T10:48:02.387+01:00 level=INFO msg="Git ref change detected: %s" !BADKEY=/home/mihai/personal/vex-nim/.git/refs/heads/main.lock
+time=2026-01-18T10:48:03.389+01:00 level=INFO msg="Import triggered by file change"
+time=2026-01-18T10:48:03.390+01:00 level=INFO msg="Starting %s..." !BADKEY=auto-import
+time=2026-01-18T10:48:03.392+01:00 level=INFO msg="Skipping %s: JSONL content unchanged" !BADKEY=auto-import
+time=2026-01-18T10:48:03.830+01:00 level=INFO msg="JSONL file created: %s" !BADKEY=/home/mihai/personal/vex-nim/.beads/issues.jsonl
+time=2026-01-18T10:48:03.831+01:00 level=INFO msg="File change detected: %s" !BADKEY=/home/mihai/personal/vex-nim/.beads/issues.jsonl
+time=2026-01-18T10:48:04.833+01:00 level=INFO msg="Import triggered by file change"
+time=2026-01-18T10:48:04.833+01:00 level=INFO msg="Starting %s..." !BADKEY=auto-import
+time=2026-01-18T10:48:04.834+01:00 level=INFO msg="Skipping %s: JSONL content unchanged" !BADKEY=auto-import
