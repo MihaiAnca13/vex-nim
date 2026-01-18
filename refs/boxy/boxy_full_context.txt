@@ -1,0 +1,4597 @@
+Directory structure:
+└── treeform-boxy/
+    ├── README.md
+    ├── boxy.nimble
+    ├── examples/
+    │   ├── animated_gif.nim
+    │   ├── atlas_packing.nim
+    │   ├── basic_glfw.nim
+    │   ├── basic_glut.nim
+    │   ├── basic_sdl2.nim
+    │   ├── basic_windy.nim
+    │   ├── bigbang.nim
+    │   ├── blending.nim
+    │   ├── blur.nim
+    │   ├── config.nims
+    │   ├── content_scale.nim
+    │   ├── heart.nim
+    │   ├── hexmap.nim
+    │   ├── layer_as_image.nim
+    │   ├── layer_tints.nim
+    │   ├── layers.nim
+    │   ├── masking.nim
+    │   ├── multiple_windows.nim
+    │   ├── shadow.nim
+    │   ├── text_dynamic.nim
+    │   ├── text_static.nim
+    │   ├── tilemap.nim
+    │   ├── transparent.nim
+    │   ├── zooming.nim
+    │   └── emscripten/
+    │       └── emscripten.html
+    ├── src/
+    │   ├── boxy.nim
+    │   └── boxy/
+    │       ├── blends.nim
+    │       ├── blurs.nim
+    │       ├── buffers.nim
+    │       ├── shaders.nim
+    │       ├── spreads.nim
+    │       └── textures.nim
+    └── tests/
+        ├── bench.nim
+        ├── config.nims
+        ├── max_atlas_size.nim
+        ├── rectscale.nim
+        ├── test.nim
+        └── test_examples.nim
+
+================================================
+FILE: README.md
+================================================
+<img src="docs/banner.png">
+
+# Boxy - 2D GPU rendering with a tiling atlas.
+
+`nimble install boxy`
+
+![Github Actions](https://github.com/treeform/boxy/workflows/Github%20Actions/badge.svg)
+
+[API reference](https://treeform.github.io/boxy)
+
+## About
+
+Boxy is an easy to use 2D GPU rendering API built on top of [Pixie](https://github.com/treeform/pixie).
+
+The basic model for using Boxy goes something like this:
+
+* Open a window and prepare an OpenGL context.
+* Load image files like .png using Pixie.
+* Render any dynamic assets (such as text) into images once using Pixie.
+* Add these images to Boxy, where they are put into a tiling atlas texture.
+* Draw these images to screen each frame.
+
+## Videos
+
+* [Efficient 2D rendering on GPU](https://www.youtube.com/watch?v=UFbffBIzEDc)
+* [GPU Gaussian Blur in Nim using Boxy and Shady](https://youtu.be/oUB0BGsNY5g)
+
+## Basic Example
+
+```nim
+import boxy, opengl, windy
+
+let windowSize = ivec2(1280, 800)
+
+let window = newWindow("Windy + Boxy", windowSize)
+makeContextCurrent(window)
+
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("bg", readImage("examples/data/bg.png"))
+bxy.addImage("ring1", readImage("examples/data/ring1.png"))
+bxy.addImage("ring2", readImage("examples/data/ring2.png"))
+bxy.addImage("ring3", readImage("examples/data/ring3.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+proc display() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(windowSize)
+
+  # Draw the bg.
+  bxy.drawImage("bg", rect = rect(vec2(0, 0), windowSize.vec2))
+
+  # Draw the rings.
+  let center = windowSize.vec2 / 2
+  bxy.drawImage("ring1", center, angle = frame.float / 100)
+  bxy.drawImage("ring2", center, angle = -frame.float / 190)
+  bxy.drawImage("ring3", center, angle = frame.float / 170)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  display()
+  pollEvents()
+```
+
+## Emscripten
+
+Boxy can be compiled to WebAssembly using Emscripten. See the [Emscripten tutorial](https://github.com/treeform/nim_emscripten_tutorial) for more information on how Emscripten works with Nim and things you need to know.
+
+To compile any of the examples:
+```sh
+nim c -d:emscripten examples/basic_windy.nim
+```
+
+This will generate:
+* HTML shell: `examples/basic_windy.html`
+* Preloaded data: `examples/basic_windy.data`
+* JavaScript: `examples/basic_windy.js`
+* WebAssembly: `examples/basic_windy.wasm`
+
+Then run the compiled HTML file:
+```sh
+emrun examples/basic_windy.html
+```
+
+## Examples
+
+You can use boxy with industry standard windowing libraries like [GLFW](https://github.com/treeform/boxy/blob/master/examples/basic_glfw.nim) and [SDL2](https://github.com/treeform/boxy/blob/master/examples/basic_sdl2.nim).
+
+
+<img src="docs/basic_windy.png">
+
+But the preferred way is to use Boxy with my own Nim native windowing library [Windy](https://github.com/treeform/boxy/blob/master/examples/basic_windy.nim).
+
+<img src="docs/hexmap.png">
+
+[Hexmap](https://github.com/treeform/boxy/blob/master/examples/hexmap.nim)
+
+
+<img src="docs/bigbang.png">
+
+[Bigbang](https://github.com/treeform/boxy/blob/master/examples/bigbang.nim)
+
+<img src="docs/blending.png">
+
+[Blending](https://github.com/treeform/boxy/blob/master/examples/blending.nim)
+
+
+<img src="docs/blur.png">
+
+[Blur](https://github.com/treeform/boxy/blob/master/examples/blur.nim)
+
+<img src="docs/masking.png">
+
+[Masking](https://github.com/treeform/boxy/blob/master/examples/masking.nim)
+
+<img src="docs/shadow.png">
+
+[Shadow](https://github.com/treeform/boxy/blob/master/examples/shadow.nim)
+
+
+[Check out more examples here.](https://github.com/treeform/boxy/tree/master/examples)
+
+
+
+================================================
+FILE: boxy.nimble
+================================================
+version     = "0.7.0"
+author      = "Andre von Houck and Ryan Oldenburg"
+description = "2D GPU rendering with a tiling atlas."
+license     = "MIT"
+
+srcDir = "src"
+
+requires "nim >= 1.2.2"
+requires "shady >= 0.1.4"
+requires "bitty >= 0.1.4"
+requires "windy >= 0.4.4"
+
+
+
+================================================
+FILE: examples/animated_gif.nim
+================================================
+import boxy, opengl, pixie, pixie/fileformats/gif, std/times, windy
+
+let window = newWindow("Animated Gif", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Decode the .gif file.
+let animatedGif = decodeGif(readFile("examples/data/newtons_cradle.gif"))
+
+# Add the gif's frames to boxy.
+for i, frame in animatedGif.frames:
+  bxy.addImage("frame" & $i, frame)
+
+var
+  prevFrameTime = epochTime()
+  gifTimer: float32
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(0.1, 0.1, 0.1, 1))
+
+  # How much time passed from the last frame to this frame?
+  let
+    frameTime = epochTime()
+    frameDeltaTime = frameTime - prevFrameTime
+  prevFrameTime = frameTime
+
+  gifTimer += frameDeltaTime
+
+  # If we haven't reached the end of the gif, draw the gif's frames.
+  if gifTimer < animatedGif.duration:
+    var intervalSum: float32 # Keep track of how far we are into the gif.
+    for i in 0 ..< animatedGif.frames.len:
+      bxy.drawImage("frame" & $i, center = window.size.vec2 / 2, angle = 0)
+      intervalSum += animatedGif.intervals[i]
+      if intervalSum > gifTimer:
+        break
+  else:
+    # Restart the gif
+    gifTimer = 0
+    bxy.drawImage("frame0", center = window.size.vec2 / 2, angle = 0)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+
+  # On F4 key, write the atlas to a file.
+  if window.buttonPressed[KeyF4]:
+    echo "Writing atlas to tmp/atlas.png"
+    bxy.readAtlas().writeFile("tmp/atlas.png")
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/atlas_packing.nim
+================================================
+import boxy, boxy/textures, opengl, windy, os, random, math, pixie
+
+# Test the boxy atlas with randomly generated images.
+
+randomize()
+
+proc randomColor(): Color =
+  ## Generate a random color.
+  color(rand(1.0), rand(1.0), rand(1.0), 1.0)
+
+proc drawStar(image: Image, center: Vec2, radius: float32, points: int, color: Color) =
+  ## Draw a star with N points.
+  let
+    outerRadius = radius
+    innerRadius = radius * 0.4
+    angleStep = TAU / float32(points * 2)
+
+  var path = newPath()
+  for i in 0 ..< points * 2:
+    let
+      angle = float32(i) * angleStep - PI / 2
+      r = if i mod 2 == 0: outerRadius else: innerRadius
+      x = center.x + cos(angle) * r
+      y = center.y + sin(angle) * r
+
+    if i == 0:
+      path.moveTo(x, y)
+    else:
+      path.lineTo(x, y)
+
+  path.closePath()
+  image.fillPath(path, color)
+
+proc generateRandomImage(minSize, maxSize: int): Image =
+  ## Generate a random image with random content
+  let
+    width = rand(minSize..maxSize)
+    height = rand(minSize..maxSize)
+    image = newImage(width, height)
+    bgColor = randomColor()
+
+  image.fill(bgColor)
+
+  # For larger images, draw a random shape
+  if width > 16 and height > 16:
+    let
+      shapeColor = randomColor()
+      centerX = width.float32 / 2
+      centerY = height.float32 / 2
+      maxRadius = min(width, height).float32 * 0.3
+
+    case rand(0..3):
+    of 0:
+      # Rectangle.
+      let
+        w = rand(width.float32 * 0.2..width.float32 * 0.7)
+        h = rand(height.float32 * 0.2..height.float32 * 0.7)
+        x = (width.float32 - w) / 2
+        y = (height.float32 - h) / 2
+      var path = newPath()
+      path.rect(x, y, w, h)
+      image.fillPath(path, shapeColor)
+
+    of 1:
+      # Circle.
+      let radius = rand(maxRadius * 0.5..maxRadius)
+      var path = newPath()
+      path.circle(centerX, centerY, radius)
+      image.fillPath(path, shapeColor)
+
+    of 2:
+      # Triangle.
+      var path = newPath()
+      let size = rand(maxRadius * 0.5..maxRadius)
+      path.moveTo(centerX, centerY - size)
+      path.lineTo(centerX - size * 0.866, centerY + size * 0.5)
+      path.lineTo(centerX + size * 0.866, centerY + size * 0.5)
+      path.closePath()
+      image.fillPath(path, shapeColor)
+
+    of 3:
+      # Star with random points
+      let
+        points = rand(3..8)
+        radius = rand(maxRadius * 0.5..maxRadius)
+      image.drawStar(vec2(centerX, centerY), radius, points, shapeColor)
+
+    else:
+      discard
+
+    # Add debug grid to the image
+    # for x in 0 ..< width:
+    #   for y in 0 ..< height:
+    #     if x mod 10 == 0 and y mod 10 == 0:
+    #       image.unsafe[x, y] = color(1, 1, 1, 1).rgbx()
+
+  return image
+
+let window = newWindow("Atlas Packing", ivec2(1000, 1000))
+makeContextCurrent(window)
+loadExtensions()
+
+let ctx = newBoxy(atlasSize = 128)  # Add 2 pixel margin around each image
+
+if not dirExists("tmp"):
+  createDir("tmp")
+
+echo "Generating random images and packing them..."
+
+var
+  imageCount = 0
+  totalImages = 200  # Generate more images to trigger atlas growth
+  saveInterval = 20  # Save atlas every N images
+
+# Generate and add random images
+for i in 1..totalImages:
+  let
+    # Mix of small and large images
+    sizeCategory = rand(0..2)
+    (minSize, maxSize) = case sizeCategory:
+      of 0: (4, 16)      # Small images
+      of 1: (16, 64)     # Medium images
+      else: (64, 256)    # Large images
+
+    img = generateRandomImage(minSize, maxSize)
+    key = "img_" & $i
+
+  ctx.addImage(key, img)
+  inc imageCount
+
+  # echo "Added image ", i, " (", img.width, "x", img.height, ")"
+
+  # Save atlas periodically
+  if (i < 40) or (i mod saveInterval == 0) or (i == totalImages):
+    # Force packing by drawing something
+    ctx.beginFrame(ivec2(800, 600))
+    ctx.drawImage(key, vec2(0, 0))
+    ctx.endFrame()
+
+    # when not defined(emscripten):
+    #   let filename = "tmp/atlas_" & $i & ".png"
+    #   ctx.atlasTexture.writeFile(filename)
+    #   echo "  Wrote ", filename
+
+
+var frameCount = 0
+window.onCloseRequest = proc() =
+  quit()
+
+while not window.closeRequested:
+  pollEvents()
+
+  ctx.beginFrame(window.size)
+
+  # Draw a grid of images
+  var
+    x = 10.0
+    y = 10.0
+    maxHeight = 0.0
+    cols = 0
+
+  for i in 1 ..< totalImages:  # Show first 50 images
+    let key = "img_" & $i
+    if ctx.contains(key):
+      let size = ctx.getImageSize(key)
+
+      # Wrap to next row if needed
+      if x + size.x.float32 > window.size.x.float32:
+        x = 10
+        y += maxHeight + 10
+        maxHeight = 0
+        cols = 0
+
+      ctx.drawImage(key, vec2(x, y))
+
+      x += size.x.float32 + 10
+      maxHeight = max(maxHeight, size.y.float32)
+      inc cols
+
+      # Stop if we're getting too far down
+      if y > window.size.y.float32:
+        break
+
+  ctx.endFrame()
+
+  # On F4 key, write the atlas to a file.
+  if window.buttonPressed[KeyF4]:
+    echo "Writing atlas to tmp/atlas.png"
+    ctx.readAtlas().writeFile("tmp/atlas.png")
+
+  window.swapBuffers()
+  inc frameCount
+
+
+
+================================================
+FILE: examples/basic_glfw.nim
+================================================
+# This example needs GLFW to be installed:
+# nimble install staticglfw
+
+import boxy, opengl, staticglfw
+
+let windowSize = ivec2(1280, 800)
+
+if init() == 0:
+  quit("Failed to Initialize GLFW.")
+
+windowHint(RESIZABLE, false.cint)
+windowHint(CONTEXT_VERSION_MAJOR, 4)
+windowHint(CONTEXT_VERSION_MINOR, 1)
+
+let window = createWindow(windowSize.x, windowSize.y, "Basic Glfw", nil, nil)
+makeContextCurrent(window)
+
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("bg", readImage("examples/data/bg.png"))
+bxy.addImage("ring1", readImage("examples/data/ring1.png"))
+bxy.addImage("ring2", readImage("examples/data/ring2.png"))
+bxy.addImage("ring3", readImage("examples/data/ring3.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+proc display() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(windowSize)
+
+  # Draw the bg.
+  bxy.drawImage("bg", rect = rect(vec2(0, 0), windowSize.vec2))
+
+  # Draw the rings.
+  let center = windowSize.vec2 / 2
+  bxy.drawImage("ring1", center, angle = frame.float / 100)
+  bxy.drawImage("ring2", center, angle = -frame.float / 190)
+  bxy.drawImage("ring3", center, angle = frame.float / 170)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while windowShouldClose(window) != 1:
+  display()
+  pollEvents()
+
+
+
+================================================
+FILE: examples/basic_glut.nim
+================================================
+import boxy, opengl, opengl/glut
+
+let windowSize = ivec2(1280, 800)
+
+proc display() {.cdecl.} # Forward declaration
+
+glutInit()
+glutInitDisplayMode(GLUT_DOUBLE)
+glutInitWindowSize(windowSize.x, windowSize.y)
+discard glutCreateWindow("Basic Glut")
+glutDisplayFunc(display)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("bg", readImage("examples/data/bg.png"))
+bxy.addImage("ring1", readImage("examples/data/ring1.png"))
+bxy.addImage("ring2", readImage("examples/data/ring2.png"))
+bxy.addImage("ring3", readImage("examples/data/ring3.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+proc display() {.cdecl.} =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(windowSize)
+
+  # Draw the bg.
+  bxy.drawImage("bg", rect = rect(vec2(0, 0), windowSize.vec2))
+
+  # Draw the rings.
+  let center = windowSize.vec2 / 2
+  bxy.drawImage("ring1", center, angle = frame.float / 100)
+  bxy.drawImage("ring2", center, angle = -frame.float / 190)
+  bxy.drawImage("ring3", center, angle = frame.float / 170)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  glutSwapBuffers()
+  inc frame
+
+  # Ask glut to draw next frame
+  glutPostRedisplay()
+
+glutMainLoop()
+
+
+
+================================================
+FILE: examples/basic_sdl2.nim
+================================================
+# This example needs SDL2 to be installed:
+# nimble install sdl2
+
+import boxy, opengl, sdl2
+
+let windowSize = ivec2(1280, 800)
+
+discard init(INIT_EVERYTHING)
+
+discard glSetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE)
+discard glSetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4)
+discard glSetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1)
+
+let window = createWindow(
+  "Basic SDL2",
+  100,
+  100,
+  windowSize.x,
+  windowSize.y,
+  SDL_WINDOW_OPENGL
+)
+discard window.glCreateContext()
+
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("bg", readImage("examples/data/bg.png"))
+bxy.addImage("ring1", readImage("examples/data/ring1.png"))
+bxy.addImage("ring2", readImage("examples/data/ring2.png"))
+bxy.addImage("ring3", readImage("examples/data/ring3.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+proc display() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(windowSize)
+
+  # Draw the bg.
+  bxy.drawImage("bg", rect = rect(vec2(0, 0), windowSize.vec2))
+
+  # Draw the rings.
+  let center = windowSize.vec2 / 2
+  bxy.drawImage("ring1", center, angle = frame.float / 100)
+  bxy.drawImage("ring2", center, angle = -frame.float / 190)
+  bxy.drawImage("ring3", center, angle = frame.float / 170)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.glSwapWindow()
+  inc frame
+
+var runGame = true
+while runGame:
+  var evt = defaultEvent
+  while pollEvent(evt):
+    if evt.kind == QuitEvent:
+      runGame = false
+      break
+  display()
+
+
+
+================================================
+FILE: examples/basic_windy.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Basic Windy", ivec2(1280, 800))
+makeContextCurrent(window)
+
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("bg", readImage("examples/data/bg.png"))
+bxy.addImage("ring1", readImage("examples/data/ring1.png"))
+bxy.addImage("ring2", readImage("examples/data/ring2.png"))
+bxy.addImage("ring3", readImage("examples/data/ring3.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawImage("bg", rect = rect(vec2(0, 0), window.size.vec2))
+
+  # Draw the rings.
+  let center = window.size.vec2 / 2
+  bxy.drawImage("ring1", center, angle = frame.float / 100)
+  bxy.drawImage("ring2", center, angle = -frame.float / 190)
+  bxy.drawImage("ring3", center, angle = frame.float / 170)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+  # On F4 key, write the atlas to a file.
+  if window.buttonPressed[KeyF4]:
+    echo "Writing atlas to tmp/atlas.png"
+    bxy.readAtlas().writeFile("tmp/atlas.png")
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/bigbang.nim
+================================================
+import boxy, opengl, random, windy
+
+let window = newWindow("Bigbang", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("bg", readImage("examples/data/bg.png"))
+bxy.addImage("star1", readImage("examples/data/star1.png"))
+
+var frame: int = 1
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(0, 0, 0, 1))
+
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2 / 2)
+  bxy.scale(0.1)
+
+  randomize(2022)
+  for i in 0 .. 5000:
+    let pos = vec2(gauss(), gauss()) * frame.float32 * 10
+    bxy.drawImage("star1",
+      center = pos,
+      angle = rand(0.0 .. PI)
+    )
+
+  bxy.restoreTransform()
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/blending.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Blending", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("greece", readImage("examples/data/greece.png"))
+bxy.addImage("test", readImage("examples/data/testTexture.png"))
+
+var frame: int
+
+var blendMode = ScreenBlend
+echo "Use left or right key to switch blend modes."
+window.onButtonPress = proc(button: Button) =
+  if button == KeyLeft:
+    blendMode = BlendMode(max(blendMode.ord - 1, 0))
+    echo "blendMode :", blendMode, " #", blendMode.ord
+  if button == KeyRight:
+    blendMode = BlendMode(min(blendMode.ord + 1, BlendMode.high.ord))
+    echo "blendMode :", blendMode, " #", blendMode.ord
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(0.1, 0.1, 0.1, 1))
+
+  let c2 = color(1, 1, 1, 0.5)
+
+  bxy.pushLayer()
+
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2 / 2)
+  bxy.scale(1.2 + 0.2 * sin(frame.float32/100))
+  bxy.drawImage("greece", center = vec2(0, 0), angle = 0, color(1, 1, 1, 1))
+  bxy.restoreTransform()
+
+  bxy.pushLayer()
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2 / 2)
+  bxy.scale(1.8 + 0.2 * cos(frame.float32/100))
+  bxy.drawImage("test", center = vec2(0, 0), angle = 0, color(1, 1, 1, 1))
+  bxy.restoreTransform()
+  bxy.popLayer(blendMode = blendMode)
+
+  bxy.popLayer()
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/blur.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Blur", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the image.
+bxy.addImage("greece", readImage("examples/data/greece.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(0, 0, 0, 1))
+
+  bxy.pushLayer()
+
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2/2)
+  bxy.drawImage("greece", center = vec2(0, 0), angle = 0)
+  bxy.restoreTransform()
+
+  # Set the blur amount based on time.
+  let radius = 50 * (sin(frame.float32/100) + 1)
+
+  # Blurs the current pushed layer.
+  bxy.blurEffect(radius)
+
+  bxy.popLayer()
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/config.nims
+================================================
+import os, strformat, strutils
+
+--path:"../src"
+
+when defined(emscripten):
+  --nimcache:tmp
+  --os:linux
+  --cpu:wasm32
+  --cc:clang
+  when defined(windows):
+    --clang.exe:emcc.bat
+    --clang.linkerexe:emcc.bat
+    --clang.cpp.exe:emcc.bat
+    --clang.cpp.linkerexe:emcc.bat
+  else:
+    --clang.exe:emcc
+    --clang.linkerexe:emcc
+    --clang.cpp.exe:emcc
+    --clang.cpp.linkerexe:emcc
+  --listCmd
+
+  --gc:arc
+  --exceptions:goto
+  --define:noSignalHandler
+  --debugger:native
+  --define:release
+  --define:noAutoGLerrorCheck
+
+  # Pass this to Emscripten linker to generate html file scaffold for us.
+  switch(
+    "passL",
+    (&"""
+    -o examples/emscripten/{projectName()}.html
+    --preload-file examples/data
+    --shell-file examples/emscripten/emscripten.html
+    -s ASYNCIFY
+    -s FETCH
+    -s USE_WEBGL2=1
+    -s MAX_WEBGL_VERSION=2
+    -s MIN_WEBGL_VERSION=1
+    -s FULL_ES3=1
+    -s GL_ENABLE_GET_PROC_ADDRESS=1
+    -s ALLOW_MEMORY_GROWTH
+    --profiling
+    """).replace("\n", " ")
+  )
+
+  # Prevent accidental running of emscripten.
+  if paramStr(1) == "run" or paramStr(1) == "r":
+    setCommand("c")
+    echo "To run emscripten, use:"
+    echo "emrun examples/" & projectName() & ".html"
+
+when not defined(debug):
+  --define:noAutoGLerrorCheck
+  --define:release
+  --define:ssl
+
+
+
+================================================
+FILE: examples/content_scale.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Content Scale", size = ivec2(1280, 800))
+echo "starting window content scale: ", window.contentScale, " window size: ", window.size
+
+makeContextCurrent(window)
+
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("bg", readImage("examples/data/bg.png"))
+bxy.addImage("ring1", readImage("examples/data/ring1.png"))
+bxy.addImage("ring2", readImage("examples/data/ring2.png"))
+bxy.addImage("ring3", readImage("examples/data/ring3.png"))
+bxy.addImage("crosshair", readImage("examples/data/crosshair.png"))
+
+var frame: int
+
+proc contentSize*(window: Window): IVec2 =
+  ## Returns the size / contentScale of the window in physical pixels.
+  (window.size.vec2 / window.contentScale).ivec2
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  echo "content scale: ", window.contentScale, " window size: ", window.size
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Transform to high-dpi scale.
+  bxy.saveTransform()
+  bxy.scale(window.contentScale)
+
+  # Draw the bg.
+  bxy.drawImage("bg", rect = rect(vec2(0, 0), window.contentSize.vec2))
+
+  # Draw the rings.
+  let center = window.contentSize.vec2 / 2
+  bxy.drawImage("ring1", center, angle = frame.float / 100)
+  bxy.drawImage("ring2", center, angle = -frame.float / 190)
+  bxy.drawImage("ring3", center, angle = frame.float / 170)
+
+  # Draw the stars at the mouse position.
+  let mousePos = window.mousePos.vec2 / window.contentScale
+  bxy.drawImage("crosshair", mousePos, angle = 0)
+
+  # End this frame, flushing the draw commands.
+  bxy.restoreTransform()
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+  # On F4 key, write the atlas to a file.
+  if window.buttonPressed[KeyF4]:
+    echo "Writing atlas to tmp/atlas.png"
+    bxy.readAtlas().writeFile("tmp/atlas.png")
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/heart.nim
+================================================
+import boxy, opengl, vmath, windy
+
+let window = newWindow("Heart", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+var path = parsePath("""
+  M 20 60
+  A 40 40 90 0 1 100 60
+  A 40 40 90 0 1 180 60
+  Q 180 120 100 180
+  Q 20 120 20 60
+  z
+""")
+
+var frame: int = 1
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(0, 0, 0, 1))
+
+  bxy.saveTransform()
+
+  let
+    w = 200 + frame mod 300
+    id = $(frame mod 30)
+    image = newImage(w, w)
+  image.fill(color(1, 1, 1, 0.1))
+  image.fillPath(
+    path,
+    color(1, 0, 0, 1),
+    scale(vec2(2, 2)) *
+    translate(vec2(100, 100)) *
+    rotate(frame.float32/100) *
+    translate(vec2(-100, -100))
+  )
+
+  bxy.addImage("heart" & id, image)
+  bxy.drawImage("heart" & id, center = window.size.vec2 / 2, angle = 0)
+
+  bxy.restoreTransform()
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+  # On F4 key, write the atlas to a file.
+  if window.buttonPressed[KeyF4]:
+    echo "Writing atlas to tmp/atlas.png"
+    bxy.readAtlas().writeFile("tmp/atlas.png")
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/hexmap.nim
+================================================
+
+import
+  std/[strutils, random],
+  boxy, opengl, pixie, windy
+
+randomize()
+
+const
+  bgPath = "M17.1132 10.359C18.8996 7.26497 22.2008 5.35898 25.7735 5.35898L54.2265 5.35898C57.7992 5.35898 61.1004 7.26496 62.8867 10.359L77.1132 35C78.8996 38.094 78.8996 41.906 77.1132 45L62.8867 69.641C61.1004 72.735 57.7991 74.641 54.2265 74.641L25.7735 74.641C22.2008 74.641 18.8996 72.735 17.1132 69.641L2.88674 45C1.10042 41.906 1.10042 38.094 2.88674 35L17.1132 10.359Z"
+  topPath = "M25.8996 9C23.0742 9.53881 20.5818 11.2795 19.1132 13.8231L13.8149 23H66.185L60.8867 13.8231C59.4182 11.2795 56.9257 9.53881 54.1004 9H25.8996Z"
+  bottomPath = "M25.8996 71C23.0742 70.4612 20.5818 68.7205 19.1132 66.1769L13.8149 57H66.185L60.8867 66.1769C59.4182 68.7205 56.9258 70.4612 54.1004 71H25.8996Z"
+  borderPath = "M27.7735 9.82309L52.2265 9.82309C55.4419 9.82309 58.413 11.5385 60.0207 14.3231L72.2472 35.5C73.8549 38.2846 73.8549 41.7154 72.2472 44.5L60.0207 65.6769C58.413 68.4615 55.4419 70.1769 52.2265 70.1769L27.7735 70.1769C24.5581 70.1769 21.587 68.4615 19.9793 65.6769L7.75278 44.5C6.14509 41.7154 6.14509 38.2846 7.75278 35.5L19.9793 14.3231C21.587 11.5385 24.5581 9.82309 27.7735 9.82309Z"
+
+  topList = @["New", "", "", "", ""]
+  bottomList = @["Review", "Issue", "Error", "", "", "", ""]
+
+  colors = @["#F35624", "#00E9B1", "#B9B3B1"]
+
+let words = """lorem ipsum dolor sit amet consectetur adipiscing elit nulla sit amet nisi ipsum nullam nisi erat cursus at nisi ac semper feugiat dolor morbi mattis nibh diam eget pretium nisi facilisis et nullam eget pellentesque eros nec pretium mauris sed ullamcorper turpis luctus magna porttitor, eget bibendum lacus commodo. Morbi pretium dapibus nisi ut dignissim. Sed blandit vulputate orci ac fermentum suspendisse""".split(" ")
+
+proc genText(a, b: int): string =
+  for i in 0 ..< rand(a .. b):
+    if i != 0:
+      result.add " "
+    result.add words.sample()
+
+var font = readFont("examples/data/Roboto-Regular_1.ttf")
+font.paint = newPaint(SolidPaint)
+font.paint.color = color(1, 1, 1, 1)
+font.size = 10
+
+var font2 = readFont("examples/data/Roboto-Regular_1.ttf")
+font2.paint = newPaint(SolidPaint)
+font2.paint.color = color(0, 0, 0, 1)
+font2.size = 10
+
+proc createHex(size: float32, middle, top, bottom, htmlColor: string): Image =
+  let color = parseHtmlColor(htmlColor)
+  let image = newImage(int(80.0 * size), int(80.0 * size))
+  #image.fill(rgba(200, 200, 200, 255))
+
+  font.paint.color = color(1, 1, 1, 1)
+  font.size = 10
+
+  font2.paint.color = color
+  font2.size = 10
+
+  let mat = scale(vec2(size))
+  image.fillPath(
+    bgPath,
+    parseHtmlColor("#FFFFFF").rgba,
+    mat
+  )
+
+  if top != "":
+    image.fillPath(
+      topPath,
+      color,
+      mat
+    )
+
+  if bottom != "":
+    image.fillPath(
+      bottomPath,
+      color,
+      mat,
+    )
+
+  image.strokePath(
+    borderPath,
+    color,
+    mat,
+    strokeWidth = 3.0
+  )
+
+  image.fillText(
+    font.typeset(top, vec2(39, 12), CenterAlign),
+    mat * translate(vec2(21, 10))
+  )
+
+  image.fillText(
+    font.typeset(bottom, vec2(39, 12), CenterAlign),
+    mat * translate(vec2(21, 58))
+  )
+
+  var arrangement: Arrangement
+  font2.size = 30
+  font2.lineHeight = 28
+  while font2.size > 1:
+    arrangement = font2.typeset(middle, vec2(53, 34), CenterAlign, MiddleAlign)
+    let bounds = arrangement.computeBounds()
+    if bounds.w < 53 and bounds.h < 34:
+      break
+    font2.size -= 1
+    font2.lineHeight -= 1
+
+  image.fillText(arrangement, mat * translate(vec2(13, 23)))
+  return image
+
+let window = newWindow("Hexmap", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+var frame: int
+
+type Hex = ref object
+  id: int
+  size: float32
+  middle, top, bottom: string
+  hexColor: string
+
+var
+  gridSize = 50
+  pos: Vec2 # vec2(gridSize.float32, gridSize.float32) * 160 / 2
+  vel: Vec2
+  zoom: float32 = 0.5
+  zoomVel: float32
+  grid: seq[seq[Hex]]
+  idC = 1
+
+for x in 0 ..< gridSize:
+  grid.add(newSeq[Hex](gridSize))
+
+# grow clusters
+block:
+  echo "Generating hexes..."
+  proc addCluster(x, y, more: int) =
+    if x < 0 or y < 0 or x >= gridSize or y >= gridSize:
+      return
+
+    let thisSize = 1.8 + more.float32 / 4
+
+    if grid[x][y] != nil and grid[x][y].size > thisSize:
+      return
+
+    let hex = Hex(
+      id: idC,
+      size: thisSize,
+      middle: genText(3, 20),
+      top: topList.sample(),
+      bottom: bottomList.sample(),
+      hexColor: colors.sample(),
+    )
+    grid[x][y] = hex
+    inc idC
+
+    if more > 0:
+      addCluster(x, y+1, more - 1)
+      addCluster(x, y-1, more - 1)
+      if x mod 2 == 0:
+        addCluster(x-1, y+1, more - 1)
+        addCluster(x+1, y+1, more - 1)
+      else:
+        addCluster(x-1, y-1, more - 1)
+        addCluster(x+1, y-1, more - 1)
+      addCluster(x-1, y, more - 1)
+      addCluster(x+1, y, more - 1)
+
+  for c in 0 ..< 17:
+    let
+      x = rand(0 ..< gridSize)
+      y = rand(0 ..< gridSize)
+    addCluster(x, y, 3)
+
+  #addCluster(0, 0, 0)
+
+  echo "Done generating hexes"
+
+proc vec3(v: IVec2): Vec3 =
+  vec3(v.x.float32, v.y.float32, 1)
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  glClearColor(0.9, 0.9, 0.9, 0.9)
+  glClear(GL_COLOR_BUFFER_BIT)
+
+  bxy.saveTransform()
+
+  if window.buttonDown[MouseLeft]:
+    vel = window.mouseDelta.vec2
+  else:
+    vel *= 0.9
+
+  pos += vel
+
+  if window.scrollDelta.y != 0:
+    zoomVel = window.scrollDelta.y * 0.03
+  else:
+    zoomVel *= 0.9
+
+  let oldMat = translate(vec2(pos.x, pos.y)) * scale(vec2(zoom*zoom, zoom*zoom))
+  zoom += zoomVel
+  zoom = clamp(zoom, 0.3, 1.3)
+  let newMat = translate(vec2(pos.x, pos.y)) * scale(vec2(zoom*zoom, zoom*zoom))
+  let newAt = newMat.inverse() * window.mousePos.vec2
+  let oldAt = oldMat.inverse() * window.mousePos.vec2
+  pos -= (oldAt - newAt).xy * (zoom*zoom)
+
+  bxy.translate(pos)
+  bxy.scale(vec2(zoom*zoom, zoom*zoom))
+
+  for x, row in grid:
+    for y, hex in row:
+      if hex != nil:
+        let shift =
+          if x mod 2 == 0:
+            0.5
+          else:
+            0.0
+        let key = "hex" & $hex.id
+        if key notin bxy:
+          var image = createHex(hex.size, hex.middle, hex.top, hex.bottom, hex.hexColor)
+          bxy.addImage(key, image)
+        bxy.drawImage(
+          key,
+          center = vec2((x.float32)*160, (y.float32 + shift)*160),
+          angle = 0,
+          color(1, 1, 1, 1)
+        )
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  bxy.restoreTransform()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+  # On F4 key, write the atlas to a file.
+  if window.buttonPressed[KeyF4]:
+    echo "Writing atlas to tmp/atlas.png"
+    bxy.readAtlas().writeFile("tmp/atlas.png")
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/layer_as_image.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Layer As Image", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the image.
+let greeceImage = readImage("examples/data/greece.png")
+bxy.addImage("greece", greeceImage)
+
+# Draw into an image so that it can be resued.
+# Blur operation are potentially costly, save to an atlas already blured
+# and draw them much faster.
+bxy.beginFrame(window.size)
+
+bxy.pushLayer()
+block:
+  bxy.drawImage("greece", pos = vec2(50, 50))
+  bxy.blurEffect(50)
+  bxy.addImage("greeceBlur", bxy.getImage(rect(0, 0, 512+50*2, 512+50*2)))
+bxy.popLayer()
+
+bxy.endFrame()
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(0, 0, 0, 1))
+
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2/2)
+  bxy.drawImage("greeceBlur", center = vec2(0, 0), angle = 0)
+  bxy.restoreTransform()
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/layer_tints.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Layer Tints", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("greece", readImage("examples/data/greece.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  bxy.pushLayer()
+  bxy.pushLayer()
+  bxy.pushLayer()
+  bxy.pushLayer()
+
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2 / 2)
+  bxy.scale(1.2 + 0.2 * sin(frame.float32/100))
+  bxy.drawImage("greece", center = vec2(0, 0), angle = 0, color(1, 1, 1, 1))
+  bxy.restoreTransform()
+
+  bxy.popLayer(tint = color(1, 1, 1, 0.5))
+  bxy.popLayer(tint = color(1, 1, 1, 0.5))
+  bxy.popLayer(tint = color(1, 1, 1, 0.5))
+  bxy.popLayer(tint = color(1, 1, 1, 0.5))
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/layers.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Layers", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("mask", readImage("examples/data/mask.png"))
+bxy.addImage("greece", readImage("examples/data/greece.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(0.1, 0.1, 0.1, 1))
+
+  let c2 = color(1, 1, 1, 0.5)
+
+  bxy.pushLayer()
+
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2 / 2)
+  bxy.scale(1.2 + 0.2 * sin(frame.float32/100))
+  bxy.drawImage("mask", center = vec2(0, 0), angle = 0, color(1, 1, 1, 1))
+  bxy.restoreTransform()
+
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2 / 2)
+  bxy.scale(0.8 + 0.2 * cos(frame.float32/100))
+  bxy.drawImage("mask", center = vec2(0, 0), angle = 0, color(1, 1, 1, 1))
+  bxy.restoreTransform()
+
+  bxy.popLayer(tint = c2)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/masking.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Masking", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("mask", readImage("examples/data/mask.png"))
+bxy.addImage("greece", readImage("examples/data/greece.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(0, 0, 0, 1))
+
+  # Draw some background image.
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2 / 2)
+  bxy.scale(1.2 + 0.2 * sin(frame.float32/100))
+  bxy.drawImage("greece", center = vec2(0, 0), angle = 0)
+  bxy.restoreTransform()
+
+  # Draw the mask.
+  bxy.pushLayer()
+  bxy.drawImage(
+    "mask",
+    center = window.size.vec2 / 2,
+    angle = 0,
+    tint = color(1, 0, 0, 1)
+  )
+  bxy.popLayer(blendMode = MaskBlend)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/multiple_windows.nim
+================================================
+import boxy, opengl, windy
+
+let
+  rhino = readImage("examples/data/rhino.png")
+
+var i: int
+proc display(window: Window, bxy: Boxy) =
+  makeContextCurrent(window)
+  bxy.beginFrame(window.size)
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(1, 1, 1, 1))
+  bxy.drawImage("rhino", vec2((i mod window.size.x).float32, 0))
+  bxy.endFrame()
+  window.swapBuffers()
+  inc i
+
+let
+  window1 = newWindow("Multiple Windows 1", ivec2(1280, 800))
+  window2 = newWindow("Multiple Windows 2", ivec2(1280, 800))
+
+var
+  dirty1: bool
+  dirty2: bool
+
+makeContextCurrent(window1)
+loadExtensions()
+
+let bxy1 = newBoxy()
+bxy1.addImage("rhino", rhino)
+
+makeContextCurrent(window2)
+loadExtensions()
+
+let bxy2 = newBoxy()
+bxy2.addImage("rhino", rhino)
+
+window1.onFrame = proc() =
+  if dirty1:
+    dirty1 = false
+    display(window1, bxy1)
+
+window2.onFrame = proc() =
+  if dirty2:
+    dirty2 = false
+    display(window2, bxy2)
+
+window1.onMouseMove = proc() =
+  echo "move 1", window1.mouseDelta
+  dirty1 = true
+
+window2.onMouseMove = proc() =
+  echo "move 2", window2.mouseDelta
+  dirty2 = true
+
+while not window1.closeRequested and not window2.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/shadow.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Shadow", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the image.
+bxy.addImage("mask", readImage("examples/data/mask.png"))
+
+var frame: int
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(1, 1, 1, 1))
+
+  bxy.pushLayer()
+
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2/2)
+  bxy.drawImage(
+    "mask",
+    center = vec2(0, 0),
+    angle = 0,
+    tint = color(1, 1, 1, 1)
+  )
+  bxy.restoreTransform()
+
+  # Set the shadow blur amount based on time.
+  let radius = 50 * (sin(frame.float32/100) + 1)
+
+  # Shadow follows the mouse.
+  let mouse = ivec2(window.mousePos.x, window.mousePos.y).vec2
+
+  bxy.dropShadowEffect(
+    color(0, 0, 0, 1),
+    (mouse - window.size.vec2/2) / 10,
+    radius,
+    10
+  )
+
+  bxy.popLayer()
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/text_dynamic.nim
+================================================
+import boxy, opengl, times, windy
+
+let window = newWindow("Text Dynamic", ivec2(1280, 800))
+makeContextCurrent(window)
+
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("bg", readImage("examples/data/bg.png"))
+
+var frame: int
+
+let typeface = readTypeface("examples/data/IBMPlexMono-Bold.ttf")
+
+proc drawText(
+  bxy: Boxy,
+  imageKey: string,
+  transform: Mat3,
+  typeface: Typeface,
+  text: string,
+  size: float32,
+  color: Color
+) =
+  var font = newFont(typeface)
+  font.size = size
+  font.paint = color
+  let
+    arrangement = typeset(@[newSpan(text, font)], bounds = vec2(1280, 800))
+    globalBounds = arrangement.computeBounds(transform).snapToPixels()
+    textImage = newImage(globalBounds.w.int, globalBounds.h.int)
+    imageSpace = translate(-globalBounds.xy) * transform
+  textImage.fillText(arrangement, imageSpace)
+
+  bxy.addImage(imageKey, textImage)
+  bxy.drawImage(imageKey, globalBounds.xy)
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawImage("bg", rect = rect(vec2(0, 0), window.size.vec2))
+
+  bxy.drawText(
+    "main-image",
+    translate(vec2(100, 100)),
+    typeface,
+    "Current time:",
+    80,
+    color(1, 1, 1, 1)
+  )
+
+  bxy.drawText(
+    "main-image2",
+    translate(vec2(100, 200)),
+    typeface,
+    now().format("hh:mm:ss"),
+    80,
+    color(1, 1, 1, 1)
+  )
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+  # On F4 key, write the atlas to a file.
+  if window.buttonPressed[KeyF4]:
+    echo "Writing atlas to tmp/atlas.png"
+    bxy.readAtlas().writeFile("tmp/atlas.png")
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/text_static.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Text Static", ivec2(1280, 800))
+makeContextCurrent(window)
+
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("bg", readImage("examples/data/bg.png"))
+
+var frame: int
+
+let
+  typeface1 = readTypeface("examples/data/PinyonScript.ttf")
+  font1 = newFont(typeface1)
+font1.size = 40
+font1.paint = "#FFFFFF"
+
+let poem = """
+Once upon a midnight dreary, while I pondered, weak and weary,
+Over many a quaint and curious volume of forgotten lore—
+    While I nodded, nearly napping, suddenly there came a tapping,
+As of some one gently rapping, rapping at my chamber door.
+“’Tis some visitor,” I muttered, “tapping at my chamber door—
+            Only this and nothing more.”
+
+    Ah, distinctly I remember it was in the bleak December;
+And each separate dying ember wrought its ghost upon the floor.
+    Eagerly I wished the morrow;—vainly I had sought to borrow
+    From my books surcease of sorrow—sorrow for the lost Lenore—
+For the rare and radiant maiden whom the angels name Lenore—
+            Nameless here for evermore.
+"""
+
+let
+  arrangement = typeset(@[newSpan(poem, font1)], bounds = vec2(1280, 800))
+  snappedBounds = arrangement.computeBounds().snapToPixels()
+  textImage = newImage(snappedBounds.w.int, snappedBounds.h.int)
+
+textImage.fillText(arrangement, translate(-snappedBounds.xy))
+
+bxy.addImage("text", textImage)
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawImage("bg", rect = rect(vec2(0, 0), window.size.vec2))
+
+  # Draw big static text:
+  bxy.drawImage("text", snappedBounds.xy + vec2(100, 100))
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+  # On F4 key, write the atlas to a file.
+  if window.buttonPressed[KeyF4]:
+    echo "Writing atlas to tmp/atlas.png"
+    bxy.readAtlas().writeFile("tmp/atlas.png")
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/tilemap.nim
+================================================
+
+# Tilemap Example - Renders a huge tilemap using OpenGL 4.1 shaders
+#
+# Features:
+# - 1024x1024 tilemap (over 1 million tiles!)
+# - Uses a 16x16 tile atlas (256 unique tiles)
+# - Custom OpenGL 4.1 shaders for efficient rendering
+# - Pan with left mouse button, zoom with mouse wheel
+# - Generates random pattern with interesting tile variations
+#
+# The whole tilemap is rendered as a single quad using:
+# - Index texture: 1024x1024 R8 texture where each pixel is a tile index (0-255)
+# - Atlas texture: The tile atlas loaded from testTexture.png
+# - Custom OpenGL 4.1 fragment shader that samples the index, calculates atlas coordinates, and renders
+
+import boxy, opengl, pixie, windy, random, boxy/shaders
+
+let window = newWindow("Tilemap", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load tile atlas (16x16 = 256 tiles)
+let tileAtlas = readImage("examples/data/testTexture.png")
+bxy.addImage("tileAtlas", tileAtlas)
+
+var vel: Vec2
+var pos: Vec2
+var zoom: float32 = 0.5
+var zoomVel: float32
+var frame: int
+
+# Generate a 1024x1024 texture where each pixel is a byte index into the 16x16 tile map
+const MAP_SIZE = 1024*16
+echo "map size: ", MAP_SIZE * MAP_SIZE, " bytes"
+var tileIndexData: seq[uint8] = newSeq[uint8](MAP_SIZE * MAP_SIZE)
+
+# Fill with random tile indices (0-255 for 16x16 atlas) or load from file
+randomize()
+
+# Generate random tilemap if file doesn't exist or is invalid
+echo "Generating random tilemap... this will take a few seconds..."
+for i in 0 ..< tileIndexData.len:
+  # Create some patterns for more interesting visuals
+  let x = i mod MAP_SIZE
+  let y = i div MAP_SIZE
+
+  if x >= MAP_SIZE div 2 and y >= MAP_SIZE div 2:
+    tileIndexData[i] = rand(192..255).uint8
+  elif x < MAP_SIZE div 2 and y >= MAP_SIZE div 2:
+    tileIndexData[i] = rand(128..192).uint8
+  elif x >= MAP_SIZE div 2 and y < MAP_SIZE div 2:
+    tileIndexData[i] = rand(64..128).uint8
+  elif x < MAP_SIZE div 2 and y < MAP_SIZE div 2:
+    tileIndexData[i] = rand(0..64).uint8
+
+  # Border tiles
+  let borderSize = 8
+  if x < borderSize or y < borderSize or x > MAP_SIZE - borderSize or y > MAP_SIZE - borderSize:
+    tileIndexData[i] = 0
+
+echo "Done generating tilemap"
+
+# Create OpenGL texture for tile indices
+var indexTexture: GLuint
+glGenTextures(1, indexTexture.addr)
+glBindTexture(GL_TEXTURE_2D, indexTexture)
+glTexImage2D(GL_TEXTURE_2D, 0, GL_R8.GLint, MAP_SIZE, MAP_SIZE, 0, GL_RED, GL_UNSIGNED_BYTE, tileIndexData[0].addr)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST.GLint)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST.GLint)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE.GLint)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE.GLint)
+
+# Create tile atlas texture, mipmapped.
+var atlasTexture: GLuint
+glGenTextures(1, atlasTexture.addr)
+glBindTexture(GL_TEXTURE_2D, atlasTexture)
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA.GLint, tileAtlas.width.GLint, tileAtlas.height.GLint, 0, GL_RGBA, GL_UNSIGNED_BYTE, tileAtlas.data[0].addr)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR.GLint)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST.GLint)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE.GLint)
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE.GLint)
+glGenerateMipmap(GL_TEXTURE_2D)
+
+# Vertex shader source (OpenGL 4.1)
+const vertexShaderSource = """
+#version 410 core
+
+layout (location = 0) in vec2 aPos;
+layout (location = 1) in vec2 aTexCoord;
+
+out vec2 TexCoord;
+
+uniform mat4 uMVP;
+
+void main() {
+    gl_Position = uMVP * vec4(aPos, 0.0, 1.0);
+    TexCoord = aTexCoord;
+}
+"""
+
+# Fragment shader source (OpenGL 4.1)
+const fragmentShaderSource = """
+#version 410 core
+
+in vec2 TexCoord;
+out vec4 FragColor;
+
+uniform sampler2D uIndexTexture;
+uniform sampler2D uTileAtlas;
+uniform vec2 uMapSize;
+uniform vec2 uAtlasSize;
+uniform float uTileSize;
+
+void main() {
+    // Sample the tile index from the index texture
+    float tileIndex = texture(uIndexTexture, TexCoord).r * 255.0;
+
+    // Convert tile index to atlas coordinates
+    float tilesPerRow = uAtlasSize.x / uTileSize;
+    float tileX = mod(tileIndex, tilesPerRow);
+    float tileY = floor(tileIndex / tilesPerRow);
+
+    // Get position within the current tile (0-1 range)
+    vec2 tilePos = fract(TexCoord * uMapSize);
+
+    // Clamp tilePos to (0.5 .. uTileSize - 0.5) range.
+    vec2 rangeLower = vec2(1.0, 1.0)/uTileSize;
+    vec2 rangeUpper = vec2(uTileSize - 1.0, uTileSize - 1.0)/uTileSize;
+    vec2 tilePosClamped = clamp(tilePos, rangeLower, rangeUpper);
+
+    // Calculate final texture coordinates in the atlas
+    vec2 atlasCoord = (vec2(tileX, tileY) + tilePosClamped) * uTileSize / uAtlasSize;
+    FragColor = texture(uTileAtlas, atlasCoord);
+
+    // Debug: Draw if over the clamp range (0.5 .. uTileSize - 0.5)
+    // Note: tilePos is 0..1, so we need to convert to 0..uTileSize range.
+    vec2 tilePosPixel = tilePos * uTileSize;
+    if (tilePosPixel.x < 1.0 || tilePosPixel.x > uTileSize - 1.0 || tilePosPixel.y < 1.0 || tilePosPixel.y > uTileSize - 1.0) {
+      // FragColor *= vec4(1.0, 0.0, 0.0, 1.0);
+    }
+}
+"""
+
+# Compile shader
+let shader = newShader(
+  ("vertex", vertexShaderSource),
+  ("fragment", fragmentShaderSource)
+)
+
+# Quad vertices (position + texture coordinates)
+var quadVertices: seq[float32] = @[
+  # positions    # texture coords
+  -1.0f,  1.0f,   0.0f, 0.0f,  # top left
+  -1.0f, -1.0f,   0.0f, 1.0f,  # bottom left
+   1.0f, -1.0f,   1.0f, 1.0f,  # bottom right
+   1.0f,  1.0f,   1.0f, 0.0f   # top right
+]
+
+var quadIndices: seq[uint32] = @[
+  0u32, 1u32, 2u32,  # first triangle
+  0u32, 2u32, 3u32   # second triangle
+]
+
+# Create VAO, VBO, EBO
+var VAO, VBO, EBO: GLuint
+glGenVertexArrays(1, VAO.addr)
+glGenBuffers(1, VBO.addr)
+glGenBuffers(1, EBO.addr)
+
+glBindVertexArray(VAO)
+
+glBindBuffer(GL_ARRAY_BUFFER, VBO)
+glBufferData(GL_ARRAY_BUFFER, quadVertices.len * sizeof(float32), quadVertices[0].addr, GL_STATIC_DRAW)
+
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO)
+glBufferData(GL_ELEMENT_ARRAY_BUFFER, quadIndices.len * sizeof(uint32), quadIndices[0].addr, GL_STATIC_DRAW)
+
+# Position attribute
+glVertexAttribPointer(0, 2, cGL_FLOAT, GL_FALSE, 4 * sizeof(float32), cast[pointer](0))
+glEnableVertexAttribArray(0)
+
+# Texture coordinate attribute
+glVertexAttribPointer(1, 2, cGL_FLOAT, GL_FALSE, 4 * sizeof(float32), cast[pointer](2 * sizeof(float32)))
+glEnableVertexAttribArray(1)
+
+glBindVertexArray(0)
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  glClearColor(0.0, 0.0, 0.0, 1.0)
+  glClear(GL_COLOR_BUFFER_BIT)
+
+  # Handle input for panning and zooming like hex example
+  # Left mouse button: drag to pan
+  # Mouse wheel: zoom in/out
+  if window.buttonDown[MouseLeft]:
+    vel = window.mouseDelta.vec2
+  else:
+    vel *= 0.9
+
+  pos += vel
+
+  if window.scrollDelta.y != 0:
+    zoomVel = window.scrollDelta.y * 0.01
+  else:
+    zoomVel *= 0.9
+
+  let oldMat = translate(vec2(pos.x, pos.y)) * scale(vec2(zoom, zoom))
+  zoom += zoomVel
+  zoom = clamp(zoom, 0.01, 100.0)
+  let newMat = translate(vec2(pos.x, pos.y)) * scale(vec2(zoom, zoom))
+  let newAt = newMat.inverse() * window.mousePos.vec2
+  let oldAt = oldMat.inverse() * window.mousePos.vec2
+  pos -= (oldAt - newAt).xy * (zoom)
+
+  # Create MVP matrix
+  let projection = ortho(0.0f, window.size.x.float32, window.size.y.float32, 0.0f, -1.0f, 1.0f)
+  let view = translate(vec3(pos.x, pos.y, 0.0f)) *
+             scale(vec3(zoom * MAP_SIZE.float32/2, zoom * MAP_SIZE.float32/2, 1.0f))
+  let mvp = projection * view
+
+  # Use our custom shader
+  glUseProgram(shader.programId)
+
+  # Set uniforms
+  shader.setUniform("uMVP", mvp)
+  shader.setUniform("uMapSize", vec2(MAP_SIZE.float32, MAP_SIZE.float32))
+  shader.setUniform("uAtlasSize", vec2(tileAtlas.width.float32, tileAtlas.height.float32))
+  shader.setUniform("uTileSize", 16.0f)  # Each tile is 16x16 pixels
+
+  shader.bindUniforms()
+
+  # Bind textures
+  glActiveTexture(GL_TEXTURE0)
+  glBindTexture(GL_TEXTURE_2D, indexTexture)
+  shader.setUniform("uIndexTexture", 0)
+
+  glActiveTexture(GL_TEXTURE1)
+  glBindTexture(GL_TEXTURE_2D, atlasTexture)
+  shader.setUniform("uTileAtlas", 1)
+
+  shader.bindUniforms()
+
+  # Draw the quad
+  glBindVertexArray(VAO)
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nil)
+  glBindVertexArray(0)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/transparent.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Transparent", ivec2(1280, 800), style = Transparent)
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the images.
+bxy.addImage("ring1", readImage("examples/data/ring1.png"))
+bxy.addImage("ring2", readImage("examples/data/ring2.png"))
+bxy.addImage("ring3", readImage("examples/data/ring3.png"))
+
+var frame: int
+
+window.onButtonPress = proc(button: Button) =
+  window.closeRequested = true
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the rings.
+  let center = window.size.vec2 / 2
+  bxy.drawImage("ring1", center, angle = frame.float / 100)
+  bxy.drawImage("ring2", center, angle = -frame.float / 190)
+  bxy.drawImage("ring3", center, angle = frame.float / 170)
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/zooming.nim
+================================================
+import boxy, opengl, windy
+
+let window = newWindow("Zooming", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+# Load the image.
+bxy.addImage("greece", readImage("examples/data/greece.png"))
+
+var frame: int
+var scale: float32 = 0.7
+
+# Called when it is time to draw a new frame.
+window.onFrame = proc() =
+  # Clear the screen and begin a new frame.
+  bxy.beginFrame(window.size)
+
+  # Draw the bg.
+  bxy.drawRect(rect(vec2(0, 0), window.size.vec2), color(0, 0, 0, 1))
+
+  bxy.saveTransform()
+  bxy.translate(window.size.vec2/2)
+  bxy.scale(scale)
+  scale *= 0.999
+  bxy.drawImage("greece", center = vec2(0, 0), angle = 0)
+  bxy.restoreTransform()
+
+  # End this frame, flushing the draw commands.
+  bxy.endFrame()
+  # Swap buffers displaying the new Boxy frame.
+  window.swapBuffers()
+  inc frame
+
+while not window.closeRequested:
+  pollEvents()
+
+
+
+================================================
+FILE: examples/emscripten/emscripten.html
+================================================
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Emscripten-Generated Code</title>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas.emscripten {
+        border: none;
+        background-color: black;
+        position: absolute;
+        left: 0px;
+        right: 0px;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+    <script type='text/javascript'>
+      var Module = {
+        preRun: [],
+        postRun: [],
+        canvas: (function() {
+          var canvas = document.getElementById('canvas');
+          canvas.addEventListener(
+            "webglcontextlost",
+            function(e) {
+              console.error('WebGL context lost. You will need to reload the page.');
+              e.preventDefault();
+            }, false);
+
+          return canvas;
+        })(),
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+        },
+        onRuntimeInitialized: function() {
+          setTimeout(function() {
+            console.info('WASM Runtime Initialized');
+          }, 0);
+        }
+      };
+      window.onerror = function() {
+        console.info('Exception thrown, see JavaScript console');
+      };
+    </script>
+    {{{ SCRIPT }}}
+  </body>
+</html>
+
+
+
+================================================
+FILE: src/boxy.nim
+================================================
+import
+  std/[algorithm, sequtils, sets, strutils, tables],
+  bitty, shady, vmath, bumpy, chroma, hashes, opengl, pixie,
+  boxy/[blends, blurs, buffers, shaders, spreads, textures]
+
+export atlasVert, atlasMain, maskMain
+
+export pixie
+
+const
+  QuadLimit = 10_921 # 6 indices per quad, ensure indices stay in uint16 range
+
+type
+  BoxyError* = object of ValueError
+
+  TileKind = enum
+    tkIndex, tkColor
+
+  TileInfo = object
+    case kind: TileKind
+    of tkIndex:
+      index: int
+    of tkColor:
+      color: Color
+
+  ImageInfo = ref object
+    size: IVec2               ## Size of the image in pixels.
+    tiles: seq[seq[TileInfo]] ## The tile info for this image.
+    oneColor: Color           ## If tiles = [] then this is the image's color.
+
+  Boxy* = ref object
+    atlasShader, maskShader, blendShader, activeShader: Shader
+    blurXShader, blurYShader: Shader
+    spreadXShader, spreadYShader: Shader
+    atlasTexture*, tmpTexture: Texture
+    tmpFramebuffer: GLuint
+    layerNum: int                    ## Index into layer textures for writing.
+    layerTextures: seq[Texture]      ## Layers array for pushing and popping.
+    layerFramebuffers: seq[GLuint]   ## Attachment targets for layer textures.
+    atlasSize: int                   ## Size x size dimensions of the atlas.
+    quadCount: int                   ## Number of quads drawn so far in this batch.
+    quadsPerBatch: int               ## Max quads in a batch before issuing an OpenGL call.
+    mat: Mat3                        ## The current matrix.
+    mats: seq[Mat3]                  ## The matrix stack.
+    entries: Table[string, ImageInfo]
+    entriesBuffered: HashSet[string] ## Entries used but not flushed yet.
+    tileSize: int
+    maxTiles: int
+    tileRun: int
+    tileMargin: int
+    takenTiles: BitArray             ## Flag for if the tile is taken or not.
+    proj: Mat4
+    frameSize: IVec2                 ## Dimensions of the window frame.
+    vertexArrayId: GLuint
+    frameBegun: bool
+    maxAtlasSize: int
+
+    # Buffer data for OpenGL
+    positions: tuple[buffer: Buffer, data: seq[float32]]
+    colors: tuple[buffer: Buffer, data: seq[uint8]]
+    uvs: tuple[buffer: Buffer, data: seq[float32]]
+    indices: tuple[buffer: Buffer, data: seq[uint16]]
+
+proc vec2(x, y: SomeNumber): Vec2 {.inline.} =
+  ## Integer short cut for creating vectors.
+  vec2(x.float32, y.float32)
+
+proc `*`(a, b: Color): Color {.inline.} =
+  result.r = a.r * b.r
+  result.g = a.g * b.g
+  result.b = a.b * b.b
+  result.a = a.a * b.a
+
+proc readAtlas*(boxy: Boxy): Image =
+  ## Read the current atlas content.
+  boxy.atlasTexture.readImage()
+
+proc upload(boxy: Boxy) =
+  ## When buffers change, uploads them to GPU.
+  boxy.positions.buffer.count = boxy.quadCount * 4
+  boxy.colors.buffer.count = boxy.quadCount * 4
+  boxy.uvs.buffer.count = boxy.quadCount * 4
+  boxy.indices.buffer.count = boxy.quadCount * 6
+  bindBufferData(boxy.positions.buffer, boxy.positions.data[0].addr)
+  bindBufferData(boxy.colors.buffer, boxy.colors.data[0].addr)
+  bindBufferData(boxy.uvs.buffer, boxy.uvs.data[0].addr)
+
+proc contains*(boxy: Boxy, key: string): bool {.inline.} =
+  key in boxy.entries
+
+proc drawVertexArray(boxy: Boxy) =
+  glDrawElements(
+    GL_TRIANGLES,
+    boxy.indices.buffer.count.GLint,
+    boxy.indices.buffer.componentType,
+    nil
+  )
+  boxy.quadCount = 0
+
+proc flush*(boxy: Boxy, useAtlas: bool = true) =
+  ## Flips - draws current buffer and starts a new one.
+  if boxy.quadCount == 0:
+    return
+
+  boxy.entriesBuffered.clear()
+  boxy.upload()
+
+  glActiveTexture(GL_TEXTURE0)
+  glBindTexture(GL_TEXTURE_2D, boxy.atlasTexture.textureId)
+
+  glUseProgram(boxy.activeShader.programId)
+  boxy.activeShader.setUniform("proj", boxy.proj)
+  if useAtlas:
+    boxy.activeShader.setUniform("atlasTex", 0)
+  boxy.activeShader.bindUniforms()
+
+  boxy.drawVertexArray()
+
+proc checkFramebuffer() =
+  let status = glCheckFramebufferStatus(GL_FRAMEBUFFER)
+  if status != GL_FRAMEBUFFER_COMPLETE:
+    raise newException(
+      BoxyError,
+      "Something wrong with layer framebuffer: " & $toHex(status.int32, 4)
+    )
+
+proc drawToTexture(boxy: Boxy, texture: Texture, framebufferId: GLuint) =
+  glBindFramebuffer(GL_FRAMEBUFFER, framebufferId)
+  glFramebufferTexture2D(
+    GL_FRAMEBUFFER,
+    GL_COLOR_ATTACHMENT0,
+    GL_TEXTURE_2D,
+    texture.textureId,
+    0
+  )
+
+proc createAtlasTexture(boxy: Boxy, size: int): Texture =
+  result = Texture()
+  result.width = size.int32
+  result.height = size.int32
+  result.componentType = GL_UNSIGNED_BYTE
+  result.format = GL_RGBA
+  result.internalFormat = GL_RGBA8
+  result.magFilter = filterLinear
+  result.minFilter = filterLinear
+  result.useMipmap = false
+  bindTextureData(result, nil, false)
+
+proc addLayerTexture(boxy: Boxy) =
+  # Must be >0 for framebuffer creation below
+  # Set to real value in beginFrame
+  let layerTexture = Texture()
+  layerTexture.width = boxy.frameSize.x.int32
+  layerTexture.height = boxy.frameSize.y.int32
+  layerTexture.componentType = GL_UNSIGNED_BYTE
+  layerTexture.format = GL_RGBA
+  layerTexture.internalFormat = GL_RGBA8
+  layerTexture.magFilter = filterLinear
+  layerTexture.minFilter = filterLinear
+  bindTextureData(layerTexture, nil)
+  boxy.layerTextures.add(layerTexture)
+
+  var layerFramebufferId: GLuint
+  glGenFramebuffers(1, layerFramebufferId.addr)
+  boxy.drawToTexture(layerTexture, layerFramebufferId)
+  boxy.layerFramebuffers.add(layerFramebufferId)
+
+proc addWhiteTile(boxy: Boxy)
+proc clearAtlas*(boxy: Boxy) =
+  boxy.entries.clear()
+  boxy.takenTiles.clear()
+  boxy.addWhiteTile()
+
+proc newBoxy*(
+  atlasSize = 512,
+  tileSize = 32,
+  tileMargin = 2,
+  quadsPerBatch = 1024
+): Boxy =
+  ## Creates a new Boxy with a specified atlas size and quads per batch.
+  if quadsPerBatch > QuadLimit:
+    raise newException(BoxyError, "Quads per batch cannot exceed " & $QuadLimit)
+
+  result = Boxy()
+  result.atlasSize = atlasSize
+  result.quadsPerBatch = quadsPerBatch
+  result.mat = mat3()
+  result.mats = newSeq[Mat3]()
+
+  result.atlasTexture = result.createAtlasTexture(atlasSize)
+  # Tile system initialization
+  result.tileMargin = tileMargin
+  result.tileSize = tileSize - result.tileMargin
+  if result.atlasSize mod (result.tileSize + result.tileMargin) != 0:
+    raise newException(BoxyError, "Atlas size must be a multiple of (tile size + 2)")
+  result.tileRun = result.atlasSize div (result.tileSize + result.tileMargin)
+  result.maxTiles = result.tileRun * result.tileRun
+  result.takenTiles = newBitArray(result.maxTiles)
+
+  result.layerNum = -1
+
+  when defined(emscripten):
+    result.atlasShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "300 es", "precision highp float;\n")),
+      ("atlasMain", toGLSL(atlasMain, "300 es", "precision highp float;\n"))
+    )
+    result.maskShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "300 es", "precision highp float;\n")),
+      ("maskMain", toGLSL(maskMain, "300 es", "precision highp float;\n"))
+    )
+    result.blendShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "300 es", "precision highp float;\n")),
+      ("blendingMain", toGLSL(blendingMain, "300 es", "precision highp float;\n"))
+    )
+    result.blurXShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "300 es", "precision highp float;\n")),
+      ("blendingMain", toGLSL(blurXMain, "300 es", "precision highp float;\n"))
+    )
+    result.blurYShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "300 es", "precision highp float;\n")),
+      ("blendingMain", toGLSL(blurYMain, "300 es", "precision highp float;\n"))
+    )
+    result.spreadXShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "300 es", "precision highp float;\n")),
+      ("spreadXMain", toGLSL(spreadXMain, "300 es", "precision highp float;\n"))
+    )
+    result.spreadYShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "300 es", "precision highp float;\n")),
+      ("spreadYMain", toGLSL(spreadYMain, "300 es", "precision highp float;\n"))
+    )
+
+  else:
+    result.atlasShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "410", "")),
+      ("atlasMain", toGLSL(atlasMain, "410", ""))
+    )
+    result.maskShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "410", "")),
+      ("maskMain", toGLSL(maskMain, "410", ""))
+    )
+    result.blendShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "410", "")),
+      ("blendingMain", toGLSL(blendingMain, "410", ""))
+    )
+    result.blurXShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "410", "")),
+      ("blendingMain", toGLSL(blurXMain, "410", ""))
+    )
+    result.blurYShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "410", "")),
+      ("blendingMain", toGLSL(blurYMain, "410", ""))
+    )
+    result.spreadXShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "410", "")),
+      ("spreadXMain", toGLSL(spreadXMain, "410", ""))
+    )
+    result.spreadYShader = newShader(
+      ("atlasVert", toGLSL(atlasVert, "410", "")),
+      ("spreadYMain", toGLSL(spreadYMain, "410", ""))
+    )
+
+  result.positions.buffer = Buffer()
+  result.positions.buffer.componentType = cGL_FLOAT
+  result.positions.buffer.kind = bkVEC2
+  result.positions.buffer.target = GL_ARRAY_BUFFER
+  result.positions.data = newSeq[float32](
+    result.positions.buffer.kind.componentCount() * quadsPerBatch * 4
+  )
+
+  result.colors.buffer = Buffer()
+  result.colors.buffer.componentType = GL_UNSIGNED_BYTE
+  result.colors.buffer.kind = bkVEC4
+  result.colors.buffer.target = GL_ARRAY_BUFFER
+  result.colors.buffer.normalized = true
+  result.colors.data = newSeq[uint8](
+    result.colors.buffer.kind.componentCount() * quadsPerBatch * 4
+  )
+
+  result.uvs.buffer = Buffer()
+  result.uvs.buffer.componentType = cGL_FLOAT
+  result.uvs.buffer.kind = bkVEC2
+  result.uvs.buffer.target = GL_ARRAY_BUFFER
+  result.uvs.data = newSeq[float32](
+    result.uvs.buffer.kind.componentCount() * quadsPerBatch * 4
+  )
+
+  result.indices.buffer = Buffer()
+  result.indices.buffer.componentType = GL_UNSIGNED_SHORT
+  result.indices.buffer.kind = bkSCALAR
+  result.indices.buffer.target = GL_ELEMENT_ARRAY_BUFFER
+  result.indices.buffer.count = quadsPerBatch * 6
+
+  for i in 0 ..< quadsPerBatch:
+    let offset = i * 4
+    result.indices.data.add([
+      (offset + 3).uint16,
+      (offset + 0).uint16,
+      (offset + 1).uint16,
+      (offset + 2).uint16,
+      (offset + 3).uint16,
+      (offset + 1).uint16,
+    ])
+
+  # Indices are only uploaded once
+  bindBufferData(result.indices.buffer, result.indices.data[0].addr)
+
+  result.upload()
+
+  result.activeShader = result.atlasShader
+
+  glGenVertexArrays(1, result.vertexArrayId.addr)
+  glBindVertexArray(result.vertexArrayId)
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, result.indices.buffer.bufferId)
+
+  result.activeShader.bindAttrib("vertexPos", result.positions.buffer)
+  result.activeShader.bindAttrib("vertexColor", result.colors.buffer)
+  result.activeShader.bindAttrib("vertexUv", result.uvs.buffer)
+
+  glBindFramebuffer(GL_FRAMEBUFFER, 0)
+
+  # Enable premultiplied alpha blending
+  glEnable(GL_BLEND)
+  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
+
+  var maxAtlasSize: int32
+  glGetIntegerv(GL_MAX_TEXTURE_SIZE, maxAtlasSize.addr)
+  result.maxAtlasSize = maxAtlasSize
+
+  if result.maxAtlasSize < result.atlasSize:
+    raise newException(
+      BoxyError,
+      "Requested atlas texture is larger than max supported size: " &
+      $result.maxAtlasSize
+    )
+
+  result.addWhiteTile()
+
+proc enterRawOpenGLMode*(boxy: Boxy) =
+  ## Used to run other OpenGL code while using boxy.
+  boxy.flush()
+
+proc exitRawOpenGLMode*(boxy: Boxy) =
+  ## Exits raw OpenGL mode, and restores boxy's state.
+
+  glBindVertexArray(boxy.vertexArrayId)
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, boxy.indices.buffer.bufferId)
+  boxy.activeShader.bindAttrib("vertexPos", boxy.positions.buffer)
+  boxy.activeShader.bindAttrib("vertexColor", boxy.colors.buffer)
+  boxy.activeShader.bindAttrib("vertexUv", boxy.uvs.buffer)
+  glBindFramebuffer(
+    GL_FRAMEBUFFER,
+    if boxy.layerNum >= 0:
+      boxy.layerFramebuffers[boxy.layerNum]
+    else:
+      0
+  )
+  glEnable(GL_BLEND)
+  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
+
+# Forward declaration
+proc drawUvRect(boxy: Boxy, at, to, uvAt, uvTo: Vec2, tint: Color)
+proc saveTransform*(boxy: Boxy)
+proc restoreTransform*(boxy: Boxy)
+
+proc removeImage*(boxy: Boxy, key: string) =
+  ## Removes an image, does nothing if the image has not been added.
+  if key in boxy.entriesBuffered:
+    raise newException(
+      BoxyError,
+      "Attempting to remove an image that is set to be drawn"
+    )
+
+  if key in boxy.entries:
+    for tileLevel in boxy.entries[key].tiles:
+      for tile in tileLevel:
+        if tile.kind == tkIndex:
+          boxy.takenTiles.unsafeSetFalse(tile.index)
+    boxy.entries.del(key)
+
+proc clearColor(boxy: Boxy) =
+  glClearColor(0, 0, 0, 0)
+  glClear(GL_COLOR_BUFFER_BIT)
+
+proc grow(boxy: Boxy) =
+  ## Grows the atlas size by 2 (growing area by 4) and repositions tiles.
+  if boxy.atlasSize == boxy.maxAtlasSize:
+    var images = boxy.entries.pairs().toSeq()
+    images.sort(proc(a, b: (string, ImageInfo)): int = cmp(-a[1].size.x * a[1].size.y, -b[1].size.x * b[1].size.y))
+    var i = 0
+    for image in images:
+      echo "  Image ", image[0], " size: ", image[1].size.x, "x", image[1].size.y
+      inc i
+    when not defined(emscripten):
+      boxy.atlasTexture.writeFile("tmp/atlas.png")
+    raise newException(
+      BoxyError,
+      "Can't grow boxy atlas texture, max supported size reached: " &
+      $boxy.maxAtlasSize
+    )
+
+  boxy.flush()
+
+  let
+    oldAtlasSize = boxy.atlasSize
+    newAtlasSize = oldAtlasSize * 2
+    oldTileRun = boxy.tileRun
+    newTileRun = newAtlasSize div (boxy.tileSize + boxy.tileMargin)
+
+  # Create new atlas texture
+  let newAtlasTexture = boxy.createAtlasTexture(newAtlasSize)
+
+  # Create framebuffer for new atlas
+  var newFramebuffer: GLuint
+  glGenFramebuffers(1, newFramebuffer.addr)
+  boxy.drawToTexture(newAtlasTexture, newFramebuffer)
+
+  # Save state
+  let
+    savedFramebuffer = if boxy.layerNum >= 0:
+      boxy.layerFramebuffers[boxy.layerNum]
+    else:
+      0.GLuint
+    savedProj = boxy.proj
+    savedShader = boxy.activeShader
+
+  # Setup drawing to new atlas
+  glBindFramebuffer(GL_FRAMEBUFFER, newFramebuffer)
+  glViewport(0, 0, newAtlasSize.int32, newAtlasSize.int32)
+
+  # Clear new atlas
+  glClearColor(0, 0, 0, 0)
+  glClear(GL_COLOR_BUFFER_BIT)
+
+  # Setup projection for new atlas
+  boxy.proj = ortho(0.float32, newAtlasSize.float32, newAtlasSize.float32, 0, -1000, 1000)
+
+  # Use atlas shader
+  boxy.activeShader = boxy.atlasShader
+
+  # Disable blending for copy
+  glDisable(GL_BLEND)
+
+  # Draw old atlas into new atlas
+  boxy.saveTransform()
+  boxy.mat = mat3()
+
+  boxy.drawUvRect(
+    at = vec2(0, newAtlasSize),
+    to = vec2(oldAtlasSize, oldAtlasSize),
+    uvAt = vec2(0, 0),
+    uvTo = vec2(oldAtlasSize, oldAtlasSize),
+    tint = color(1, 1, 1, 1)
+  )
+
+  boxy.flush()
+
+  boxy.restoreTransform()
+
+  # Restore state
+  glEnable(GL_BLEND)
+  # If layerNum is -1, savedFramebuffer is 0.
+  glBindFramebuffer(GL_FRAMEBUFFER, savedFramebuffer)
+  glViewport(0, 0, boxy.frameSize.x, boxy.frameSize.y)
+  boxy.proj = savedProj
+  boxy.activeShader = savedShader
+
+  # Clean up temporary framebuffer
+  glDeleteFramebuffers(1, newFramebuffer.addr)
+
+  # Delete old atlas texture
+  glDeleteTextures(1, boxy.atlasTexture.textureId.addr)
+
+  # Update boxy
+  boxy.atlasTexture = newAtlasTexture
+  boxy.atlasSize = newAtlasSize
+  boxy.tileRun = newTileRun
+  boxy.maxTiles = newTileRun * newTileRun
+
+  # Rebuild takenTiles and update entries
+  var newTakenTiles = newBitArray(boxy.maxTiles)
+  newTakenTiles[0] = true # White tile
+
+  for key, imageInfo in boxy.entries.mpairs:
+    for level in 0 ..< imageInfo.tiles.len:
+      for i in 0 ..< imageInfo.tiles[level].len:
+        if imageInfo.tiles[level][i].kind == tkIndex:
+          let
+            oldIndex = imageInfo.tiles[level][i].index
+            x = oldIndex mod oldTileRun
+            y = oldIndex div oldTileRun
+            newIndex = x + y * newTileRun
+
+          imageInfo.tiles[level][i].index = newIndex
+          newTakenTiles[newIndex] = true
+
+  boxy.takenTiles = newTakenTiles
+
+proc takeFreeTile(boxy: Boxy): int =
+  let (found, index) = boxy.takenTiles.firstFalse
+  if found:
+    boxy.takenTiles.unsafeSetTrue(index)
+    return index
+  boxy.grow()
+  boxy.takeFreeTile()
+
+proc addImage*(boxy: Boxy, key: string, image: Image, mipmaps: bool = true) =
+  if key in boxy.entriesBuffered:
+    raise newException(
+      BoxyError,
+      "Attempting to modify an image that is already set to be drawn " &
+      "(try using a unique key?)"
+    )
+
+  boxy.removeImage(key)
+  boxy.entriesBuffered.incl(key)
+
+  var imageInfo = ImageInfo()
+  boxy.entries[key] = imageInfo
+  imageInfo.size = ivec2(image.width.int32, image.height.int32)
+
+  if image.isOneColor():
+    imageInfo.oneColor = image[0, 0].color
+  else:
+    var
+      img = image
+      level = 0
+    while true:
+      imageInfo.tiles.add(@[])
+
+      # Split the image into tiles.
+      for y in 0 ..< (ceil(img.height / boxy.tileSize).int):
+        for x in 0 ..< (ceil(img.width / boxy.tileSize).int):
+          let tileImage = img.superImage(
+            x * boxy.tileSize - boxy.tileMargin div 2,
+            y * boxy.tileSize - boxy.tileMargin div 2,
+            boxy.tileSize + boxy.tileMargin,
+            boxy.tileSize + boxy.tileMargin
+          )
+          if tileImage.isOneColor():
+            let tileColor = tileImage[0, 0].color
+            imageInfo.tiles[level].add(
+              TileInfo(kind: tkColor, color: tileColor)
+            )
+          else:
+            let index = boxy.takeFreeTile()
+            imageInfo.tiles[level].add(TileInfo(kind: tkIndex, index: index))
+            updateSubImage(
+              boxy.atlasTexture,
+              (index mod boxy.tileRun) * (boxy.tileSize + boxy.tileMargin),
+              (index div boxy.tileRun) * (boxy.tileSize + boxy.tileMargin),
+              tileImage
+            )
+      if not mipmaps:
+        break
+
+      if img.width <= 1 or img.height <= 1:
+        break
+
+      img = img.minifyBy2()
+      inc level
+
+proc getImageSize*(boxy: Boxy, key: string): IVec2 =
+  ## Return the size of an inserted image.
+  boxy.entries[key].size
+
+proc checkBatch(boxy: Boxy) {.inline.} =
+  if boxy.quadCount == boxy.quadsPerBatch:
+    # This batch is full, draw and start a new batch.
+    boxy.flush()
+
+proc setVert(buf: var seq[float32], i: int, v: Vec2) =
+  buf[i * 2 + 0] = v.x
+  buf[i * 2 + 1] = v.y
+
+proc setVertColor(buf: var seq[uint8], i: int, rgbx: ColorRGBX) =
+  buf[i * 4 + 0] = rgbx.r
+  buf[i * 4 + 1] = rgbx.g
+  buf[i * 4 + 2] = rgbx.b
+  buf[i * 4 + 3] = rgbx.a
+
+proc drawQuad(
+  boxy: Boxy,
+  verts: array[4, Vec2],
+  uvs: array[4, Vec2],
+  tints: array[4, Color]
+) =
+  boxy.checkBatch()
+
+  let offset = boxy.quadCount * 4
+  boxy.positions.data.setVert(offset + 0, verts[0])
+  boxy.positions.data.setVert(offset + 1, verts[1])
+  boxy.positions.data.setVert(offset + 2, verts[2])
+  boxy.positions.data.setVert(offset + 3, verts[3])
+
+  boxy.uvs.data.setVert(offset + 0, uvs[0])
+  boxy.uvs.data.setVert(offset + 1, uvs[1])
+  boxy.uvs.data.setVert(offset + 2, uvs[2])
+  boxy.uvs.data.setVert(offset + 3, uvs[3])
+
+  boxy.colors.data.setVertColor(offset + 0, tints[0].asRgbx())
+  boxy.colors.data.setVertColor(offset + 1, tints[1].asRgbx())
+  boxy.colors.data.setVertColor(offset + 2, tints[2].asRgbx())
+  boxy.colors.data.setVertColor(offset + 3, tints[3].asRgbx())
+
+  inc boxy.quadCount
+
+proc drawUvRect(boxy: Boxy, at, to, uvAt, uvTo: Vec2, tint: Color) =
+  ## Adds an image rect with a path to a ctx
+  ## at, to, uvAt, uvTo are all in pixels
+  let
+    posQuad = [
+      boxy.mat * vec2(at.x, to.y),
+      boxy.mat * vec2(to.x, to.y),
+      boxy.mat * vec2(to.x, at.y),
+      boxy.mat * vec2(at.x, at.y),
+    ]
+    uvAt = uvAt / boxy.atlasSize.float32
+    uvTo = uvTo / boxy.atlasSize.float32
+    uvQuad = [
+      vec2(uvAt.x, uvTo.y),
+      vec2(uvTo.x, uvTo.y),
+      vec2(uvTo.x, uvAt.y),
+      vec2(uvAt.x, uvAt.y),
+    ]
+    tints = [tint, tint, tint, tint]
+
+  boxy.drawQuad(posQuad, uvQuad, tints)
+
+proc addWhiteTile(boxy: Boxy) =
+  # Insert a solid white tile used for all one color draws.
+  let whiteTile = newImage(boxy.tileSize, boxy.tileSize)
+  whiteTile.fill(color(1, 1, 1, 1))
+  updateSubImage(
+    boxy.atlasTexture,
+    0,
+    0,
+    whiteTile
+  )
+  boxy.takenTiles[0] = true
+
+proc drawRect*(
+  boxy: Boxy,
+  rect: Rect,
+  color: Color
+) =
+  if color != color(0, 0, 0, 0):
+    boxy.drawUvRect(
+      rect.xy,
+      rect.xy + rect.wh,
+      vec2(boxy.tileSize / 2, boxy.tileSize / 2),
+      vec2(boxy.tileSize / 2, boxy.tileSize / 2),
+      color
+    )
+
+proc readyTmpTexture(boxy: Boxy) =
+  ## Makes sure boxy.tmpTexture is ready to be used.
+  # Create extra tmp texture if needed
+  if boxy.tmpTexture == nil:
+    boxy.tmpTexture = Texture()
+    boxy.tmpTexture.width = 1
+    boxy.tmpTexture.height = 1
+    boxy.tmpTexture.componentType = GL_UNSIGNED_BYTE
+    boxy.tmpTexture.format = GL_RGBA
+    boxy.tmpTexture.internalFormat = GL_RGBA8
+    boxy.tmpTexture.magFilter = filterLinear
+    boxy.tmpTexture.minFilter = filterLinear
+  # Resize extra blend texture if needed
+  if boxy.tmpTexture.width != boxy.frameSize.x.int32 or
+    boxy.tmpTexture.height != boxy.frameSize.y.int32:
+    boxy.tmpTexture.width = boxy.frameSize.x.int32
+    boxy.tmpTexture.height = boxy.frameSize.y.int32
+    bindTextureData(boxy.tmpTexture, nil)
+  if boxy.tmpFramebuffer == 0:
+    glGenFramebuffers(1, boxy.tmpFramebuffer.addr)
+    boxy.drawToTexture(boxy.tmpTexture, boxy.tmpFramebuffer)
+    checkFramebuffer()
+  else:
+    glBindFramebuffer(GL_FRAMEBUFFER, boxy.tmpFramebuffer)
+
+proc pushLayer*(boxy: Boxy) =
+  ## Starts drawing into a new layer.
+  if not boxy.frameBegun:
+    raise newException(BoxyError, "beginFrame has not been called")
+
+  boxy.flush()
+
+  inc boxy.layerNum
+  if boxy.layerNum >= boxy.layerTextures.len:
+    boxy.addLayerTexture()
+  else:
+    glBindFramebuffer(GL_FRAMEBUFFER, boxy.layerFramebuffers[boxy.layerNum])
+
+  boxy.clearColor()
+
+proc popLayer*(
+  boxy: Boxy,
+  tint = color(1, 1, 1, 1),
+  blendMode: BlendMode = NormalBlend
+) =
+  ## Pops the layer and draws with tint and blend.
+  if boxy.layerNum == -1:
+    raise newException(BoxyError, "popLayer called without pushLayer")
+
+  boxy.flush()
+
+  let layerTexture = boxy.layerTextures[boxy.layerNum]
+  let savedAtlasTexture = boxy.atlasTexture
+  dec boxy.layerNum
+
+  if blendMode in {NormalBlend, MaskBlend, ScreenBlend}:
+    glBindFramebuffer(GL_FRAMEBUFFER, if boxy.layerNum == -1: 0.GLuint else: boxy.layerFramebuffers[boxy.layerNum])
+
+    # Can use OpenGL blending mode,
+    if blendMode == NormalBlend:
+      boxy.atlasTexture = layerTexture
+      glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
+      boxy.activeShader = boxy.atlasShader
+    elif blendMode == MaskBlend:
+      boxy.atlasTexture = layerTexture
+      glBlendFunc(GL_ZERO, GL_SRC_COLOR)
+      boxy.activeShader = boxy.maskShader
+    elif blendMode == ScreenBlend:
+      boxy.atlasTexture = layerTexture
+      glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_COLOR)
+      boxy.activeShader = boxy.atlasShader
+
+    boxy.drawUvRect(
+      at = vec2(0, 0),
+      to = boxy.frameSize.vec2,
+      uvAt = vec2(0, boxy.atlasSize.float32),
+      uvTo = vec2(boxy.atlasSize.float32, 0),
+      tint = tint
+    )
+    boxy.flush(blendMode != MaskBlend)
+
+  else:
+    let
+      srcTexture = layerTexture
+      dstTexture = boxy.layerTextures[boxy.layerNum]
+
+    # Can use OpenGL blending mode
+    boxy.readyTmpTexture()
+    boxy.clearColor()
+
+    glActiveTexture(GL_TEXTURE0)
+    glBindTexture(GL_TEXTURE_2D, srcTexture.textureId)
+
+    glActiveTexture(GL_TEXTURE1)
+    glBindTexture(GL_TEXTURE_2D, dstTexture.textureId)
+
+    glUseProgram(boxy.blendShader.programId)
+    boxy.blendShader.setUniform("proj", boxy.proj)
+    boxy.blendShader.setUniform("srcTexture", 0)
+    boxy.blendShader.setUniform("dstTexture", 1)
+    boxy.blendShader.setUniform("blendMode", blendMode.ord.int32)
+    boxy.blendShader.bindUniforms()
+
+    boxy.drawUvRect(
+      at = vec2(0, 0),
+      to = boxy.frameSize.vec2,
+      uvAt = vec2(0, boxy.atlasSize.float32),
+      uvTo = vec2(boxy.atlasSize.float32, 0),
+      tint = tint
+    )
+    boxy.upload()
+    boxy.drawVertexArray()
+
+    # For debugging:
+    # boxy.tmpTexture.writeFile("resTexture.png")
+    # boxy.srcTexture.writeFile("srcTexture.png")
+    # boxy.dstTexture.writeFile("dstTexture.png")
+
+    swap boxy.layerTextures[boxy.layerNum], boxy.tmpTexture
+    swap boxy.layerFramebuffers[boxy.layerNum], boxy.tmpFramebuffer
+
+  # Reset everything back.
+  boxy.atlasTexture = savedAtlasTexture
+  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA)
+  boxy.activeShader = boxy.atlasShader
+
+proc copyLowerToCurrent*(boxy: Boxy) =
+  ## Copies the immediately lower layer texture into the current layer.
+  ## Requires that at least one lower layer exists and a current layer is active.
+  if boxy.layerNum <= 0:
+    raise newException(BoxyError, "copyLowerToCurrent requires an active layer above a lower layer")
+
+  boxy.flush()
+
+  let srcTexture = boxy.layerTextures[boxy.layerNum - 1]
+  let savedAtlasTexture = boxy.atlasTexture
+  let savedShader = boxy.activeShader
+
+  boxy.atlasTexture = srcTexture
+  boxy.activeShader = boxy.atlasShader
+
+  boxy.drawUvRect(
+    at = vec2(0, 0),
+    to = boxy.frameSize.vec2,
+    uvAt = vec2(0, boxy.atlasSize.float32),
+    uvTo = vec2(boxy.atlasSize.float32, 0),
+    tint = color(1, 1, 1, 1)
+  )
+
+  boxy.flush()
+
+  boxy.atlasTexture = savedAtlasTexture
+  boxy.activeShader = savedShader
+
+proc blurEffect(
+  boxy: Boxy,
+  radius: float32,
+  tint: Color,
+  offset: Vec2,
+  readLayer: int,
+  writeLayer: int
+) =
+  ## Blurs the current layer
+  if boxy.layerNum == -1:
+    raise newException(BoxyError, "blurEffect called without pushLayer")
+
+  boxy.flush()
+
+  # blurX
+  boxy.readyTmpTexture()
+  boxy.clearColor()
+
+  glActiveTexture(GL_TEXTURE0)
+  glBindTexture(GL_TEXTURE_2D, boxy.layerTextures[readLayer].textureId)
+
+  glUseProgram(boxy.blurXShader.programId)
+  boxy.blurXShader.setUniform("srcTexture", 0)
+  boxy.blurXShader.setUniform("proj", boxy.proj)
+  boxy.blurXShader.setUniform("pixelScale", 1 / boxy.frameSize.x.float32)
+  boxy.blurXShader.setUniform("blurRadius", radius)
+  boxy.blurXShader.bindUniforms()
+
+  boxy.drawUvRect(
+    at = vec2(0, 0),
+    to = boxy.frameSize.vec2,
+    uvAt = vec2(0, boxy.atlasSize.float32),
+    uvTo = vec2(boxy.atlasSize.float32, 0),
+    tint = color(1, 1, 1, 1)
+  )
+  boxy.upload()
+  boxy.drawVertexArray()
+
+  # blurY
+  glBindFramebuffer(GL_FRAMEBUFFER, boxy.layerFramebuffers[writeLayer])
+  boxy.clearColor()
+
+  glActiveTexture(GL_TEXTURE0)
+  glBindTexture(GL_TEXTURE_2D, boxy.tmpTexture.textureId)
+
+  glUseProgram(boxy.blurYShader.programId)
+  boxy.blurYShader.setUniform("srcTexture", 0)
+  boxy.blurYShader.setUniform("proj", boxy.proj)
+  boxy.blurYShader.setUniform("pixelScale", 1 / boxy.frameSize.y.float32)
+  boxy.blurYShader.setUniform("blurRadius", radius)
+  boxy.blurYShader.bindUniforms()
+
+  boxy.drawUvRect(
+    at = offset,
+    to = offset + boxy.frameSize.vec2,
+    uvAt = vec2(0, boxy.atlasSize.float32),
+    uvTo = vec2(boxy.atlasSize.float32, 0),
+    tint = tint
+  )
+  boxy.upload()
+  boxy.drawVertexArray()
+
+  # For debugging:
+  # boxy.tmpTexture.writeFile("blurX.png")
+  # texture.writeFile("blurY.png")
+
+proc blurEffect*(boxy: Boxy, radius: float32) =
+  ## Blurs the current layer
+  if boxy.layerNum == -1:
+    raise newException(BoxyError, "blurEffect called without pushLayer")
+  boxy.blurEffect(
+    radius,
+    color(1, 1, 1, 1),
+    vec2(0, 0),
+    boxy.layerNum,
+    boxy.layerNum
+  )
+
+proc dropShadowEffect*(boxy: Boxy, tint: Color, offset: Vec2, radius, spread: float32) =
+  ## Drop shadows the current layer
+  if boxy.layerNum == -1:
+    raise newException(BoxyError, "shadowLayer called without pushLayer")
+
+  boxy.pushLayer()
+
+  let
+    shadowLayerId = boxy.layerNum
+    mainLayerId = boxy.layerNum - 1
+    mainLayer = boxy.layerTextures[mainLayerId]
+
+  # spreadX
+  boxy.readyTmpTexture()
+  boxy.clearColor()
+
+  glActiveTexture(GL_TEXTURE0)
+  glBindTexture(GL_TEXTURE_2D, mainLayer.textureId)
+
+  glUseProgram(boxy.spreadXShader.programId)
+  boxy.spreadXShader.setUniform("srcTexture", 0)
+  boxy.spreadXShader.setUniform("proj", boxy.proj)
+  boxy.spreadXShader.setUniform("pixelScale", 1 / boxy.frameSize.x.float32)
+  boxy.spreadXShader.setUniform("radius", spread)
+  boxy.spreadXShader.bindUniforms()
+
+  boxy.drawUvRect(
+    at = vec2(0, 0),
+    to = boxy.frameSize.vec2,
+    uvAt = vec2(0, boxy.atlasSize.float32),
+    uvTo = vec2(boxy.atlasSize.float32, 0),
+    tint = color(1, 1, 1, 1)
+  )
+  boxy.upload()
+  boxy.drawVertexArray()
+
+  # spreadY
+  glBindFramebuffer(GL_FRAMEBUFFER, boxy.layerFramebuffers[shadowLayerId])
+  boxy.clearColor()
+
+  glBindTexture(GL_TEXTURE_2D, boxy.tmpTexture.textureId)
+
+  glUseProgram(boxy.spreadYShader.programId)
+  boxy.spreadYShader.setUniform("srcTexture", 0)
+  boxy.spreadYShader.setUniform("proj", boxy.proj)
+  boxy.spreadYShader.setUniform("pixelScale", 1 / boxy.frameSize.y.float32)
+  boxy.spreadYShader.setUniform("radius", spread)
+  boxy.spreadYShader.bindUniforms()
+
+  boxy.drawUvRect(
+    at = vec2(0, 0) + offset,
+    to = boxy.frameSize.vec2 + offset,
+    uvAt = vec2(0, boxy.atlasSize.float32),
+    uvTo = vec2(boxy.atlasSize.float32, 0),
+    tint = color(1, 1, 1, 1)
+  )
+  boxy.upload()
+  boxy.drawVertexArray()
+
+  boxy.blurEffect(radius, tint, offset, shadowLayerId, shadowLayerId)
+
+  swap(boxy.layerTextures[shadowLayerId], boxy.layerTextures[mainLayerId])
+  swap(boxy.layerFramebuffers[shadowLayerId], boxy.layerFramebuffers[mainLayerId])
+  boxy.popLayer()
+
+  # For debugging:
+  # boxy.tmpTexture.writeFile("spreadX.png")
+  # mainLayer.writeFile("spreadY.png")
+
+proc beginFrame*(boxy: Boxy, frameSize: IVec2, proj: Mat4, clearFrame = true) =
+  ## Starts a new frame.
+  if boxy.frameBegun:
+    raise newException(BoxyError, "beginFrame has already been called")
+
+  # Resize all of the layers if needed.
+  if boxy.frameSize != frameSize:
+    boxy.frameSize = frameSize
+    for texture in boxy.layerTextures:
+      texture.width = frameSize.x
+      texture.height = frameSize.y
+      bindTextureData(texture, nil)
+      #glBindFramebuffer(GL_FRAMEBUFFER, boxy.layerFramebuffers[boxy.layerNum])
+      #checkFramebuffer()
+
+  boxy.frameBegun = true
+  boxy.proj = proj
+
+  glViewport(0, 0, boxy.frameSize.x, boxy.frameSize.y)
+
+  if clearFrame:
+    boxy.clearColor()
+
+proc beginFrame*(boxy: Boxy, frameSize: IVec2, clearFrame = true) {.inline.} =
+  beginFrame(
+    boxy,
+    frameSize,
+    ortho(0.float32, frameSize.x.float32, frameSize.y.float32, 0, -1000, 1000),
+    clearFrame
+  )
+
+proc endFrame*(boxy: Boxy) =
+  ## Ends a frame.
+  if not boxy.frameBegun:
+    raise newException(BoxyError, "beginFrame has not been called")
+  if boxy.layerNum != -1:
+    raise newException(BoxyError, "Not all layers have been popped")
+
+  boxy.frameBegun = false
+  boxy.flush()
+
+proc applyTransform*(boxy: Boxy, m: Mat3) =
+  ## Applies transform to the internal transform.
+  boxy.mat = boxy.mat * m
+
+proc setTransform*(boxy: Boxy, m: Mat3) =
+  ## Sets the internal transform.
+  boxy.mat = m
+
+proc getTransform*(boxy: Boxy): Mat3 =
+  ## Gets the internal transform.
+  boxy.mat
+
+proc translate*(boxy: Boxy, v: Vec2) =
+  ## Translate the internal transform.
+  boxy.mat = boxy.mat * translate(v)
+
+proc rotate*(boxy: Boxy, angle: float32) =
+  ## Rotates the internal transform.
+  boxy.mat = boxy.mat * rotate(angle)
+
+proc scale*(boxy: Boxy, scale: Vec2) =
+  ## Scales the internal transform.
+  boxy.mat = boxy.mat * scale(scale)
+
+proc scale*(boxy: Boxy, scale: float32) {.inline.} =
+  ## Scales the internal transform.
+  boxy.scale(vec2(scale))
+
+proc saveTransform*(boxy: Boxy) =
+  ## Pushes a transform onto the stack.
+  boxy.mats.add boxy.mat
+
+proc restoreTransform*(boxy: Boxy) =
+  ## Pops a transform off the stack.
+  boxy.mat = boxy.mats.pop()
+
+proc clearTransform*(boxy: Boxy) =
+  ## Clears transform and transform stack.
+  boxy.mat = mat3()
+  boxy.mats.setLen(0)
+
+proc fromScreen*(boxy: Boxy, windowFrame: Vec2, v: Vec2): Vec2 =
+  ## Takes a point from screen and translates it to point inside the current transform.
+  (boxy.mat.inverse() * vec3(v.x, windowFrame.y - v.y, 0)).xy
+
+proc toScreen*(boxy: Boxy, windowFrame: Vec2, v: Vec2): Vec2 =
+  ## Takes a point from current transform and translates it to screen.
+  result = (boxy.mat * vec3(v.x, v.y, 1)).xy
+  result.y = -result.y + windowFrame.y
+
+proc drawImage*(
+  boxy: Boxy,
+  key: string,
+  pos: Vec2,
+  tint = color(1, 1, 1, 1)
+) =
+  ## Draws image at pos from top-left.
+  ## The image should have already been added.
+  let imageInfo = boxy.entries[key]
+  if imageInfo.tiles.len == 0:
+    boxy.drawRect(
+      rect(pos, imageInfo.size.vec2),
+      imageInfo.oneColor * tint
+    )
+  else:
+    var i = 0
+    let
+      xVec = vec2(boxy.mat[0, 0], boxy.mat[0, 1])
+      yVec = vec2(boxy.mat[0, 1], boxy.mat[1, 1])
+      vecMag = max(xVec.length, yVec.length)
+      wantLevel = int((-log2(vecMag) + 0.5).floor)
+      level = clamp(wantLevel, 0, imageInfo.tiles.len - 1)
+      levelPow2 = 2 ^ level
+      scale = vec2(levelPow2, levelPow2)
+      pos = pos / scale
+
+    boxy.saveTransform()
+    boxy.scale(scale)
+
+    var
+      width = imageInfo.size.x
+      height = imageInfo.size.y
+    for _ in 0 ..< level:
+      if width mod 2 != 0:
+        width = width div 2 + 1
+      else:
+        width = width div 2
+      if height mod 2 != 0:
+        height = height div 2 + 1
+      else:
+        height = height div 2
+
+    for y in 0 ..< (ceil(height / boxy.tileSize).int):
+      for x in 0 ..< (ceil(width / boxy.tileSize).int):
+        let
+          tile = imageInfo.tiles[level][i]
+          posAt = pos + vec2(x * boxy.tileSize, y * boxy.tileSize)
+        case tile.kind:
+        of tkIndex:
+          var uvAt = vec2(
+            (tile.index mod boxy.tileRun) * (boxy.tileSize + boxy.tileMargin),
+            (tile.index div boxy.tileRun) * (boxy.tileSize + boxy.tileMargin)
+          )
+          uvAt += vec2(boxy.tileMargin div 2, boxy.tileMargin div 2)
+          boxy.drawUvRect(
+            posAt,
+            posAt + vec2(boxy.tileSize, boxy.tileSize),
+            uvAt,
+            uvAt + vec2(boxy.tileSize, boxy.tileSize),
+            tint
+          )
+        of tkColor:
+          if tile.color != color(0, 0, 0, 0):
+            let wh = vec2(
+              min(boxy.tileSize.float32, imageInfo.size.x.float32),
+              min(boxy.tileSize.float32, imageInfo.size.y.float32)
+            )
+            boxy.drawRect(
+              rect(posAt, wh),
+              tile.color * tint
+            )
+        inc i
+
+    boxy.restoreTransform()
+    assert i == imageInfo.tiles[level].len
+
+proc drawImage*(
+  boxy: Boxy,
+  key: string,
+  rect: Rect,
+  tint = color(1, 1, 1, 1)
+) =
+  ## Draws image filling the rect.
+  ## The image should have already been added.
+  let imageInfo = boxy.entries[key]
+  boxy.saveTransform()
+  let
+    scale = rect.wh / imageInfo.size.vec2
+    pos = vec2(
+      rect.x / scale.x,
+      rect.y / scale.y
+    )
+  boxy.scale(scale)
+  boxy.drawImage(key, pos, tint)
+  boxy.restoreTransform()
+
+proc drawImage*(
+  boxy: Boxy,
+  key: string,
+  center: Vec2,
+  angle: float32,
+  tint = color(1, 1, 1, 1),
+  scale: float32 = 1
+) =
+  ## Draws image at center and rotated by angle.
+  ## The image should have already been added.
+  let imageInfo = boxy.entries[key]
+  boxy.saveTransform()
+  boxy.translate(center)
+  boxy.rotate(angle)
+  boxy.scale(vec2(scale, scale))
+  boxy.translate(-imageInfo.size.vec2 / 2)
+  boxy.drawImage(key, pos = vec2(0, 0), tint)
+  boxy.restoreTransform()
+
+proc getImage*(boxy: Boxy, bounds: Rect): Image =
+  ## Gets an Image rectangle from the current layer.
+  ## Note: This is very costly because it transfers GPU data to CPU.
+  ## It's not recommended to use this in a game loop.
+  if boxy.layerNum == -1:
+    raise newException(BoxyError, "getImage called without pushLayer")
+  let layerTexture = boxy.layerTextures[boxy.layerNum]
+  let fullLayer = layerTexture.readImage()
+  fullLayer.flipVertical()
+  return fullLayer.subImage(
+    bounds.x.int,
+    bounds.y.int,
+    bounds.w.int,
+    bounds.h.int
+  )
+
+
+
+================================================
+FILE: src/boxy/blends.nim
+================================================
+import shady, vmath
+
+var
+  srcTexture: Uniform[Sampler2d]
+  dstTexture: Uniform[Sampler2d]
+  blendMode: Uniform[int32]
+  gl_Position*: Vec4
+
+proc min3(c: Vec3): float =
+  min(min(c.r, c.g), c.b)
+
+proc max3(c: Vec3): float =
+  max(max(c.r, c.g), c.b)
+
+proc sat3(c: Vec3): float =
+  max3(c) - min3(c)
+
+proc lumv3(c: Vec3): float =
+  dot(c, vec3(0.3, 0.59, 0.11))
+
+proc lum(cBase, cLum: Vec3): Vec3 =
+  var
+    lBase = lumv3(cBase)
+    lLum = lumv3(cLum)
+    lDiff = lLum - lBase
+    color = cBase + vec3(lDiff)
+    minColor = min3(color)
+    maxColor = max3(color)
+  if minColor < 0.0:
+    color = mix(vec3(lLum), color, lLum / (lLum - minColor))
+  elif maxColor > 1.0:
+    color = mix(vec3(lLum), color, (1.0 - lLum) / (maxColor - lLum))
+  return color
+
+proc lumSat(cBase, cSat, cLum: Vec3): Vec3 =
+  var
+    sBase = sat3(cBase)
+    color = vec3(0.0)
+  if sBase > 0.0:
+    var
+      minBase = min3(cBase)
+      sSat = sat3(cSat)
+    color = (cBase - minBase) * sSat / sBase
+  return lum(color, cLum)
+
+proc blender(blendMode: int32, dst, src: Vec4): Vec4 =
+
+  if blendMode == 0:
+    # NormalBlend (usually done though fixed function)
+    return src
+
+  if src.a == 0.0:
+    # early return with no alpha
+    return dst
+
+  var
+    alphaFinal = src.a + (1.0 - src.a) * dst.a
+    res = src.rgb * (1.0 - dst.a)
+
+  res += dst.rgb * (1.0 - src.a)
+
+  if blendMode == 1:
+    # DarkenBlend
+    res += min(src.rgb * dst.a, dst.rgb * src.a)
+  elif blendMode == 2:
+    # MultiplyBlend
+    res += src.rgb * dst.rgb
+  elif blendMode == 3:
+    # ColorBurnBlend
+    res += src.a * dst.a * (vec3(1.0) - min(
+      vec3(1.0),
+      (dst.a - dst.rgb) * src.a / (src.rgb * dst.a + 1e-6))
+    )
+  elif blendMode == 4:
+    # LightenBlend
+    res += max(src.rgb * dst.a, dst.rgb * src.a)
+  elif blendMode == 5:
+    # ScreenBlend (usually done though fixed function)
+    res = vec3(1.0) - (vec3(1.0) - dst.rgb) * (vec3(1.0) - src.rgb)
+  elif blendMode == 6:
+    # ColorDodgeBlend
+    res += src.a * dst.a * min(
+      vec3(1.0),
+      dst.rgb * src.a / (dst.a * (src.a - src.rgb) + 1e-6)
+    )
+  elif blendMode == 7:
+    # OverlayBlend
+    var
+      Dca2 = 2.0f * dst.rgb
+      c0 = src.rgb * Dca2
+      c1 = vec3(src.a * dst.a) - 2.0f *
+        (vec3(dst.a) - dst.rgb) *
+        (vec3(src.a) - src.rgb)
+    res += mix(c1, c0, vec3(lessThanEqual(Dca2, vec3(dst.a))))
+  elif blendMode == 8:
+    # SoftLightBlend
+    var Dc = dst.rgb
+    if dst.a > 0.0:
+      Dc /= dst.a
+
+    var Sc = src.rgb
+    if src.a > 0.0:
+      Sc /= src.a
+
+    var
+      c0 = vec3(1.0f) - Dc
+      c1 = (16.0f * Dc - 12.0f) * Dc + 3.0f
+      c2 = inversesqrt(Dc) - 1.0f
+      c = mix(c1, c2, vec3(greaterThan(Dc, vec3(0.25))))
+    c = mix(c, c0, vec3(greaterThan(Sc, vec3(0.5))))
+    var cmid = 2.0f * Sc - 1.0f
+    c = src.a * dst.rgb * (vec3(1.0) + cmid * c)
+    res += c
+  elif blendMode == 9:
+    # HardLightBlend
+    var
+      Sca2 = 2.0f * src.rgb
+      c0 = Sca2 * dst.rgb
+      c1 = vec3(src.a * dst.a) - 2.0f *
+        (vec3(dst.a) - dst.rgb) *
+        (vec3(src.a) - src.rgb)
+    res += mix(c0, c1, vec3(greaterThan(Sca2, vec3(src.a))))
+  elif blendMode == 10:
+    # DifferenceBlend
+    res += abs(dst.rgb * src.a - src.rgb * dst.a)
+  elif blendMode == 11:
+    # ExclusionBlend
+    res += src.rgb * dst.a + dst.rgb * src.a - 2.0f * src.rgb * dst.rgb
+  elif blendMode == 12 or blendMode == 13 or blendMode == 14 or blendMode == 15:
+    var
+      dstColor = dst.rgb
+      srcColor = src.rgb
+
+    if src.a > 0f:
+      srcColor = src.rgb / src.a
+
+    if dst.a > 0f:
+      dstColor = dst.rgb / dst.a
+
+    var c: Vec3
+    if blendMode == 12:
+      # HueBlend
+      c = lumSat(srcColor.rgb, dstColor.rgb, dstColor.rgb)
+    elif blendMode == 13:
+      # SaturationBlend
+      c = lumSat(dstColor.rgb, srcColor.rgb, dstColor.rgb)
+    elif blendMode == 14:
+      # ColorBlend
+      c = lum(srcColor.rgb, dstColor.rgb)
+    else:
+      # LuminosityBlend
+      c = lum(dstColor.rgb, srcColor.rgb)
+
+    res += c * src.a * dst.a
+
+  return vec4(res, alphaFinal)
+
+proc blendingMain*(
+  pos: Vec2,
+  uv: Vec2,
+  color: Vec4,
+  fragColor: var Vec4
+) =
+  fragColor = blender(
+    blendMode,
+    texture(dstTexture, uv),
+    texture(srcTexture, uv)
+  )
+
+var proj: Uniform[Mat4]
+var atlasTex: Uniform[Sampler2d]
+var maskTex: Uniform[Sampler2d]
+
+proc atlasVert*(
+  vertexPos: Vec2,
+  vertexUv: Vec2,
+  vertexColor: Vec4,
+  pos: var Vec2,
+  uv: var Vec2,
+  color: var Vec4
+) =
+  pos = vertexPos
+  uv = vertexUv
+  color = vertexColor
+  gl_Position = proj * vec4(vertexPos.x, vertexPos.y, 0.0, 1.0)
+
+proc atlasMain*(
+  pos: Vec2,
+  uv: Vec2,
+  color: Vec4,
+  fragColor: var Vec4
+) =
+  fragColor = texture(atlasTex, uv) * color
+
+proc maskMain*(
+  pos: Vec2,
+  uv: Vec2,
+  color: Vec4,
+  fragColor: var Vec4
+) =
+  fragColor = vec4(texture(maskTex, uv).r)
+
+
+
+================================================
+FILE: src/boxy/blurs.nim
+================================================
+import shady, vmath
+
+var
+  srcTexture: Uniform[Sampler2d]
+  blurRadius: Uniform[float32]
+  pixelScale: Uniform[float32]
+
+proc blurXMain*(
+  pos: Vec2,
+  uv: Vec2,
+  color: Vec4,
+  fragColor: var Vec4
+) =
+  fragColor = vec4(0, 0, 0, 0)
+  # gaussian blur
+  var accumulation = 0f
+  let r = max(round(blurRadius), 1)
+  for x in floor(-r).int .. ceil(r).int:
+    let a = exp(-(x*x).float32/(r * r)*2)
+    fragColor += texture(srcTexture, uv + vec2(x.float32 * pixelScale, 0)) * a
+    accumulation += a
+  fragColor = fragColor / accumulation
+
+proc blurYMain*(
+  pos: Vec2,
+  uv: Vec2,
+  color: Vec4,
+  fragColor: var Vec4
+) =
+  fragColor = vec4(0, 0, 0, 0)
+  # gaussian blur
+  var accumulation = 0f
+  let r = max(round(blurRadius), 1)
+  for y in floor(-r).int .. ceil(r).int:
+    let a = exp(-(y*y).float32/(r * r)*2)
+    fragColor += texture(srcTexture, uv + vec2(0, y.float32 * pixelScale)) * a
+    accumulation += a
+  fragColor = fragColor / accumulation
+  fragColor *= color
+
+
+
+================================================
+FILE: src/boxy/buffers.nim
+================================================
+import opengl
+
+type
+  BufferKind* = enum
+    bkSCALAR, bkVEC2, bkVEC3, bkVEC4, bkMAT2, bkMAT3, bkMAT4
+
+  Buffer* = ref object
+    count*: int
+    target*, componentType*: GLenum
+    kind*: BufferKind
+    normalized*: bool
+    bufferId*: GLuint
+
+func size*(componentType: GLenum): Positive =
+  case componentType:
+    of cGL_BYTE, cGL_UNSIGNED_BYTE:
+      1
+    of cGL_SHORT, cGL_UNSIGNED_SHORT:
+      2
+    of cGL_INT, GL_UNSIGNED_INT, cGL_FLOAT:
+      4
+    else:
+      raise newException(Exception, "Unexpected componentType")
+
+func componentCount*(bufferKind: BufferKind): Positive =
+  case bufferKind:
+    of bkSCALAR:
+      1
+    of bkVEC2:
+      2
+    of bkVEC3:
+      3
+    of bkVEC4, bkMAT2:
+      4
+    of bkMAT3:
+      9
+    of bkMAT4:
+      16
+
+proc bindBufferData*(buffer: Buffer, data: pointer) =
+  if buffer.bufferId == 0:
+    glGenBuffers(1, buffer.bufferId.addr)
+
+  let byteLength = buffer.count *
+    buffer.kind.componentCount() *
+    buffer.componentType.size()
+
+  glBindBuffer(buffer.target, buffer.bufferId)
+  glBufferData(
+    buffer.target,
+    byteLength,
+    data,
+    GL_STATIC_DRAW
+  )
+
+
+
+================================================
+FILE: src/boxy/shaders.nim
+================================================
+import buffers, opengl, os, strformat, strutils, vmath
+
+type
+  ShaderAttrib = object
+    name: string
+    location: GLint
+
+  Uniform = object
+    name: string
+    componentType: GLenum
+    kind: BufferKind
+    values: array[64, uint8]
+    location: GLint
+    changed: bool # Flag for if this uniform has changed since last bound.
+
+  Shader* = ref object
+    paths: seq[string]
+    programId*: GLuint
+    attribs*: seq[ShaderAttrib]
+    uniforms*: seq[Uniform]
+
+proc getErrorLog*(
+  id: GLuint,
+  path: string,
+  lenProc: typeof(glGetShaderiv),
+  strProc: typeof(glGetShaderInfoLog)
+): string =
+  ## Gets the error log from compiling or linking shaders.
+  var length: GLint = 0
+  lenProc(id, GL_INFO_LOG_LENGTH, length.addr)
+  var log = newString(length.int)
+  strProc(id, length, nil, log.cstring)
+  when defined(emscripten):
+    result = log
+  else:
+    if log.startsWith("Compute info"):
+      log = log[25..^1]
+    let
+      clickable =
+        if ')' in log:
+          &"{path}({log[2..log.find(')')]}"
+        else:
+          path
+    result = &"{clickable}: {log}"
+
+proc compileComputeShader*(compute: (string, string)): GLuint =
+  ## Compiles the compute shader and returns the program id.
+  var computeShader: GLuint
+
+  block:
+    var computeShaderArray = allocCStringArray([compute[1]])
+
+    var isCompiled: GLint
+
+    computeShader = glCreateShader(GL_COMPUTE_SHADER)
+    glShaderSource(computeShader, 1, computeShaderArray, nil)
+    glCompileShader(computeShader)
+    glGetShaderiv(computeShader, GL_COMPILE_STATUS, isCompiled.addr)
+
+    if isCompiled == 0:
+      echo "Compute shader compilation failed:"
+      echo getErrorLog(
+        computeShader, compute[0], glGetShaderiv, glGetShaderInfoLog
+      )
+      quit()
+
+    deallocCStringArray(computeShaderArray)
+
+  result = glCreateProgram()
+  glAttachShader(result, computeShader)
+
+  glLinkProgram(result)
+
+  var isLinked: GLint
+  glGetProgramiv(result, GL_LINK_STATUS, isLinked.addr)
+  if isLinked == 0:
+    echo "Linking compute shader failed:"
+    echo getErrorLog(
+      result, compute[0], glGetProgramiv, glGetProgramInfoLog
+    )
+    quit()
+
+proc compileComputeShader*(path: string): GLuint =
+  ## Compiles the compute shader and returns the program id.
+  compileComputeShader((path, readFile(path)))
+
+proc compileShaderFiles*(vert, frag: (string, string)): GLuint =
+  ## Compiles the shader files and links them into a program, returning that id.
+  var vertShader, fragShader: GLuint
+
+  # Compile the shaders
+  block shaders:
+    var vertShaderArray = allocCStringArray([vert[1]])
+    var fragShaderArray = allocCStringArray([frag[1]])
+    var isCompiled: GLint
+
+    vertShader = glCreateShader(GL_VERTEX_SHADER)
+    glShaderSource(vertShader, 1, vertShaderArray, nil)
+    glCompileShader(vertShader)
+    glGetShaderiv(vertShader, GL_COMPILE_STATUS, isCompiled.addr)
+
+    if isCompiled == 0:
+      echo "Vertex shader compilation failed:"
+      echo "--------------------------------"
+      echo vert[1]
+      echo "--------------------------------"
+      echo getErrorLog(
+        vertShader, vert[0], glGetShaderiv, glGetShaderInfoLog
+      )
+      quit()
+
+    fragShader = glCreateShader(GL_FRAGMENT_SHADER)
+    glShaderSource(fragShader, 1, fragShaderArray, nil)
+    glCompileShader(fragShader)
+    glGetShaderiv(fragShader, GL_COMPILE_STATUS, isCompiled.addr)
+
+    if isCompiled == 0:
+      echo "Fragment shader compilation failed:"
+      echo "--------------------------------"
+      echo frag[1]
+      echo "--------------------------------"
+      echo getErrorLog(
+        fragShader, frag[0], glGetShaderiv, glGetShaderInfoLog
+      )
+      quit()
+
+    deallocCStringArray(vertShaderArray)
+    deallocCStringArray(fragShaderArray)
+
+  # Attach shaders to a GL program
+  result = glCreateProgram()
+  glAttachShader(result, vertShader)
+  glAttachShader(result, fragShader)
+
+  glLinkProgram(result)
+
+  var isLinked: GLint
+  glGetProgramiv(result, GL_LINK_STATUS, isLinked.addr)
+  if isLinked == 0:
+    echo "Linking shaders failed:"
+    echo getErrorLog(result, "", glGetProgramiv, glGetProgramInfoLog)
+    quit()
+
+proc compileShaderFiles*(vertPath, fragPath: string): GLuint =
+  ## Compiles the shader files and links them into a program, returning that id.
+  compileShaderFiles(
+    (vertPath, readFile(vertPath)),
+    (fragPath, readFile(fragPath))
+  )
+
+proc readAttribsAndUniforms(shader: Shader) =
+  block attributes:
+    var activeAttribCount: GLint
+    glGetProgramiv(
+      shader.programId,
+      GL_ACTIVE_ATTRIBUTES,
+      activeAttribCount.addr
+    )
+
+    for i in 0 ..< activeAttribCount:
+      var
+        buf = newString(64)
+        length, size: GLint
+        kind: GLenum
+      glGetActiveAttrib(
+        shader.programId,
+        i.GLuint,
+        len(buf).GLint,
+        length.addr,
+        size.addr,
+        kind.addr,
+        cast[cstring](buf[0].addr)
+      )
+      buf.setLen(length)
+
+      let location = glGetAttribLocation(shader.programId, buf.cstring)
+      shader.attribs.add(ShaderAttrib(name: move(buf), location: location))
+
+  block uniforms:
+    var activeUniformCount: GLint
+    glGetProgramiv(
+      shader.programId,
+      GL_ACTIVE_UNIFORMS,
+      activeUniformCount.addr
+    )
+
+    for i in 0 ..< activeUniformCount:
+      var
+        buf = newString(64)
+        length, size: GLint
+        kind: GLenum
+      glGetActiveUniform(
+        shader.programId,
+        i.GLuint,
+        len(buf).GLint,
+        length.addr,
+        size.addr,
+        kind.addr,
+        cast[cstring](buf[0].addr)
+      )
+      buf.setLen(length)
+
+      if buf.endsWith("[0]"):
+        # Skip arrays, these are part of UBOs and done a different way
+        continue
+
+      let location = glGetUniformLocation(shader.programId, buf.cstring)
+      shader.uniforms.add(Uniform(name: move(buf), location: location))
+
+proc newShader*(compute: (string, string)): Shader =
+  result = Shader()
+  result.paths = @[compute[0]]
+  result.programId = compileComputeShader(compute)
+  result.readAttribsAndUniforms()
+
+proc newShader*(computePath: string): Shader =
+  let
+    computeCode = readFile(computePath)
+    dir = getCurrentDir()
+    computePathFull = dir / computePath
+  newShader((computePathFull, computeCode))
+
+template newShaderStatic*(computePath: string): Shader =
+  ## Creates a new shader but also statically reads computePath
+  ## so it is compiled into the binary.
+  const
+    computeCode = staticRead(computePath)
+    dir = currentSourcePath().parentDir
+    computePathFull = dir / computePath
+  newShader((computePathFull, computeCode))
+
+proc newShader*(vert, frag: (string, string)): Shader =
+  result = Shader()
+  result.paths = @[vert[0], frag[0]]
+  result.programId = compileShaderFiles(vert, frag)
+  result.readAttribsAndUniforms()
+
+proc newShader*(vertPath, fragPath: string): Shader =
+  let
+    vertCode = readFile(vertPath)
+    fragCode = readFile(fragPath)
+    dir = getCurrentDir()
+    vertPathFull = dir / vertPath
+    fragPathFull = dir / fragPath
+  newShader((vertPathFull, vertCode), (fragPathFull, fragCode))
+
+template newShaderStatic*(vertPath, fragPath: string): Shader =
+  ## Creates a new shader but also statically reads vertPath and fragPath
+  ## so they are compiled into the binary.
+  const
+    vertCode = staticRead(vertPath)
+    fragCode = staticRead(fragPath)
+    dir = currentSourcePath().parentDir
+    vertPathFull = dir / vertPath
+    fragPathFull = dir / fragPath
+  newShader((vertPathFull, vertCode), (fragPathFull, fragCode))
+
+proc hasUniform*(shader: Shader, name: string): bool =
+  for uniform in shader.uniforms:
+    if uniform.name == name:
+      return true
+  return false
+
+proc setUniform(
+  shader: Shader,
+  name: string,
+  componentType: GLenum,
+  kind: BufferKind,
+  values: array[64, uint8]
+) =
+  for uniform in shader.uniforms.mitems:
+    if uniform.name == name:
+      if uniform.componentType != componentType or
+        uniform.kind != kind or
+        uniform.values != values:
+        uniform.componentType = componentType
+        uniform.kind = kind
+        uniform.values = values
+        uniform.changed = true
+      return
+
+  echo &"Ignoring setUniform for \"{name}\", not active"
+
+proc setUniform(
+  shader: Shader,
+  name: string,
+  componentType: GLenum,
+  kind: BufferKind,
+  values: array[16, float32]
+) =
+  assert componentType == cGL_FLOAT
+  setUniform(shader, name, componentType, kind, cast[array[64, uint8]](values))
+
+proc setUniform(
+  shader: Shader,
+  name: string,
+  componentType: GLenum,
+  kind: BufferKind,
+  values: array[16, int32]
+) =
+  assert componentType == cGL_INT
+  setUniform(shader, name, componentType, kind, cast[array[64, uint8]](values))
+
+proc raiseUniformVarargsException(name: string, count: int) =
+  raise newException(
+    Exception,
+    &"{count} varargs is more than the maximum of 4 for \"{name}\""
+  )
+
+proc raiseUniformComponentTypeException(
+  name: string,
+  componentType: GLenum
+) =
+  let hex = toHex(componentType.uint32)
+  raise newException(
+    Exception,
+    &"Uniform \"{name}\" is of unexpected component type {hex}"
+  )
+
+proc raiseUniformKindException(name: string, kind: BufferKind) =
+  raise newException(
+    Exception,
+    &"Uniform \"{name}\" is of unexpected kind {kind}"
+  )
+
+proc setUniform*(shader: Shader, name: string, args: varargs[int32]) =
+  var values: array[16, int32]
+  for i in 0 ..< min(len(args), 16):
+    values[i] = args[i]
+
+  var kind: BufferKind
+  case len(args):
+    of 1:
+      kind = bkSCALAR
+    of 2:
+      kind = bkVEC2
+    of 3:
+      kind = bkVEC3
+    of 4:
+      kind = bkVEC4
+    else:
+      raiseUniformVarargsException(name, len(args))
+
+  shader.setUniform(name, cGL_INT, kind, values)
+
+proc setUniform*(shader: Shader, name: string, args: varargs[float32]) =
+  var values: array[16, float32]
+  for i in 0 ..< min(len(args), 16):
+    values[i] = args[i]
+
+  var kind: BufferKind
+  case len(args):
+    of 1:
+      kind = bkSCALAR
+    of 2:
+      kind = bkVEC2
+    of 3:
+      kind = bkVEC3
+    of 4:
+      kind = bkVEC4
+    else:
+      raiseUniformVarargsException(name, len(args))
+
+  shader.setUniform(name, cGL_FLOAT, kind, values)
+
+proc setUniform*(shader: Shader, name: string, v: Vec2) =
+  var values: array[16, float32]
+  values[0] = v.x
+  values[1] = v.y
+  shader.setUniform(name, cGL_FLOAT, bkVEC2, values)
+
+proc setUniform*(shader: Shader, name: string, v: Vec3) =
+  var values: array[16, float32]
+  values[0] = v.x
+  values[1] = v.y
+  values[2] = v.z
+  shader.setUniform(name, cGL_FLOAT, bkVEC3, values)
+
+proc setUniform*(shader: Shader, name: string, v: Vec4) =
+  var values: array[16, float32]
+  values[0] = v.x
+  values[1] = v.y
+  values[2] = v.z
+  values[3] = v.w
+  shader.setUniform(name, cGL_FLOAT, bkVEC4, values)
+
+proc setUniform*(shader: Shader, name: string, m: Mat4) =
+  shader.setUniform(name, cGL_FLOAT, bkMAT4, cast[array[16, float32]](m))
+
+proc setUniform*(shader: Shader, name: string, b: bool) =
+  var values: array[16, int32]
+  values[0] = b.int32
+  shader.setUniform(name, cGL_INT, bkSCALAR, values)
+
+proc bindUniforms*(shader: Shader) =
+  for uniform in shader.uniforms.mitems:
+    if uniform.componentType == 0.GLenum:
+      continue
+
+    if not uniform.changed:
+      continue
+
+    if uniform.componentType == cGL_INT:
+      let values = cast[array[16, GLint]](uniform.values)
+      case uniform.kind:
+      of bkSCALAR:
+        glUniform1i(uniform.location, values[0])
+      of bkVEC2:
+        glUniform2i(uniform.location, values[0], values[1])
+      of bkVEC3:
+        glUniform3i(uniform.location, values[0], values[1], values[2])
+      of bkVEC4:
+        glUniform4i(
+          uniform.location,
+          values[0],
+          values[1],
+          values[2],
+          values[3]
+        )
+      else:
+        raiseUniformKindException(uniform.name, uniform.kind)
+    elif uniform.componentType == cGL_FLOAT:
+      let values = cast[array[16, float32]](uniform.values)
+      case uniform.kind:
+      of bkSCALAR:
+        glUniform1f(uniform.location, values[0])
+      of bkVEC2:
+        glUniform2f(uniform.location, values[0], values[1])
+      of bkVEC3:
+        glUniform3f(uniform.location, values[0], values[1], values[2])
+      of bkVEC4:
+        glUniform4f(
+          uniform.location,
+          values[0],
+          values[1],
+          values[2],
+          values[3]
+        )
+      of bkMAT4:
+        glUniformMatrix4fv(
+          uniform.location,
+          1,
+          GL_FALSE,
+          values[0].unsafeAddr
+        )
+      else:
+        raiseUniformKindException(uniform.name, uniform.kind)
+    else:
+      raiseUniformComponentTypeException(uniform.name, uniform.componentType)
+
+    uniform.changed = false
+
+proc bindUniformBuffer*(
+  shader: Shader, name: string, buffer: Buffer, binding: GLuint
+) =
+  assert buffer.target == GL_UNIFORM_BUFFER
+  let index = glGetUniformBlockIndex(shader.programId, name)
+  glBindBufferBase(GL_UNIFORM_BUFFER, binding, buffer.bufferId)
+  glUniformBlockBinding(shader.programId, index, binding)
+
+proc bindAttrib*(
+  shader: Shader,
+  name: string,
+  buffer: Buffer
+) =
+  glBindBuffer(buffer.target, buffer.bufferId)
+
+  for attrib in shader.attribs:
+    if name == attrib.name:
+      if buffer.normalized or buffer.kind != bkSCALAR:
+        glVertexAttribPointer(
+          attrib.location.GLuint,
+          buffer.kind.componentCount().GLint,
+          buffer.componentType,
+          if buffer.normalized: GL_TRUE else: GL_FALSE,
+          0,
+          nil
+        )
+      else:
+        glVertexAttribIPointer(
+          attrib.location.GLuint,
+          buffer.kind.componentCount().GLint,
+          buffer.componentType,
+          0,
+          nil
+        )
+
+      glEnableVertexAttribArray(attrib.location.GLuint)
+      return
+
+  echo &"Attribute \"{name}\" not found in shader {shader.paths}"
+
+
+
+================================================
+FILE: src/boxy/spreads.nim
+================================================
+import shady, vmath
+
+var
+  srcTexture: Uniform[Sampler2d]
+  radius: Uniform[float32]
+  pixelScale: Uniform[float32]
+
+proc spreadXMain*(
+  pos: Vec2,
+  uv: Vec2,
+  color: Vec4,
+  fragColor: var Vec4
+) =
+  var alpha: float32
+  if radius >= 0:
+    let r = radius
+    alpha = 0f
+    for x in floor(-r).int .. ceil(r).int:
+      alpha = max(alpha, texture(
+        srcTexture,
+        uv + vec2(x.float32 * pixelScale, 0)
+      ).a)
+  else:
+    let r = -radius
+    alpha = 1f
+    for x in floor(-r).int .. ceil(r).int:
+      alpha = min(alpha, texture(
+        srcTexture,
+        uv + vec2(x.float32 * pixelScale, 0)
+      ).a)
+  fragColor.rgba = vec4(alpha)
+
+proc spreadYMain*(
+  pos: Vec2,
+  uv: Vec2,
+  color: Vec4,
+  fragColor: var Vec4
+) =
+  var alpha: float32
+  if radius >= 0:
+    let r = radius
+    alpha = 0f
+    for y in floor(-r).int .. ceil(r).int:
+      alpha = max(alpha, texture(
+        srcTexture,
+        uv + vec2(0, y.float32 * pixelScale)
+      ).a)
+  else:
+    let r = -radius
+    alpha = 1f
+    for y in floor(-r).int .. ceil(r).int:
+      alpha = min(alpha, texture(
+        srcTexture,
+        uv + vec2(0, y.float32 * pixelScale)
+      ).a)
+  fragColor.rgba = vec4(alpha)
+
+
+
+================================================
+FILE: src/boxy/textures.nim
+================================================
+import buffers, opengl, pixie, vmath
+
+type
+  Filter* = enum
+    filterDefault,
+    filterNearest = GL_NEAREST,
+    filterLinear = GL_LINEAR
+
+  Wrap* = enum
+    wDefault,
+    wRepeat = GL_REPEAT,
+    wClampToEdge = GL_CLAMP_TO_EDGE,
+    wMirroredRepeat = GL_MIRRORED_REPEAT
+
+  Texture* = ref object
+    width*, height*: int32
+    componentType*, format*, internalFormat*: GLenum
+    magFilter*: Filter
+    minFilter*: Filter
+    mipFilter*: Filter
+    wrapS*, wrapT*, wrapR*: Wrap
+    useMipmap*: bool
+    textureId*: GLuint
+
+proc bindTextureBufferData*(texture: Texture, buffer: Buffer, data: pointer) =
+  ## Binds data to a texture buffer.
+  bindBufferData(buffer, data)
+
+  if texture.textureId == 0:
+    glGenTextures(1, texture.textureId.addr)
+
+  glBindTexture(GL_TEXTURE_BUFFER, texture.textureId)
+  glTexBuffer(
+    GL_TEXTURE_BUFFER,
+    texture.internalFormat,
+    buffer.bufferId
+  )
+
+proc bindTextureData*(texture: Texture, data: pointer, useMipmap = texture.useMipmap) =
+  ## Binds the data to a texture.
+  if texture.textureId == 0:
+    glGenTextures(1, texture.textureId.addr)
+
+  glBindTexture(GL_TEXTURE_2D, texture.textureId)
+  glTexImage2D(
+    target = GL_TEXTURE_2D,
+    level = 0,
+    internalFormat = texture.internalFormat.GLint,
+    width = texture.width,
+    height = texture.height,
+    border = 0,
+    format = texture.format,
+    `type` = texture.componentType,
+    pixels = data
+  )
+
+  if texture.magFilter != filterDefault:
+    glTexParameteri( # default is GL_LINEAR
+      GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture.magFilter.GLint
+    )
+  if not texture.useMipmap:
+    glTexParameteri( # default is GL_NEAREST_MIPMAP_LINEAR, but we don't use mipmaps
+      GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+      if texture.minFilter == filterDefault: GL_NEAREST
+      else: texture.minFilter.GLint
+    )
+  elif texture.minFilter != filterDefault or texture.mipFilter != filterDefault:
+    glTexParameteri( # default is GL_NEAREST_MIPMAP_LINEAR
+      GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+      case texture.minFilter:
+      of filterNearest, filterDefault:
+        case texture.mipFilter:
+        of filterNearest: GL_NEAREST_MIPMAP_NEAREST
+        else: GL_NEAREST_MIPMAP_LINEAR
+      else:
+        case texture.mipFilter:
+        of filterNearest: GL_LINEAR_MIPMAP_NEAREST
+        else: GL_LINEAR_MIPMAP_LINEAR
+    )
+
+  if texture.wrapS != wDefault:
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture.wrapS.GLint)
+  if texture.wrapT != wDefault:
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture.wrapT.GLint)
+  if texture.wrapR != wDefault:
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, texture.wrapR.GLint)
+
+  if useMipmap:
+    glGenerateMipmap(GL_TEXTURE_2D)
+
+func getFormat(image: Image): GLenum =
+  ## Gets the format of the image.
+  result = GL_RGBA
+
+proc newTexture*(image: Image): Texture =
+  ## Creates a new texture.
+  result = Texture()
+  result.width = image.width.GLint
+  result.height = image.height.GLint
+  result.componentType = GL_UNSIGNED_BYTE
+  result.format = image.getFormat()
+  result.internalFormat = GL_RGBA8
+  result.useMipmap = true
+  result.magFilter = filterLinear
+  result.minFilter = filterLinear
+  result.mipFilter = filterLinear
+  bindTextureData(result, image.data[0].addr)
+
+proc updateSubImage*(texture: Texture, x, y: int, image: Image, level: int) =
+  ## Update a small part of a texture image.
+  glBindTexture(GL_TEXTURE_2D, texture.textureId)
+  glTexSubImage2D(
+    GL_TEXTURE_2D,
+    level = level.GLint,
+    xoffset = x.GLint,
+    yoffset = y.GLint,
+    width = image.width.GLint,
+    height = image.height.GLint,
+    format = image.getFormat(),
+    `type` = GL_UNSIGNED_BYTE,
+    pixels = image.data[0].addr
+  )
+
+proc updateSubImage*(texture: Texture, x, y: int, image: Image, mip = texture.useMipmap) =
+  ## Update a small part of texture with a new image.
+  var
+    x = x
+    y = y
+    image = image
+    level = 0
+  while true:
+    texture.updateSubImage(x, y, image, level)
+    if not mip or image.width <= 1 or image.height <= 1:
+      break
+    image = image.minifyBy2()
+    x = x div 2
+    y = y div 2
+    inc level
+
+proc clearSubImage*(texture: Texture, x, y, width, height: int, level: int = 0) =
+  ## Clears a rectangular region of the texture to transparent black.
+  ## Uses a more compatible approach that works with older OpenGL versions.
+  if width <= 0 or height <= 0:
+    return
+  let clearImage = newImage(width, height)
+  glBindTexture(GL_TEXTURE_2D, texture.textureId)
+  glTexSubImage2D(
+    GL_TEXTURE_2D,
+    level = level.GLint,
+    xoffset = x.GLint,
+    yoffset = y.GLint,
+    width = width.GLint,
+    height = height.GLint,
+    format = GL_RGBA,
+    `type` = GL_UNSIGNED_BYTE,
+    pixels = clearImage.data[0].addr
+  )
+
+proc clearSubImage*(texture: Texture, x, y: int, size: IVec2) =
+  ## Clears a rectangular region across all mipmap levels.
+  if size.x <= 0 or size.y <= 0:
+    return
+  var
+    curX = x
+    curY = y
+    curWidth = size.x
+    curHeight = size.y
+    level = 0
+
+  while true:
+    texture.clearSubImage(curX, curY, curWidth, curHeight, level)
+
+    if curWidth <= 1 or curHeight <= 1:
+      break
+    if not texture.useMipmap:
+      break
+
+    # Scale down for next mipmap level
+    curX = curX div 2
+    curY = curY div 2
+    curWidth = max(1, curWidth div 2)
+    curHeight = max(1, curHeight div 2)
+    inc level
+
+proc readImage*(texture: Texture): Image =
+  ## Reads the data of the texture back.
+  when defined(emscripten):
+    raise newException(
+      Exception,
+      "readImage is not supported on emscripten due to security reasons"
+    )
+  else:
+    let image = newImage(texture.width, texture.height)
+    glBindTexture(GL_TEXTURE_2D, texture.textureId)
+    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data[0].addr)
+    return image
+
+proc writeFile*(texture: Texture, path: string) =
+  ## Reads the data of the texture and writes it to file.
+  let image = texture.readImage()
+  image.flipVertical()
+  image.writeFile(path)
+
+
+
+================================================
+FILE: tests/bench.nim
+================================================
+import benchy, boxy, opengl, windy
+
+let window = newWindow("Windy + Boxy", ivec2(1280, 800))
+makeContextCurrent(window)
+loadExtensions()
+
+let
+  bxy = newBoxy()
+  image = readImage("docs/boxyBanner.png")
+
+timeIt "add":
+  bxy.addImage("boxyBanner", image)
+
+
+
+================================================
+FILE: tests/config.nims
+================================================
+--path:"../src"
+
+
+
+================================================
+FILE: tests/max_atlas_size.nim
+================================================
+import boxy, opengl, windy, pixie, vmath
+
+let windowSize = ivec2(1280, 800)
+
+let window = newWindow("Broken Image", windowSize)
+makeContextCurrent(window)
+loadExtensions()
+
+let bxy = newBoxy()
+
+let testImage = readImage("examples/data/greece.png")
+var count = 0
+while true:
+  bxy.addImage("test" & $count, testImage)
+  inc count
+
+
+
+================================================
+FILE: tests/rectscale.nim
+================================================
+import boxy, opengl, windy, pixie, vmath
+
+let windowSize = ivec2(1280, 800)
+
+let window = newWindow("Broken Image", windowSize)
+makeContextCurrent(window)
+
+loadExtensions()
+
+let bxy = newBoxy()
+
+let testImage = newImage(400, 400)
+testImage.fill(rgba(255, 255, 255, 255))
+newContext(testImage).strokeSegment(segment(vec2(0), vec2(400)))
+
+bxy.addImage("test", testImage)
+
+# Called when it is time to draw a new frame.
+proc display() =
+
+  bxy.beginFrame(window.size)
+
+  bxy.drawImage("test", pos = vec2(100.0, 0.0), tint = color(0, 1, 0, 1))
+  bxy.drawImage("test", rect = rect(vec2(100.0, 0.0), vec2(300, 300)), tint = color(1, 0, 0, 1))
+  bxy.drawImage("test", rect = rect(vec2(100.0, 0.0), vec2(280, 280)), tint = color(0.75, 0, 0, 1))
+  bxy.drawImage("test", rect = rect(vec2(100.0, 0.0), vec2(168, 168)), tint = color(0.5, 0, 0, 1))
+
+  bxy.endFrame()
+  window.swapBuffers()
+
+while not window.closeRequested:
+  display()
+  pollEvents()
+
+
+
+================================================
+FILE: tests/test.nim
+================================================
+import boxy
+
+
+
+================================================
+FILE: tests/test_examples.nim
+================================================
+import std/[os, osproc, strutils]
+
+const ignore = [
+  # Needs extra dependencies to be installed.
+  "basic_glfw.nim", 
+  "basic_sdl2.nim",
+  "basic_glut.nim",
+  # TODO: Needs to be fixed.
+  "layer_as_image.nim"
+]
+
+# Scan for files.
+var files: seq[string]
+for file in walkDir("examples"):
+  if file.kind == pcFile and 
+    file.path.endsWith(".nim") and 
+    file.path.extractFilename notin ignore:
+      files.add(file.path)
+
+# Compile all
+for f in files:
+  let cmd = "nim c -d:release --hints:off " & f
+  echo "> ", cmd
+  if execCmd(cmd) != 0:
+    quit("Example did not compile successfully")
+
+# Run all if not in GitHub Actions.
+let isGithubActions = getEnv("GITHUB_ACTIONS") == "true"
+if not isGithubActions:
+  for f in files:
+    let cmd = f.changeFileExt("")
+    echo "> ", cmd
+    if execCmd(cmd) != 0:
+      quit("Example did not finish successfully")
+
+

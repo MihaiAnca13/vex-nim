@@ -1,0 +1,31 @@
+# Nim
+nimcache/
+*.c
+*.o
+*.obj
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# Build
+build/
+dist/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Generated
+*.nim.generated
+
+# nimgrep
+.nim_docs_index.json
+
+# opencode
+.opencode/
