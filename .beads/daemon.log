@@ -626,3 +626,14 @@ time=2026-01-18T10:47:43.064+01:00 level=INFO msg="Pull failed: %v (backoff: %v)
 time=2026-01-18T10:47:44.522+01:00 level=INFO msg="Pulled from remote"
 time=2026-01-18T10:47:44.548+01:00 level=INFO msg="Imported from JSONL"
 time=2026-01-18T10:47:44.551+01:00 level=INFO msg="Auto-import complete"
+time=2026-01-18T10:47:46.674+01:00 level=INFO msg="JSONL file created: %s" !BADKEY=/home/mihai/personal/vex-nim/.beads/issues.jsonl
+time=2026-01-18T10:47:46.674+01:00 level=INFO msg="File change detected: %s" !BADKEY=/home/mihai/personal/vex-nim/.beads/issues.jsonl
+time=2026-01-18T10:47:46.737+01:00 level=INFO msg="Git ref change detected: %s" !BADKEY=/home/mihai/personal/vex-nim/.git/refs/heads/main.lock
+time=2026-01-18T10:47:47.738+01:00 level=INFO msg="Import triggered by file change"
+time=2026-01-18T10:47:47.738+01:00 level=INFO msg="Starting %s..." !BADKEY=auto-import
+time=2026-01-18T10:47:47.739+01:00 level=INFO msg="Skipping %s: JSONL content unchanged" !BADKEY=auto-import
+time=2026-01-18T10:47:48.272+01:00 level=INFO msg="JSONL file created: %s" !BADKEY=/home/mihai/personal/vex-nim/.beads/issues.jsonl
+time=2026-01-18T10:47:48.272+01:00 level=INFO msg="File change detected: %s" !BADKEY=/home/mihai/personal/vex-nim/.beads/issues.jsonl
+time=2026-01-18T10:47:49.274+01:00 level=INFO msg="Import triggered by file change"
+time=2026-01-18T10:47:49.274+01:00 level=INFO msg="Starting %s..." !BADKEY=auto-import
+time=2026-01-18T10:47:49.275+01:00 level=INFO msg="Skipping %s: JSONL content unchanged" !BADKEY=auto-import
