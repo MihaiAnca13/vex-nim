@@ -11,6 +11,7 @@ type
     bxy*: Boxy
     nodeTextures: Table[Node, string]
     imageCache: Table[string, Image]
+    fontCache: Table[string, Font]
     nextNodeId: int
     viewportSize*: Vec2
 
@@ -19,6 +20,7 @@ proc newRenderContext*(viewportSize: Vec2): RenderContext =
     bxy: newBoxy(),
     nodeTextures: initTable[Node, string](),
     imageCache: initTable[string, Image](),
+    fontCache: initTable[string, Font](),
     nextNodeId: 0,
     viewportSize: viewportSize
   )
@@ -32,6 +34,13 @@ proc getImageSize*(ctx: RenderContext, key: string): Vec2 =
 
 proc getImage*(ctx: RenderContext, key: string): Image =
   ctx.imageCache[key]
+
+proc getFont*(ctx: RenderContext, path: string): Font =
+  if ctx.fontCache.hasKey(path):
+    return ctx.fontCache[path]
+  let font = readFont(path)
+  ctx.fontCache[path] = font
+  font
 
 proc addImage*(ctx: RenderContext, key: string, image: Image) =
   ctx.bxy.addImage(key, image)

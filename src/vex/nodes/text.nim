@@ -1,0 +1,81 @@
+import pixie
+import vmath
+import ../core/types
+import ../core/context
+import ../core/transform
+
+type
+  TextNode* = ref object of Node
+    text*: string
+    fontPath*: string
+    fontSize*: float32
+    color*: Color
+    maxWidth*: float32
+    horizontalAlign*: HorizontalAlign
+    verticalAlign*: VerticalAlign
+
+  HorizontalAlign* = enum
+    AlignLeft
+    AlignCenter
+    AlignRight
+
+  VerticalAlign* = enum
+    AlignTop
+    AlignCenter
+    AlignBottom
+
+proc newTextNode*(
+  text: string,
+  fontPath: string,
+  fontSize: float32 = 16.0,
+  color: Color = color(0, 0, 0, 1)
+): TextNode =
+  TextNode(
+    text: text,
+    fontPath: fontPath,
+    fontSize: fontSize,
+    color: color,
+    maxWidth: 0.0,
+    horizontalAlign: AlignLeft,
+    verticalAlign: AlignTop
+  )
+
+proc contains*(node: TextNode, point: Vec2): bool =
+  let localPoint = node.globalToLocal(point)
+  localPoint.x >= 0 and localPoint.x < node.size.x and
+  localPoint.y >= 0 and localPoint.y < node.size.y
+
+proc draw*(node: TextNode, renderCtx: context.RenderContext) =
+  let font = renderCtx.getFont(node.fontPath)
+  font.size = node.fontSize
+  font.paint.color = node.color
+
+  let bounds = if node.maxWidth > 0: vec2(node.maxWidth, node.size.y) else: vec2(node.size.x, node.size.y)
+  let arrangement = font.typeset(node.text, bounds)
+
+  let layout = arrangement.layoutBounds()
+  let textWidth = layout.x
+  let textHeight = layout.y
+
+  let finalWidth = max(node.size.x, textWidth)
+  let finalHeight = max(node.size.y, textHeight)
+
+  let xOffset = case node.horizontalAlign
+    of AlignLeft: 0.0
+    of AlignCenter: max(0.0, (node.size.x - textWidth) / 2)
+    of AlignRight: max(0.0, node.size.x - textWidth)
+
+  let yOffset = case node.verticalAlign
+    of AlignTop: 0.0
+    of AlignCenter: max(0.0, (node.size.y - textHeight) / 2)
+    of AlignBottom: max(0.0, node.size.y - textHeight)
+
+  let dstImage = newImage(finalWidth.int, finalHeight.int)
+  dstImage.fill(rgba(0, 0, 0, 0))
+  dstImage.fillText(arrangement, translate(vec2(xOffset, yOffset)))
+
+  let key = "text_" & $cast[int](node)
+  renderCtx.addImage(key, dstImage)
+
+  let globalPos = node.getWorldPosition()
+  renderCtx.drawImage(key, globalPos)

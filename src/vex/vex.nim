@@ -7,9 +7,13 @@ import ./core/events
 import ./core/context
 
 import ./nodes/primitive
+import ./nodes/sprite
+import ./nodes/text
 
 export types
 export transform
 export events
 export context
 export primitive
+export sprite
+export text
