@@ -19,6 +19,7 @@ type
 
 proc newRectNode*(size: Vec2 = vec2(100, 100)): RectNode =
   RectNode(
+    globalTransform: identityTransform,
     size: size,
     fill: none(Paint),
     stroke: none(Paint),
@@ -28,6 +29,7 @@ proc newRectNode*(size: Vec2 = vec2(100, 100)): RectNode =
 
 proc newCircleNode*(size: Vec2 = vec2(100, 100)): CircleNode =
   CircleNode(
+    globalTransform: identityTransform,
     size: size,
     fill: none(Paint),
     stroke: none(Paint),
@@ -42,9 +44,12 @@ proc contains*(node: RectNode, point: Vec2): bool =
 proc contains*(node: CircleNode, point: Vec2): bool =
   let localPoint = node.globalToLocal(point)
   let center = node.size / 2
+  let radius = node.size.x / 2
   let dx = localPoint.x - center.x
   let dy = localPoint.y - center.y
-  dx * dx + dy * dy <= (node.size.x / 2) * (node.size.x / 2)
+  let dist2 = dx * dx + dy * dy
+  let rad2 = radius * radius
+  result = dist2 <= rad2
 
 proc draw*(node: RectNode, renderCtx: context.RenderContext) =
   let image = newImage(node.size.x.int, node.size.y.int)

@@ -9,6 +9,7 @@ import ./core/context
 import ./nodes/primitive
 import ./nodes/sprite
 import ./nodes/text
+import ./nodes/path
 
 export types
 export transform
@@ -17,3 +18,4 @@ export context
 export primitive
 export sprite
 export text
+export path

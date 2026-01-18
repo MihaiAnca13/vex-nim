@@ -78,5 +78,6 @@ proc assertAlmostEqual*(a, b: Vec2, tolerance = 0.0001) =
   assertAlmostEqual(a.y, b.y, tolerance)
 
 proc assertAlmostEqual*(a, b: Mat3, tolerance = 0.0001) =
-  for i in 0..<9:
-    assertAlmostEqual(a.m[i], b.m[i], tolerance)
+  for i in 0..<3:
+    for j in 0..<3:
+      assertAlmostEqual(a[i, j], b[i, j], tolerance)

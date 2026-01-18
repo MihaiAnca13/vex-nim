@@ -31,6 +31,7 @@ proc newTextNode*(
   color: Color = color(0, 0, 0, 1)
 ): TextNode =
   TextNode(
+    globalTransform: identityTransform,
     text: text,
     fontPath: fontPath,
     fontSize: fontSize,

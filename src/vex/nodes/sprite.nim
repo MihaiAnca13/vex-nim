@@ -13,6 +13,7 @@ type
 
 proc newSpriteNode*(imageKey: string, size: Vec2 = vec2(100, 100)): SpriteNode =
   SpriteNode(
+    globalTransform: identityTransform,
     size: size,
     imageKey: imageKey,
     sourceRect: rect(0, 0, 0, 0),
@@ -25,6 +26,7 @@ proc newSpriteNodeWithSlice*(
   sliceInsets: Vec4
 ): SpriteNode =
   SpriteNode(
+    globalTransform: identityTransform,
     size: size,
     imageKey: imageKey,
     sourceRect: rect(0, 0, 0, 0),

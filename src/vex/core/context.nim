@@ -9,10 +9,10 @@ import ./transform
 type
   RenderContext* = ref object
     bxy*: Boxy
-    nodeTextures: Table[Node, string]
-    imageCache: Table[string, Image]
-    fontCache: Table[string, Font]
-    nextNodeId: int
+    nodeTextures*: Table[Node, string]
+    imageCache*: Table[string, Image]
+    fontCache*: Table[string, Font]
+    nextNodeId*: int
     viewportSize*: Vec2
 
 proc newRenderContext*(viewportSize: Vec2): RenderContext =
