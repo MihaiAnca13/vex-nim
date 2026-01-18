@@ -21,7 +21,8 @@ proc newPathNode*(pathData: string): PathNode =
     stroke: none(Paint),
     strokeWidth: 1.0,
     strokeCap: ButtCap,
-    strokeJoin: MiterJoin
+    strokeJoin: MiterJoin,
+    globalTransform: identityTransform
   )
 
 proc newHexNode*(radius: float32): PathNode =
@@ -44,7 +45,8 @@ proc newHexNode*(radius: float32): PathNode =
     strokeWidth: 1.0,
     strokeCap: ButtCap,
     strokeJoin: MiterJoin,
-    size: vec2(radius * 2, radius * 2)
+    size: vec2(radius * 2, radius * 2),
+    globalTransform: identityTransform
   )
 
 proc contains*(node: PathNode, point: Vec2): bool =
