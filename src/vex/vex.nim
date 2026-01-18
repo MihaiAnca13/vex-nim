@@ -4,7 +4,12 @@
 import ./core/types
 import ./core/transform
 import ./core/events
+import ./core/context
+
+import ./nodes/primitive
 
 export types
 export transform
 export events
+export context
+export primitive
