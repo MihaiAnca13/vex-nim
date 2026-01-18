@@ -243,3 +243,8 @@ bd close <id> --reason="..."      # Complete issue
 - **NEVER change the git remote URL** - Use `git@github.com:MihaiAnca13/vex-nim.git` (SSH)
 - **NEVER modify `~/.ssh/config`** - SSH authentication is managed externally
 - If push fails with SSH errors, report the issue and stop - do not attempt to fix authentication
+
+### Temporary Files
+- Use `.tmp/` folder inside project root for debug scripts and temporary files
+- Delete `.tmp/` folder when session is complete
+- Never commit `.tmp/` to version control

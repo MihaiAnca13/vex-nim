@@ -3,7 +3,7 @@ import pixie
 
 import ../src/vex/core/types
 
-const goldenDir = currentSourcePath.parentDir() / "golden"
+const goldenDir* = currentSourcePath.parentDir() / "golden"
 
 proc ensureGoldenDir*() =
   if not goldenDir.existsDir():

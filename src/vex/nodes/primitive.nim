@@ -24,7 +24,14 @@ proc newRectNode*(size: Vec2 = vec2(100, 100)): RectNode =
     fill: none(Paint),
     stroke: none(Paint),
     strokeWidth: 1.0,
-    cornerRadius: 0.0
+    cornerRadius: 0.0,
+    visible: true,
+    dirty: true,
+    children: @[],
+    localPos: vec2(0, 0),
+    localScale: vec2(1, 1),
+    localRotation: 0.0,
+    name: ""
   )
 
 proc newCircleNode*(size: Vec2 = vec2(100, 100)): CircleNode =
@@ -33,7 +40,14 @@ proc newCircleNode*(size: Vec2 = vec2(100, 100)): CircleNode =
     size: size,
     fill: none(Paint),
     stroke: none(Paint),
-    strokeWidth: 1.0
+    strokeWidth: 1.0,
+    visible: true,
+    dirty: true,
+    children: @[],
+    localPos: vec2(0, 0),
+    localScale: vec2(1, 1),
+    localRotation: 0.0,
+    name: ""
   )
 
 proc contains*(node: RectNode, point: Vec2): bool =

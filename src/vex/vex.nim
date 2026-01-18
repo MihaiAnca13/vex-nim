@@ -12,6 +12,7 @@ import ./nodes/text
 import ./nodes/path
 
 import ./layout/alignment
+import ./layout/container
 
 export types
 export transform
@@ -22,3 +23,4 @@ export sprite
 export text
 export path
 export alignment
+export container
