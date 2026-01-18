@@ -1,4 +1,3 @@
-import std/[options, math]
 import pixie
 import vmath
 import ../core/types
