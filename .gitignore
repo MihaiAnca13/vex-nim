@@ -32,3 +32,6 @@ dist/
 
 # beads
 .beads/
+
+# python
+__pycache__

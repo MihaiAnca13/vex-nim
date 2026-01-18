@@ -21,6 +21,7 @@ class LibraryIndex:
     sections: List[Dict[str, Any]] = field(default_factory=list)
     headers: List[Dict[str, Any]] = field(default_factory=list)
     topics: List[str] = field(default_factory=list)
+    file_mtime: float = 0.0
 
 
 class SearchType(Enum):
@@ -30,23 +31,47 @@ class SearchType(Enum):
 
 
 def load_library_index() -> Dict[str, LibraryIndex]:
-    if os.path.exists(INDEX_CACHE_FILE):
+    if not os.path.exists(INDEX_CACHE_FILE):
+        return build_library_index()
+
+    try:
+        with open(INDEX_CACHE_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+            cached_index = {k: LibraryIndex(**v) for k, v in data.items()}
+    except Exception:
+        return build_library_index()
+
+    libraries: Dict[str, LibraryIndex] = {}
+    libs_to_rebuild: List[str] = []
+
+    for lib_key, lib in cached_index.items():
+        full_context_file = os.path.join(lib.path, f"{lib.name}_full_context.txt")
+        if not os.path.exists(full_context_file):
+            libs_to_rebuild.append(lib_key)
+            continue
+
+        current_mtime = os.path.getmtime(full_context_file)
+        if abs(current_mtime - lib.file_mtime) > 0.001:
+            libs_to_rebuild.append(lib_key)
+        else:
+            libraries[lib_key] = lib
+
+    if libs_to_rebuild:
+        rebuilt = build_libraries(libs_to_rebuild)
+        libraries.update(rebuilt)
         try:
-            with open(INDEX_CACHE_FILE, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                return {k: LibraryIndex(**v) for k, v in data.items()}
+            with open(INDEX_CACHE_FILE, "w", encoding="utf-8") as f:
+                json.dump({k: v.__dict__ for k, v in libraries.items()}, f, indent=2)
         except Exception:
             pass
-    return build_library_index()
+
+    return libraries
 
 
-def build_library_index() -> Dict[str, LibraryIndex]:
-    libraries = {}
+def build_libraries(lib_names: List[str]) -> Dict[str, LibraryIndex]:
+    libraries: Dict[str, LibraryIndex] = {}
 
-    if not os.path.exists(DOCS_PATH):
-        return libraries
-
-    for item in os.listdir(DOCS_PATH):
+    for item in lib_names:
         lib_path = os.path.join(DOCS_PATH, item)
         if not os.path.isdir(lib_path):
             continue
@@ -108,11 +133,28 @@ def build_library_index() -> Dict[str, LibraryIndex]:
                 first_desc = extract_description(content)
                 index.description = first_desc
 
+                index.file_mtime = os.path.getmtime(full_context_file)
+
         except Exception as e:
             print(f"Error indexing {item}: {e}")
             continue
 
         libraries[item.lower()] = index
+
+    return libraries
+
+
+def build_library_index() -> Dict[str, LibraryIndex]:
+    if not os.path.exists(DOCS_PATH):
+        return {}
+
+    all_libs = [
+        item
+        for item in os.listdir(DOCS_PATH)
+        if os.path.isdir(os.path.join(DOCS_PATH, item))
+    ]
+
+    libraries = build_libraries(all_libs)
 
     try:
         with open(INDEX_CACHE_FILE, "w", encoding="utf-8") as f:
