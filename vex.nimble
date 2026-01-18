@@ -1,0 +1,9 @@
+packageName     = "vex"
+version         = "0.1.0"
+author          = "Mihai"
+description     = "Vector & Hex Scene Graph Library"
+license         = "MIT"
+
+requires "vmath >= 0.12.0"
+requires "pixie >= 0.6.0"
+requires "boxy >= 0.4.0"
