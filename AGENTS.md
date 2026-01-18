@@ -238,3 +238,8 @@ bd close <id> --reason="..."      # Complete issue
 - NEVER stop before pushing - that leaves work stranded locally
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
+
+### Git Configuration Rules
+- **NEVER change the git remote URL** - Use `git@github.com:MihaiAnca13/vex-nim.git` (SSH)
+- **NEVER modify `~/.ssh/config`** - SSH authentication is managed externally
+- If push fails with SSH errors, report the issue and stop - do not attempt to fix authentication
