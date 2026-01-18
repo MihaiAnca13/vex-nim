@@ -11,6 +11,8 @@ import ./nodes/sprite
 import ./nodes/text
 import ./nodes/path
 
+import ./layout/alignment
+
 export types
 export transform
 export events
@@ -19,3 +21,4 @@ export primitive
 export sprite
 export text
 export path
+export alignment
