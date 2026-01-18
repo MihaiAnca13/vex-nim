@@ -10,6 +10,7 @@ type
   RenderContext* = ref object
     bxy*: Boxy
     nodeTextures: Table[Node, string]
+    imageCache: Table[string, Image]
     nextNodeId: int
     viewportSize*: Vec2
 
@@ -17,6 +18,7 @@ proc newRenderContext*(viewportSize: Vec2): RenderContext =
   RenderContext(
     bxy: newBoxy(),
     nodeTextures: initTable[Node, string](),
+    imageCache: initTable[string, Image](),
     nextNodeId: 0,
     viewportSize: viewportSize
   )
@@ -28,8 +30,12 @@ proc getImageSize*(ctx: RenderContext, key: string): Vec2 =
   let size = ctx.bxy.getImageSize(key)
   vec2(size.x.float32, size.y.float32)
 
+proc getImage*(ctx: RenderContext, key: string): Image =
+  ctx.imageCache[key]
+
 proc addImage*(ctx: RenderContext, key: string, image: Image) =
   ctx.bxy.addImage(key, image)
+  ctx.imageCache[key] = image
 
 proc drawImage*(ctx: RenderContext, key: string, pos: Vec2, tint: Color = color(1, 1, 1, 1)) =
   ctx.bxy.drawImage(key, pos, tint)
