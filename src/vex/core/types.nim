@@ -21,7 +21,7 @@ type
     name*: string                      ## Optional name for debugging
     size*: Vec2                        ## Node dimensions (used for hit testing)
     zIndex*: int                       ## Rendering order (higher = on top)
-    clipChildren*: bool                ## TODO: Not yet implemented (requires Boxy scissor)
+    clipChildren*: bool                ## When true, children are clipped to parent's bounds
     childrenSorted*: bool              ## True if children are sorted by zIndex
 
 ## RenderContext wraps Boxy with texture caching and scene graph rendering.

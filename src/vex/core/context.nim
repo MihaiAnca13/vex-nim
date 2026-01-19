@@ -13,6 +13,17 @@ import ./events
 type
   RenderContext* = types.RenderContext
 
+## Computes the intersection of two rectangles.
+proc intersect*(a, b: Rect): Rect =
+  let x = max(a.x, b.x)
+  let y = max(a.y, b.y)
+  let w = min(a.x + a.w, b.x + b.w) - x
+  let h = min(a.y + a.h, b.y + b.h) - y
+  if w > 0 and h > 0:
+    Rect(x: x, y: y, w: w, h: h)
+  else:
+    Rect(x: 0, y: 0, w: 0, h: 0)
+
 ## Creates a new RenderContext with the specified viewport size.
 proc newRenderContext*(viewportSize: Vec2): RenderContext =
   RenderContext(
@@ -130,13 +141,32 @@ proc handleEvent*(ctx: RenderContext, root: Node, event: var types.InputEvent): 
 ## Draws a single node and its children.
 ##
 ## Handles culling, texture caching, z-index sorting, and recursive rendering.
-proc drawNode*(ctx: RenderContext, node: Node) =
+## When node.clipChildren is true, children are clipped to the node's bounds.
+proc drawNode*(ctx: RenderContext, node: Node, clipRect: Option[Rect] = none(Rect)) =
   if not node.visible:
     return
 
   let globalBounds = node.getGlobalBounds()
 
   let viewportRect = rect(vec2(0.0'f32, 0.0'f32), ctx.viewportSize)
+
+  var effectiveClip = clipRect
+  if node.clipChildren and node.size.x > 0 and node.size.y > 0:
+    let nodeRect = rect(globalBounds.x, globalBounds.y, globalBounds.w, globalBounds.h)
+    if effectiveClip.isSome:
+      effectiveClip = some(intersect(effectiveClip.get(), nodeRect))
+    else:
+      effectiveClip = some(nodeRect)
+
+  if effectiveClip.isSome:
+    let c = effectiveClip.get()
+    if not (
+      globalBounds.x < c.x + c.w and
+      globalBounds.x + globalBounds.w > c.x and
+      globalBounds.y < c.y + c.h and
+      globalBounds.y + globalBounds.h > c.y
+    ):
+      return
 
   if not (
     globalBounds.x < viewportRect.x + viewportRect.w and
@@ -156,13 +186,13 @@ proc drawNode*(ctx: RenderContext, node: Node) =
     node.childrenSorted = true
 
   for child in node.children:
-    ctx.drawNode(child)
+    ctx.drawNode(child, effectiveClip)
 
 ## Renders the entire scene graph.
 proc draw*(ctx: RenderContext, root: Node) =
   ctx.beginFrame()
   root.updateGlobalTransform()
-  ctx.drawNode(root)
+  ctx.drawNode(root, none(Rect))
   ctx.endFrame()
 
 ## Updates the viewport size.
