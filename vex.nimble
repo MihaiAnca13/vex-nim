@@ -3,8 +3,7 @@ version         = "0.1.0"
 author          = "Mihai"
 description     = "Vector & Hex Scene Graph Library"
 license         = "MIT"
-mainFile        = "src/vex/vex.nim"
-installDirs     = @["src"]
+srcDir          = "src"
 
 requires "vmath >= 0.12.0"
 requires "pixie >= 0.6.0"
