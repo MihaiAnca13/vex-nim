@@ -37,3 +37,4 @@ dist/
 __pycache__
 
 .sprint_states
+.semantic_index.db
