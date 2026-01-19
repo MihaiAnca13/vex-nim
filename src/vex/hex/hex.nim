@@ -5,6 +5,12 @@ import pixie
 import ../core/types
 import ../core/transform
 
+## Hexagonal grid utilities for strategy games and hexagonal layouts.
+##
+## Supports both pointy-topped and flat-topped hex orientations.
+## Uses axial coordinates (q, r) internally with cube coordinate conversions
+## for distance and line calculations.
+
 type
   HexOrientation* = enum
     PointyTopped
@@ -29,15 +35,19 @@ const
   pointyOrientation* = HexOrientation.PointyTopped
   flatOrientation* = HexOrientation.FlatTopped
 
+## Converts axial coordinates to cube coordinates.
+## Cube coordinates use three axes (x, y, z) that sum to zero.
 proc axialToCube*(coord: HexCoord): CubeCoord =
   let x = coord.q
   let z = coord.r
   let y = -x - z
   (x, y, z)
 
+## Converts cube coordinates to axial coordinates.
 proc cubeToAxial*(coord: CubeCoord): HexCoord =
   (coord.x, coord.z)
 
+## Rounds fractional cube coordinates to the nearest integer hex.
 proc cubeRound*(x, y, z: float32): CubeCoord =
   let rx = round(x)
   let ry = round(y)
@@ -54,12 +64,14 @@ proc cubeRound*(x, y, z: float32): CubeCoord =
   else:
     (int(rx), int(ry), int(-rx - ry))
 
+## Rounds fractional axial coordinates to the nearest integer hex.
 proc axialRound*(q, r: float32): HexCoord =
   let x = q
   let z = r
   let y = -x - z
   cubeRound(x, y, z).cubeToAxial()
 
+## Converts hex coordinates to pixel coordinates in screen space.
 proc hexToPixel*(layout: HexLayout, coord: HexCoord): Vec2 =
   let orientation = layout.orientation
   let size = layout.size
@@ -75,6 +87,7 @@ proc hexToPixel*(layout: HexLayout, coord: HexCoord): Vec2 =
 
   vec2(origin.x + x, origin.y + y)
 
+## Converts pixel coordinates to the nearest hex coordinate.
 proc pixelToHex*(layout: HexLayout, pixel: Vec2): HexCoord =
   let orientation = layout.orientation
   let size = layout.size
@@ -92,6 +105,7 @@ proc pixelToHex*(layout: HexLayout, pixel: Vec2): HexCoord =
 
   axialRound(q, r)
 
+## Returns the offset vector for a hex corner relative to the hex center.
 proc hexCornerOffset*(layout: HexLayout, corner: int): Vec2 =
   let size = layout.size
   let orientation = layout.orientation
@@ -104,15 +118,20 @@ const
     (-1, 0), (-1, 1), (0, 1)
   ]
 
+## Returns the neighbor coordinate in the given direction (0-5).
 proc hexNeighbor*(coord: HexCoord, direction: int): HexCoord =
   let d = hexDirections[direction]
   (coord.q + d[0], coord.r + d[1])
 
+## Calculates the distance between two hex coordinates.
+## Returns the number of steps needed to move from a to b.
 proc hexDistance*(a, b: HexCoord): int =
   let ac = a.axialToCube()
   let bc = b.axialToCube()
   (abs(ac.x - bc.x) + abs(ac.y - bc.y) + abs(ac.z - bc.z)) div 2
 
+## Generates a line of hex coordinates between two points.
+## Includes both endpoints. Returns a single hex when a == b.
 proc hexLine*(a, b: HexCoord): seq[HexCoord] =
   let n = a.hexDistance(b)
   if n == 0:
@@ -132,9 +151,11 @@ proc hexLine*(a, b: HexCoord): seq[HexCoord] =
 
   results
 
+## Creates a new hex layout with the specified orientation, size, and origin.
 proc newHexLayout*(orientation: HexOrientation, size, origin: Vec2): HexLayout =
   HexLayout(orientation: orientation, size: size, origin: origin)
 
+## Creates a new hex node at the specified axial coordinates.
 proc newHexNode*(coord: HexCoord, layout: HexLayout): HexNode =
   let pixelPos = layout.hexToPixel(coord)
   let hexSize = layout.size
@@ -168,6 +189,7 @@ proc contains*(node: HexNode, point: Vec2): bool =
     abs(relX * 0.5 + relY * sqrt(3.0'f32) / 2.0) <= r and
     abs(relX * 0.5 - relY * sqrt(3.0'f32) / 2.0) <= r
 
+## Rasterizes the hex node to an image using Pixie.
 proc draw*(node: HexNode, renderCtx: RenderContext, image: Image) =
   let ctx = newContext(image)
   let center = node.size / 2.0
@@ -212,6 +234,7 @@ type
     layout*: HexLayout
     nodes*: Table[HexCoord, HexNode]
 
+## Creates a new empty hex grid with the specified layout.
 proc newHexGrid*(layout: HexLayout): HexGrid =
   HexGrid(
     layout: layout,
@@ -227,6 +250,8 @@ proc newHexGrid*(layout: HexLayout): HexGrid =
     children: @[]
   )
 
+## Adds a hex at the specified coordinate to the grid.
+## Returns the existing hex if one already exists at that coordinate.
 proc addHex*(grid: HexGrid, coord: HexCoord): HexNode =
   if grid.nodes.hasKey(coord):
     return grid.nodes[coord]
@@ -237,6 +262,7 @@ proc addHex*(grid: HexGrid, coord: HexCoord): HexNode =
   grid.markDirty()
   node
 
+## Removes a hex at the specified coordinate from the grid.
 proc removeHex*(grid: HexGrid, coord: HexCoord) =
   if not grid.nodes.hasKey(coord):
     return
@@ -246,17 +272,21 @@ proc removeHex*(grid: HexGrid, coord: HexCoord) =
   grid.nodes.del(coord)
   grid.markDirty()
 
+## Gets the hex node at the specified coordinate, if it exists.
 proc getHex*(grid: HexGrid, coord: HexCoord): Option[HexNode] =
   if grid.nodes.hasKey(coord):
     return some(grid.nodes[coord])
   none(HexNode)
 
+## Finds the hex at the specified pixel position, if one exists.
 proc hexAt*(grid: HexGrid, pixel: Vec2): Option[HexCoord] =
   let coord = grid.layout.pixelToHex(pixel)
   if grid.nodes.hasKey(coord):
     return some(coord)
   none(HexCoord)
 
+## Updates the grid's bounding box based on its children.
+## Call this after adding or removing hexes.
 proc updateGrid*(grid: HexGrid) =
   if grid.children.len == 0:
     grid.size = vec2(0, 0)

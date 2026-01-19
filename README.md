@@ -16,7 +16,7 @@
 
 ## 1. Installation
 
-### From Nimble (Coming Soon)
+### From Nimble
 
 ```bash
 nimble install vex
@@ -68,10 +68,83 @@ window titled "Vex Demo", vec2(800, 600):
     swapBuffers()
 ```
 
+---
+
+## 3. Tutorial: Building Your First Scene
+
+### Step 1: Create a Render Context
+
+The `RenderContext` manages the rendering pipeline and texture cache:
+
+```nim
+let ctx = newRenderContext(vec2(800, 600))
+```
+
+### Step 2: Build a Scene Graph
+
+Vex uses a tree of `Node` objects. Every visual element is a node:
+
+```nim
+let root = newNode()
+
+# Create shapes
+let redRect = newRectNode(vec2(200, 100))
+redRect.fill = some(color(0.9, 0.2, 0.2, 1))
+redRect.localPos = vec2(50, 50)
+root.addChild(redRect)
+
+let blueCircle = newCircleNode(vec2(80, 80))
+blueCircle.fill = some(color(0.2, 0.6, 0.9, 1))
+blueCircle.localPos = vec2(300, 60)
+root.addChild(blueCircle)
+```
+
+### Step 3: Use Layout Containers
+
+HBox and VBox automatically position children:
+
+```nim
+let hbox = newHBox(spacing = 8, padding = 16)
+hbox.addItem(newRectNode(vec2(50, 50)))
+hbox.addItem(newRectNode(vec2(50, 50)))
+hbox.update(ctx)  # IMPORTANT: Call update() after adding items
+root.addChild(hbox)
+```
+
+The `update(ctx)` call is required after adding items to layout containers.
+It measures text nodes and calculates the container's size.
+
+### Step 4: Render the Scene
+
+Call `ctx.draw(root)` each frame:
+
+```nim
+window titled "My App", vec2(800, 600):
+  while true:
+    pollEvents()
+    ctx.resize(vec2(800, 600))
+    ctx.beginFrame()
+    ctx.draw(root)
+    ctx.endFrame()
+    swapBuffers()
+```
+
+### Step 5: Handle Input
+
+Use `hitTest` to find which node was clicked:
+
+```nim
+for event in events():
+  if event.kind == MouseButtonDown:
+    let hit = hitTest(root, event.pos)
+    if hit.isSome:
+      echo "Clicked: ", hit.get().node.name
+      hit.get().node.markDirty()  # Re-render on state change
+```
 
 ---
 
-## 3. Core Concepts
+## 4. Core Concepts
 
 ### The Node Tree
 
@@ -117,19 +190,13 @@ Boxy → GPU → Screen
 
 ### Layout Containers
 
-HBox and VBox automatically position children:
-
-```nim
-let hbox = newHBox(spacing = 8, padding = 16)
-hbox.addItem(newRectNode(vec2(50, 50)))
-hbox.addItem(newRectNode(vec2(50, 50)))
-hbox.update(ctx)  # Pass RenderContext for TextNode测量
-```
+Layout containers (HBox, VBox) automatically position their children.
+See the **Tutorial** section above for usage instructions.
 
 
 ---
 
-## 4. Project Overview
+## 5. Project Overview
 
 Vex is a high-performance 2D scene graph library designed for the "Treeform" stack (Windy/Boxy/Pixie). It bridges the gap between **Pixie** (high-quality CPU vector drawing) and **Boxy** (fast GPU texture rendering).
 
@@ -154,7 +221,7 @@ Vex is a high-performance 2D scene graph library designed for the "Treeform" sta
 
 ---
 
-## 5. Directory Structure
+## 6. Directory Structure
 
 ```text
 src/vex/
