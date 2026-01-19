@@ -142,11 +142,10 @@ proc computeGlobalTransform*(node: Node): Mat3 =
   else:
     local
 
-## Updates globalTransform for the node and all descendants.
+## Updates globalTransform for the node only (parent-to-child propagation
+## ensures children are updated correctly when called from root once).
 proc updateGlobalTransform*(node: Node) =
   node.globalTransform = node.computeGlobalTransform()
-  for child in node.children:
-    child.updateGlobalTransform()
 
 ## Marks the node as dirty, requiring re-rasterization.
 proc markDirty*(node: Node) =

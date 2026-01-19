@@ -134,8 +134,6 @@ proc drawNode*(ctx: RenderContext, node: Node) =
   if not node.visible:
     return
 
-  node.updateGlobalTransform()
-
   let globalBounds = node.getGlobalBounds()
 
   let viewportRect = rect(vec2(0.0'f32, 0.0'f32), ctx.viewportSize)
@@ -163,6 +161,7 @@ proc drawNode*(ctx: RenderContext, node: Node) =
 ## Renders the entire scene graph.
 proc draw*(ctx: RenderContext, root: Node) =
   ctx.beginFrame()
+  root.updateGlobalTransform()
   ctx.drawNode(root)
   ctx.endFrame()
 
