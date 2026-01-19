@@ -9,9 +9,11 @@ import ./types
 import ./transform
 import ./events
 
+## RenderContext re-export for convenience.
 type
   RenderContext* = types.RenderContext
 
+## Creates a new RenderContext with the specified viewport size.
 proc newRenderContext*(viewportSize: Vec2): RenderContext =
   RenderContext(
     bxy: newBoxy(),
@@ -22,16 +24,24 @@ proc newRenderContext*(viewportSize: Vec2): RenderContext =
     viewportSize: viewportSize
   )
 
+## Checks if a texture with the given key exists.
 proc contains*(ctx: RenderContext, key: string): bool =
   ctx.bxy.contains(key)
 
+## Returns the size of an image by key.
 proc getImageSize*(ctx: RenderContext, key: string): Vec2 =
   let size = ctx.bxy.getImageSize(key)
   vec2(size.x.float32, size.y.float32)
 
+## Returns a cached image by key.
+##
+## Raises KeyError if key not found.
 proc getImage*(ctx: RenderContext, key: string): Image =
   ctx.imageCache[key]
 
+## Returns a font, reading from disk if not cached.
+##
+## Fonts are cached after first load for performance.
 proc getFont*(ctx: RenderContext, path: string): Font =
   if ctx.fontCache.hasKey(path):
     return ctx.fontCache[path]
@@ -39,25 +49,35 @@ proc getFont*(ctx: RenderContext, path: string): Font =
   ctx.fontCache[path] = font
   font
 
+## Adds an image to the context cache and Boxy atlas.
 proc addImage*(ctx: RenderContext, key: string, image: Image) =
   ctx.bxy.addImage(key, image)
   ctx.imageCache[key] = image
 
+## Draws a cached image at the specified position.
 proc drawImage*(ctx: RenderContext, key: string, pos: Vec2, tint: Color = color(1, 1, 1, 1)) =
   ctx.bxy.drawImage(key, pos, tint)
 
+## Begins a new frame with the specified viewport size.
 proc beginFrame*(ctx: RenderContext) =
   ctx.bxy.beginFrame(ctx.viewportSize.ivec2)
 
+## Ends the current frame.
 proc endFrame*(ctx: RenderContext) =
   ctx.bxy.endFrame()
 
+## Rasterizes a node to an Image using Pixie.
+##
+## Creates a transparent image and calls node.draw() on it.
 proc rasterizeNode*(ctx: RenderContext, node: Node): Image =
   let image = newImage(node.size.x.int, node.size.y.int)
   image.fill(rgba(0, 0, 0, 0))
   types.draw(node, ctx, image)
   image
 
+## Ensures a node has a cached texture, rasterizing if dirty.
+##
+## Returns the texture key for the node.
 proc cacheTexture*(ctx: RenderContext, node: Node): string =
   if node.dirty:
     let key = "node_" & $ctx.nextNodeId
@@ -82,18 +102,23 @@ proc cacheTexture*(ctx: RenderContext, node: Node): string =
   ctx.nodeTextures[node] = key
   key
 
+## Removes a node's cached texture from Boxy and the cache.
 proc uncacheNode*(ctx: RenderContext, node: Node) =
   if ctx.nodeTextures.hasKey(node):
     let key = ctx.nodeTextures[node]
     ctx.bxy.removeImage(key)
     ctx.nodeTextures.del(node)
 
+## Clears all cached textures.
 proc invalidateNodeCache*(ctx: RenderContext, node: Node) =
   for n, key in ctx.nodeTextures:
     ctx.bxy.removeImage(key)
   ctx.nodeTextures.clear()
   ctx.nextNodeId = 0
 
+## Handles an input event by performing hit testing and dispatch.
+##
+## Returns true if an event handler consumed the event.
 proc handleEvent*(ctx: RenderContext, root: Node, event: var types.InputEvent): bool =
   let hitResult = hitTest(root, event.position)
   if hitResult.isSome:
@@ -102,6 +127,9 @@ proc handleEvent*(ctx: RenderContext, root: Node, event: var types.InputEvent): 
     return true
   false
 
+## Draws a single node and its children.
+##
+## Handles culling, texture caching, z-index sorting, and recursive rendering.
 proc drawNode*(ctx: RenderContext, node: Node) =
   if not node.visible:
     return
@@ -125,18 +153,23 @@ proc drawNode*(ctx: RenderContext, node: Node) =
 
   ctx.bxy.drawImage(key, pos)
 
-  node.children = sorted(node.children, proc(a, b: Node): int = a.zIndex - b.zIndex)
+  if not node.childrenSorted:
+    node.children.sort(proc(a, b: Node): int = a.zIndex - b.zIndex)
+    node.childrenSorted = true
 
   for child in node.children:
     ctx.drawNode(child)
 
+## Renders the entire scene graph.
 proc draw*(ctx: RenderContext, root: Node) =
   ctx.beginFrame()
   ctx.drawNode(root)
   ctx.endFrame()
 
+## Updates the viewport size.
 proc resize*(ctx: RenderContext, newSize: Vec2) =
   ctx.viewportSize = newSize
 
+## Reads the current atlas as an image.
 proc readAtlas*(ctx: RenderContext): Image =
   ctx.bxy.readAtlas()

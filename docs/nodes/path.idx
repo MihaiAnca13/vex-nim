@@ -1,0 +1,6 @@
+nimTitle	path	nodes/path.html	module src/vex/nodes/path		0
+nim	PathNode	nodes/path.html#PathNode	type PathNode		8
+nim	newPathNode	nodes/path.html#newPathNode,string	proc newPathNode(pathData: string): PathNode		16
+nim	newHexNode	nodes/path.html#newHexNode,float32	proc newHexNode(radius: float32): PathNode		27
+nim	contains	nodes/path.html#contains,PathNode,Vec2	proc contains(node: PathNode; point: Vec2): bool		51
+nim	draw	nodes/path.html#draw.e,PathNode,RenderContext,Image	method draw(node: PathNode; renderCtx: RenderContext; image: Image)		56

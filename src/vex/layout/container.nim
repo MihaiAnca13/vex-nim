@@ -49,11 +49,10 @@ proc addItem*(vbox: VBox, child: Node) =
   vbox.addChild(child)
   vbox.markDirty()
 
-proc update*(hbox: HBox, ctx: types.RenderContext = nil) =
+proc update*(hbox: HBox, ctx: types.RenderContext) =
   for child in hbox.children:
     when child is TextNode:
-      if ctx != nil:
-        child.measure(ctx)
+      child.measure(ctx)
 
   if hbox.children.len == 0:
     hbox.size = vec2(hbox.padding * 2, hbox.padding * 2)
@@ -74,11 +73,10 @@ proc update*(hbox: HBox, ctx: types.RenderContext = nil) =
   hbox.size = vec2(x + hbox.padding, maxHeight + hbox.padding * 2)
   hbox.markDirty()
 
-proc update*(vbox: VBox, ctx: types.RenderContext = nil) =
+proc update*(vbox: VBox, ctx: types.RenderContext) =
   for child in vbox.children:
     when child is TextNode:
-      if ctx != nil:
-        child.measure(ctx)
+      child.measure(ctx)
 
   if vbox.children.len == 0:
     vbox.size = vec2(vbox.padding * 2, vbox.padding * 2)

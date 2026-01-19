@@ -1,0 +1,32 @@
+nimTitle	hex	hex/hex.html	module src/vex/hex/hex		0
+nim	PointyTopped	hex/hex.html#PointyTopped	HexOrientation.PointyTopped		9
+nim	FlatTopped	hex/hex.html#FlatTopped	HexOrientation.FlatTopped		9
+nim	HexOrientation	hex/hex.html#HexOrientation	enum HexOrientation		9
+nim	HexCoord	hex/hex.html#HexCoord	tuple HexCoord		13
+nim	CubeCoord	hex/hex.html#CubeCoord	tuple CubeCoord		14
+nim	HexLayout	hex/hex.html#HexLayout	type HexLayout		16
+nim	HexNode	hex/hex.html#HexNode	type HexNode		21
+nim	pointyOrientation	hex/hex.html#pointyOrientation	const pointyOrientation		29
+nim	flatOrientation	hex/hex.html#flatOrientation	const flatOrientation		30
+nim	axialToCube	hex/hex.html#axialToCube,HexCoord	proc axialToCube(coord: HexCoord): CubeCoord		32
+nim	cubeToAxial	hex/hex.html#cubeToAxial,CubeCoord	proc cubeToAxial(coord: CubeCoord): HexCoord		38
+nim	cubeRound	hex/hex.html#cubeRound,float32,float32,float32	proc cubeRound(x, y, z: float32): CubeCoord		41
+nim	axialRound	hex/hex.html#axialRound,float32,float32	proc axialRound(q, r: float32): HexCoord		57
+nim	hexToPixel	hex/hex.html#hexToPixel,HexLayout,HexCoord	proc hexToPixel(layout: HexLayout; coord: HexCoord): Vec2		63
+nim	pixelToHex	hex/hex.html#pixelToHex,HexLayout,Vec2	proc pixelToHex(layout: HexLayout; pixel: Vec2): HexCoord		78
+nim	hexCornerOffset	hex/hex.html#hexCornerOffset,HexLayout,int	proc hexCornerOffset(layout: HexLayout; corner: int): Vec2		95
+nim	hexDirections	hex/hex.html#hexDirections	const hexDirections		102
+nim	hexNeighbor	hex/hex.html#hexNeighbor,HexCoord,int	proc hexNeighbor(coord: HexCoord; direction: int): HexCoord		107
+nim	hexDistance	hex/hex.html#hexDistance,HexCoord,HexCoord	proc hexDistance(a, b: HexCoord): int		111
+nim	hexLine	hex/hex.html#hexLine,HexCoord,HexCoord	proc hexLine(a, b: HexCoord): seq[HexCoord]		116
+nim	newHexLayout	hex/hex.html#newHexLayout,HexOrientation,Vec2,Vec2	proc newHexLayout(orientation: HexOrientation; size, origin: Vec2): HexLayout		135
+nim	newHexNode	hex/hex.html#newHexNode,HexCoord,HexLayout	proc newHexNode(coord: HexCoord; layout: HexLayout): HexNode		138
+nim	contains	hex/hex.html#contains,HexNode,Vec2	proc contains(node: HexNode; point: Vec2): bool		158
+nim	draw	hex/hex.html#draw,HexNode,RenderContext,Image	proc draw(node: HexNode; renderCtx: RenderContext; image: Image)		171
+nim	HexGrid	hex/hex.html#HexGrid	type HexGrid		211
+nim	newHexGrid	hex/hex.html#newHexGrid,HexLayout	proc newHexGrid(layout: HexLayout): HexGrid		215
+nim	addHex	hex/hex.html#addHex,HexGrid,HexCoord	proc addHex(grid: HexGrid; coord: HexCoord): HexNode		230
+nim	removeHex	hex/hex.html#removeHex,HexGrid,HexCoord	proc removeHex(grid: HexGrid; coord: HexCoord)		240
+nim	getHex	hex/hex.html#getHex,HexGrid,HexCoord	proc getHex(grid: HexGrid; coord: HexCoord): Option[HexNode]		249
+nim	hexAt	hex/hex.html#hexAt,HexGrid,Vec2	proc hexAt(grid: HexGrid; pixel: Vec2): Option[HexCoord]		254
+nim	updateGrid	hex/hex.html#updateGrid,HexGrid	proc updateGrid(grid: HexGrid)		260

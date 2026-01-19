@@ -1,0 +1,34 @@
+nimTitle	types	core/types.html	module src/vex/core/types		0
+nim	RenderContext	core/types.html#RenderContext	type RenderContext		7
+nim	Node	core/types.html#Node	type Node		15
+nim	EventMouseDown	core/types.html#EventMouseDown	EventType.EventMouseDown		28
+nim	EventMouseUp	core/types.html#EventMouseUp	EventType.EventMouseUp		28
+nim	EventMouseMove	core/types.html#EventMouseMove	EventType.EventMouseMove		28
+nim	EventKeyDown	core/types.html#EventKeyDown	EventType.EventKeyDown		28
+nim	EventKeyUp	core/types.html#EventKeyUp	EventType.EventKeyUp		28
+nim	EventType	core/types.html#EventType	enum EventType		28
+nim	ModShift	core/types.html#ModShift	ModifierKey.ModShift		35
+nim	ModCtrl	core/types.html#ModCtrl	ModifierKey.ModCtrl		35
+nim	ModAlt	core/types.html#ModAlt	ModifierKey.ModAlt		35
+nim	ModMeta	core/types.html#ModMeta	ModifierKey.ModMeta		35
+nim	ModifierKey	core/types.html#ModifierKey	enum ModifierKey		35
+nim	InputEvent	core/types.html#InputEvent	object InputEvent		41
+nim	StackItem	core/types.html#StackItem	tuple StackItem		47
+nim	defaultPadding	core/types.html#defaultPadding	const defaultPadding		50
+nim	identityTransform	core/types.html#identityTransform	const identityTransform		51
+nim	newNode	core/types.html#newNode	proc newNode(): Node		57
+nim	markDirty	core/types.html#markDirty,Node	proc markDirty(node: Node)		71
+nim	addChild	core/types.html#addChild,Node,Node	proc addChild(parent: Node; child: Node)		73
+nim	removeChild	core/types.html#removeChild,Node,Node	proc removeChild(parent: Node; child: Node)		81
+nim	isAncestorOf	core/types.html#isAncestorOf,Node,Node	proc isAncestorOf(ancestor, node: Node): bool		88
+nim	computeLocalTransform	core/types.html#computeLocalTransform,Node	proc computeLocalTransform(node: Node): Mat3		96
+nim	computeGlobalTransform	core/types.html#computeGlobalTransform,Node	proc computeGlobalTransform(node: Node): Mat3		102
+nim	updateGlobalTransform	core/types.html#updateGlobalTransform,Node	proc updateGlobalTransform(node: Node)		109
+nim	markDirtyUp	core/types.html#markDirtyUp,Node	proc markDirtyUp(node: Node)		118
+nim	markDirtyDown	core/types.html#markDirtyDown,Node	proc markDirtyDown(node: Node)		123
+nim	contains	core/types.html#contains,Node,Vec2	proc contains(node: Node; point: Vec2): bool		128
+nim	draw	core/types.html#draw.e,Node,RenderContext,Image	method draw(node: Node; ctx: RenderContext; image: Image)		133
+nim	findChildByName	core/types.html#findChildByName,Node,string	proc findChildByName(node: Node; name: string): Option[Node]		136
+nim	traverse	core/types.html#traverse.i,Node	iterator traverse(node: Node): Node		145
+nim	traversePostOrder	core/types.html#traversePostOrder.i,Node	iterator traversePostOrder(node: Node): Node		153
+nim	hash	core/types.html#hash,Node	proc hash(node: Node): Hash		167

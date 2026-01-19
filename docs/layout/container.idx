@@ -1,0 +1,11 @@
+nimTitle	container	layout/container.html	module src/vex/layout/container		0
+nim	HBox	layout/container.html#HBox	type HBox		6
+nim	VBox	layout/container.html#VBox	type VBox		10
+nim	newHBox	layout/container.html#newHBox,float32,float32	proc newHBox(spacing: float32 = 4.0; padding: float32 = 4.0): HBox		14
+nim	newVBox	layout/container.html#newVBox,float32,float32	proc newVBox(spacing: float32 = 4.0; padding: float32 = 4.0): VBox		29
+nim	addItem	layout/container.html#addItem,HBox,Node	proc addItem(hbox: HBox; child: Node)		44
+nim	addItem	layout/container.html#addItem,VBox,Node	proc addItem(vbox: VBox; child: Node)		48
+nim	update	layout/container.html#update,HBox,ref RenderContext:ObjectType	proc update(hbox: HBox; ctx: types.RenderContext = nil)		52
+nim	update	layout/container.html#update,VBox,ref RenderContext:ObjectType	proc update(vbox: VBox; ctx: types.RenderContext = nil)		77
+nimgrp	update	layout/container.html#update-procs-all	proc		52
+nimgrp	additem	layout/container.html#addItem-procs-all	proc		44

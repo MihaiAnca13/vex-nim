@@ -1,0 +1,20 @@
+nimTitle	context	core/context.html	module src/vex/core/context		0
+nim	RenderContext	core/context.html#RenderContext	type RenderContext		13
+nim	newRenderContext	core/context.html#newRenderContext,Vec2	proc newRenderContext(viewportSize: Vec2): RenderContext		15
+nim	contains	core/context.html#contains,RenderContext,string	proc contains(ctx: RenderContext; key: string): bool		25
+nim	getImageSize	core/context.html#getImageSize,RenderContext,string	proc getImageSize(ctx: RenderContext; key: string): Vec2		28
+nim	getImage	core/context.html#getImage,RenderContext,string	proc getImage(ctx: RenderContext; key: string): Image		32
+nim	getFont	core/context.html#getFont,RenderContext,string	proc getFont(ctx: RenderContext; path: string): Font		35
+nim	addImage	core/context.html#addImage,RenderContext,string,Image	proc addImage(ctx: RenderContext; key: string; image: Image)		42
+nim	drawImage	core/context.html#drawImage,RenderContext,string,Vec2,Color	proc drawImage(ctx: RenderContext; key: string; pos: Vec2;\n          tint: Color = color(1, 1, 1, 1))		46
+nim	beginFrame	core/context.html#beginFrame,RenderContext	proc beginFrame(ctx: RenderContext)		49
+nim	endFrame	core/context.html#endFrame,RenderContext	proc endFrame(ctx: RenderContext)		52
+nim	rasterizeNode	core/context.html#rasterizeNode,RenderContext,Node	proc rasterizeNode(ctx: RenderContext; node: Node): Image		55
+nim	cacheTexture	core/context.html#cacheTexture,RenderContext,Node	proc cacheTexture(ctx: RenderContext; node: Node): string		61
+nim	uncacheNode	core/context.html#uncacheNode,RenderContext,Node	proc uncacheNode(ctx: RenderContext; node: Node)		85
+nim	invalidateNodeCache	core/context.html#invalidateNodeCache,RenderContext,Node	proc invalidateNodeCache(ctx: RenderContext; node: Node)		91
+nim	handleEvent	core/context.html#handleEvent,RenderContext,Node,	proc handleEvent(ctx: RenderContext; root: Node; event: var types.InputEvent): bool		97
+nim	drawNode	core/context.html#drawNode,RenderContext,Node	proc drawNode(ctx: RenderContext; node: Node)		105
+nim	draw	core/context.html#draw,RenderContext,Node	proc draw(ctx: RenderContext; root: Node)		133
+nim	resize	core/context.html#resize,RenderContext,Vec2	proc resize(ctx: RenderContext; newSize: Vec2)		138
+nim	readAtlas	core/context.html#readAtlas,RenderContext	proc readAtlas(ctx: RenderContext): Image		141
