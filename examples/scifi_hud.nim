@@ -16,12 +16,6 @@ type MapData = object
   biomes: Table[string, string] # hex color strings
   tiles: seq[tuple[q, r: int, `type`: string]]
 
-proc solidPaint(color: Color, opacity: float32 = 1.0): Paint =
-  let paint = newPaint(SolidPaint)
-  paint.color = color
-  paint.opacity = opacity
-  paint
-
 let jsonNode = parseFile("examples/assets/map_data.json")
 let mapData = jsonNode.to(MapData)
 
@@ -44,7 +38,7 @@ root.size = WindowSize.vec2
 
 # 1. Background Layer (Starfield simulation)
 let bg = newRectNode(WindowSize.vec2)
-bg.fill = some(solidPaint(parseHtmlColor("#1a1a2e"))) # Dark Navy
+bg.fill = some(solidPaint(hex"#1a1a2e")) # Using new hex macro and solidPaint
 root.addChild(bg)
 
 # 2. Hex Map Container (Centered)
@@ -58,18 +52,17 @@ for tile in mapData.tiles:
   
   # Style based on JSON biome
   let colorHex = mapData.biomes[tile.`type`]
-  hexNode.fill = some(solidPaint(parseHtmlColor(colorHex)))
-  hexNode.stroke = some(solidPaint(parseHtmlColor("#4ecca3"))) # Neon Green Borders
+  hexNode.fill = some(solidPaint(hex(colorHex)))
+  hexNode.stroke = some(solidPaint(hex"#4ecca3"))
   hexNode.strokeWidth = 2.0
 
   # Add Unit Sprite to the Base
   if tile.`type` == "base":
     let unit = newSpriteNode("enemyRed", vec2(48, 48))
-    # Center sprite in hex (HexNode size is roughly size * 2)
     unit.localPos = hexNode.size / 2 - unit.size / 2 
     hexNode.addChild(unit)
 
-hexGrid.updateGrid() # Recalculate bounds
+hexGrid.updateGrid()
 
 let gridRoot = newNode()
 gridRoot.localPos = WindowSize.vec2 / 2
@@ -85,7 +78,7 @@ root.addChild(ship2)
 
 # 4. UI Layer (HUD)
 let uiRoot = newRectNode(WindowSize.vec2)
-uiRoot.fill = none(Paint) # Transparent container
+uiRoot.fill = none(Paint)
 root.addChild(uiRoot)
 
 # -- Side Panel (VBox) --
@@ -93,24 +86,23 @@ let panel = newVBox(spacing = 10, padding = 20)
 panel.localPos = vec2(20, 20)
 
 # Title
-let title = newTextNode(mapData.name.toUpperAscii(), FontPath, 28, parseHtmlColor("#e94560"))
+let title = newTextNode(mapData.name.toUpperAscii(), FontPath, 28, hex"#e94560")
 panel.addItem(title)
 
 # Stats Block
 let stats = newVBox(spacing = 5, padding = 0)
 stats.addItem(newTextNode("DIFFICULTY: " & mapData.difficulty.toUpperAscii(), FontPath, 14, color(1,1,1,0.8)))
 stats.addItem(newTextNode("ACTIVE UNITS: 2", FontPath, 14, color(1,1,1,0.8)))
-stats.addItem(newTextNode("STATUS: ONLINE", FontPath, 14, parseHtmlColor("#4ecca3")))
+stats.addItem(newTextNode("STATUS: ONLINE", FontPath, 14, hex"#4ecca3"))
 panel.addItem(stats)
 
-# Layout Update
-panel.update(ctx) # Calculates size based on text
-panel.size = vec2(300, panel.size.y) # Force width to 300
+# Layout Update with new withSize helper
+discard panel.withSize(300, 0) # Auto height, fixed width
 
 let panelBg = newRectNode(panel.size)
 panelBg.localPos = panel.localPos
-panelBg.fill = some(solidPaint(parseHtmlColor("#16213e"), 200.0 / 255.0)) # Semi-transparent
-panelBg.stroke = some(solidPaint(parseHtmlColor("#e94560")))
+panelBg.fill = some(solidPaint(hex"#16213e", 200.0 / 255.0))
+panelBg.stroke = some(solidPaint(hex"#e94560"))
 panelBg.strokeWidth = 2
 panelBg.cornerRadius = 10
 uiRoot.addChild(panelBg)

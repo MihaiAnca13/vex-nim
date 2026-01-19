@@ -119,3 +119,13 @@ proc update*(vbox: VBox, ctx: types.RenderContext = nil) =
 
 method measure*(vbox: VBox, ctx: types.RenderContext) =
   vbox.update(ctx)
+
+proc withSize*(hbox: HBox, width, height: float32): HBox =
+  hbox.update()
+  hbox.size = vec2(width, height)
+  hbox
+
+proc withSize*(vbox: VBox, width, height: float32): VBox =
+  vbox.update()
+  vbox.size = vec2(width, height)
+  vbox

@@ -179,6 +179,10 @@ method draw*(node: Node, ctx: RenderContext, image: Image) {.base.} =
 method measure*(node: Node, ctx: RenderContext) {.base.} =
   discard
 
+## Centers the node within the given bounds.
+proc centerIn*(node: Node, bounds: Vec2) =
+  node.localPos = bounds / 2 - node.size / 2
+
 ## Finds a child node by name (recursive search).
 proc findChildByName*(node: Node, name: string): Option[Node] =
   for child in node.children:

@@ -5,6 +5,7 @@ import ./core/types
 import ./core/transform
 import ./core/events
 import ./core/context
+import ./core/colors
 
 import ./nodes/primitive
 import ./nodes/sprite
@@ -19,6 +20,7 @@ export types
 export transform
 export events
 export context
+export colors
 export primitive.RectNode, primitive.CircleNode
 export primitive.newRectNode, primitive.newCircleNode
 export sprite.SpriteNode
@@ -30,7 +32,7 @@ export path.newPathNode
 export alignment.Anchor, alignment.Pivot
 export container.HBox, container.VBox
 export container.newHBox, container.newVBox
-export container.addItem, container.update
+export container.addItem, container.update, container.withSize
 export hex.HexOrientation, hex.pointyOrientation, hex.flatOrientation
 export hex.newHexLayout, hex.newHexGrid
 export hex.addHex, hex.removeHex, hex.getHex, hex.hexAt, hex.updateGrid
