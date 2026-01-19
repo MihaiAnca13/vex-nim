@@ -47,6 +47,35 @@ proc getGlobalBounds*(node: Node): Rect =
   let localRect = Rect(x: 0, y: 0, w: node.size.x, h: node.size.y)
   node.globalTransform.transformRect(localRect)
 
+proc getLocalBounds*(node: Node): Rect =
+  if node.children.len == 0:
+    return Rect(x: 0, y: 0, w: 0, h: 0)
+
+  var minX = Inf
+  var minY = Inf
+  var maxX = -Inf
+  var maxY = -Inf
+
+  for child in node.children:
+    if not child.visible:
+      continue
+    let localMat = child.computeLocalTransform()
+    let childRect = Rect(x: 0, y: 0, w: child.size.x, h: child.size.y)
+    let bounds = localMat.transformRect(childRect)
+    minX = min(minX, bounds.x)
+    minY = min(minY, bounds.y)
+    maxX = max(maxX, bounds.x + bounds.w)
+    maxY = max(maxY, bounds.y + bounds.h)
+
+  if minX == Inf:
+    Rect(x: 0, y: 0, w: 0, h: 0)
+  else:
+    Rect(x: minX, y: minY, w: maxX - minX, h: maxY - minY)
+
+proc getLocalBoundsCenter*(node: Node): Vec2 =
+  let bounds = node.getLocalBounds()
+  vec2(bounds.x + bounds.w / 2, bounds.y + bounds.h / 2)
+
 ## Extracts the world position (translation) from a node's global transform.
 proc getWorldPosition*(node: Node): Vec2 =
   let t = node.globalTransform

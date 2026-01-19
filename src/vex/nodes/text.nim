@@ -82,12 +82,17 @@ method draw*(node: TextNode, renderCtx: types.RenderContext, image: Image) =
     font.size = node.fontSize
     font.paint.color = node.color
 
-    let bounds = if node.maxWidth > 0: vec2(node.maxWidth, node.size.y) else: vec2(node.size.x, node.size.y)
+    let bounds = if node.maxWidth > 0:
+      vec2(node.maxWidth, node.size.y)
+    else:
+      vec2(Inf.float32, Inf.float32)
     let arrangement = font.typeset(node.text, bounds)
 
     let layout = arrangement.layoutBounds()
     let textWidth = layout.x
     let textHeight = layout.y
+    if node.size.x == 0 or node.size.y == 0:
+      node.size = vec2(textWidth, textHeight)
 
     let xOffset = case node.horizontalAlign
       of AlignLeft: 0.0

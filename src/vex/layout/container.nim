@@ -86,6 +86,9 @@ proc update*(hbox: HBox, ctx: types.RenderContext = nil) =
   hbox.size = vec2(x + hbox.padding, maxHeight + hbox.padding * 2)
   hbox.markDirty()
 
+method measure*(hbox: HBox, ctx: types.RenderContext) =
+  hbox.update(ctx)
+
 ## Recalculates the VBox layout.
 ##
 ## This must be called after adding items to measure TextNodes and
@@ -113,3 +116,6 @@ proc update*(vbox: VBox, ctx: types.RenderContext = nil) =
 
   vbox.size = vec2(maxWidth + vbox.padding * 2, y + vbox.padding)
   vbox.markDirty()
+
+method measure*(vbox: VBox, ctx: types.RenderContext) =
+  vbox.update(ctx)

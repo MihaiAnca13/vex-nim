@@ -1,4 +1,4 @@
-import std/[json, options, tables]
+import std/[json, options, strutils, tables]
 import vex, windy, opengl, vmath, pixie
 
 # --- Configuration ---
@@ -7,6 +7,7 @@ const
   HexSize = vec2(40, 40)
   FontPath = "examples/assets/Orbitron.ttf"
   UnitPath = "examples/assets/enemyRed.png"
+  UnitBluePath = "examples/assets/enemyBlue.png"
 
 # --- Load External Data ---
 type MapData = object
@@ -35,6 +36,7 @@ let ctx = newRenderContext(WindowSize.vec2)
 # Load Resources
 ctx.getFont(FontPath).size = 20
 ctx.addImage("enemyRed", readImage(UnitPath))
+ctx.addImage("enemyBlue", readImage(UnitBluePath))
 
 # --- Scene Construction ---
 let root = newNode()
@@ -48,8 +50,6 @@ root.addChild(bg)
 # 2. Hex Map Container (Centered)
 let gridLayout = newHexLayout(pointyOrientation, HexSize, vec2(0,0))
 let hexGrid = newHexGrid(gridLayout)
-hexGrid.localPos = WindowSize.vec2 / 2
-root.addChild(hexGrid)
 
 # Populate Grid from JSON
 for tile in mapData.tiles:
@@ -71,7 +71,19 @@ for tile in mapData.tiles:
 
 hexGrid.updateGrid() # Recalculate bounds
 
-# 3. UI Layer (HUD)
+let gridRoot = newNode()
+gridRoot.localPos = WindowSize.vec2 / 2
+root.addChild(gridRoot)
+
+hexGrid.localPos = -hexGrid.getLocalBoundsCenter()
+gridRoot.addChild(hexGrid)
+
+# 3. Ship (Image swap demo)
+let ship2 = newSpriteNode("enemyRed", vec2(48, 48))
+ship2.localPos = vec2(WindowSize.x.float32 - 140, 120)
+root.addChild(ship2)
+
+# 4. UI Layer (HUD)
 let uiRoot = newRectNode(WindowSize.vec2)
 uiRoot.fill = none(Paint) # Transparent container
 root.addChild(uiRoot)
@@ -81,13 +93,13 @@ let panel = newVBox(spacing = 10, padding = 20)
 panel.localPos = vec2(20, 20)
 
 # Title
-let title = newTextNode(mapData.name, FontPath, 28, parseHtmlColor("#e94560"))
+let title = newTextNode(mapData.name.toUpperAscii(), FontPath, 28, parseHtmlColor("#e94560"))
 panel.addItem(title)
 
 # Stats Block
 let stats = newVBox(spacing = 5, padding = 0)
-stats.addItem(newTextNode("DIFFICULTY: " & mapData.difficulty, FontPath, 14, color(1,1,1,0.8)))
-stats.addItem(newTextNode("ACTIVE UNITS: 1", FontPath, 14, color(1,1,1,0.8)))
+stats.addItem(newTextNode("DIFFICULTY: " & mapData.difficulty.toUpperAscii(), FontPath, 14, color(1,1,1,0.8)))
+stats.addItem(newTextNode("ACTIVE UNITS: 2", FontPath, 14, color(1,1,1,0.8)))
 stats.addItem(newTextNode("STATUS: ONLINE", FontPath, 14, parseHtmlColor("#4ecca3")))
 panel.addItem(stats)
 
@@ -105,10 +117,22 @@ uiRoot.addChild(panelBg)
 uiRoot.addChild(panel)
 
 # --- Main Loop ---
+var swapTimer = 0.0
+var ship2IsBlue = false
+
 window.onFrame = proc() =
+  let dt = 1.0 / 60.0
+  swapTimer += dt
+
   # Animate the grid slightly (Rotate)
-  hexGrid.localRotation += 0.001
-  # hexGrid.markDirty() # Important: Mark dirty to re-rasterize rotation
+  gridRoot.localRotation += 0.001
+  # No markDirty needed for transform-only changes
+
+  if swapTimer > 1.0:
+    swapTimer = 0.0
+    ship2IsBlue = not ship2IsBlue
+    ship2.imageKey = if ship2IsBlue: "enemyBlue" else: "enemyRed"
+    ship2.markDirty() # Content change: image key swap needs re-rasterization
 
   # Draw
   ctx.draw(root)
