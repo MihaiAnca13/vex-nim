@@ -20,9 +20,17 @@ export transform
 export events
 export context
 export primitive.RectNode, primitive.CircleNode
+export primitive.newRectNode, primitive.newCircleNode
 export sprite.SpriteNode
+export sprite.newSpriteNode, sprite.newSpriteNodeWithSlice
 export text.TextNode, text.HorizontalAlign, text.VerticalAlign
+export text.newTextNode
 export path.PathNode
+export path.newPathNode
 export alignment.Anchor, alignment.Pivot
 export container.HBox, container.VBox
+export container.newHBox, container.newVBox
+export container.addItem, container.update
 export hex.HexOrientation, hex.pointyOrientation, hex.flatOrientation
+export hex.newHexLayout, hex.newHexGrid
+export hex.addHex, hex.removeHex, hex.getHex, hex.hexAt, hex.updateGrid

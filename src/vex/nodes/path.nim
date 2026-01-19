@@ -15,6 +15,17 @@ type
 
 proc newPathNode*(pathData: string): PathNode =
   PathNode(
+    children: @[],
+    localPos: vec2(0, 0),
+    localScale: vec2(1, 1),
+    localRotation: 0.0,
+    dirty: true,
+    visible: true,
+    name: "",
+    size: vec2(0, 0),
+    zIndex: 0,
+    clipChildren: false,
+    childrenSorted: true,
     pathData: pathData,
     fill: none(Paint),
     stroke: none(Paint),
@@ -44,7 +55,17 @@ proc newHexNode*(radius: float32): PathNode =
     strokeWidth: 1.0,
     strokeCap: ButtCap,
     strokeJoin: MiterJoin,
+    children: @[],
+    localPos: vec2(0, 0),
+    localScale: vec2(1, 1),
+    localRotation: 0.0,
+    dirty: true,
+    visible: true,
+    name: "",
     size: vec2(radius * 2, radius * 2),
+    zIndex: 0,
+    clipChildren: false,
+    childrenSorted: true,
     globalTransform: identityTransform
   )
 

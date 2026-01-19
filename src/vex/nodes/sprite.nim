@@ -13,6 +13,16 @@ type
 proc newSpriteNode*(imageKey: string, size: Vec2 = vec2(100, 100)): SpriteNode =
   SpriteNode(
     globalTransform: identityTransform,
+    children: @[],
+    localPos: vec2(0, 0),
+    localScale: vec2(1, 1),
+    localRotation: 0.0,
+    dirty: true,
+    visible: true,
+    name: "",
+    zIndex: 0,
+    clipChildren: false,
+    childrenSorted: true,
     size: size,
     imageKey: imageKey,
     sourceRect: rect(0, 0, 0, 0),
@@ -26,6 +36,16 @@ proc newSpriteNodeWithSlice*(
 ): SpriteNode =
   SpriteNode(
     globalTransform: identityTransform,
+    children: @[],
+    localPos: vec2(0, 0),
+    localScale: vec2(1, 1),
+    localRotation: 0.0,
+    dirty: true,
+    visible: true,
+    name: "",
+    zIndex: 0,
+    clipChildren: false,
+    childrenSorted: true,
     size: size,
     imageKey: imageKey,
     sourceRect: rect(0, 0, 0, 0),

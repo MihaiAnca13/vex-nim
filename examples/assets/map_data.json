@@ -1,0 +1,18 @@
+{
+  "name": "Sector 7-G",
+  "difficulty": "Hard",
+  "biomes": {
+    "water": "#0f3460",
+    "land": "#16213e",
+    "base": "#e94560"
+  },
+  "tiles": [
+    {"q": 0, "r": 0, "type": "base"},
+    {"q": 1, "r": -1, "type": "land"},
+    {"q": 1, "r": 0, "type": "land"},
+    {"q": 0, "r": 1, "type": "water"},
+    {"q": -1, "r": 1, "type": "water"},
+    {"q": -1, "r": 0, "type": "water"},
+    {"q": 0, "r": -1, "type": "land"}
+  ]
+}

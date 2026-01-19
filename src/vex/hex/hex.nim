@@ -190,7 +190,7 @@ proc contains*(node: HexNode, point: Vec2): bool =
     abs(relX * 0.5 - relY * sqrt(3.0'f32) / 2.0) <= r
 
 ## Rasterizes the hex node to an image using Pixie.
-proc draw*(node: HexNode, renderCtx: RenderContext, image: Image) =
+method draw*(node: HexNode, renderCtx: RenderContext, image: Image) =
   let ctx = newContext(image)
   let center = node.size / 2.0
 

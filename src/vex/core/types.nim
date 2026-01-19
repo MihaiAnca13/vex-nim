@@ -146,6 +146,8 @@ proc computeGlobalTransform*(node: Node): Mat3 =
 ## ensures children are updated correctly when called from root once).
 proc updateGlobalTransform*(node: Node) =
   node.globalTransform = node.computeGlobalTransform()
+  for child in node.children:
+    child.updateGlobalTransform()
 
 ## Marks the node as dirty, requiring re-rasterization.
 proc markDirty*(node: Node) =

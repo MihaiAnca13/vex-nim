@@ -177,9 +177,10 @@ proc drawNode*(ctx: RenderContext, node: Node, clipRect: Option[Rect] = none(Rec
     return
 
   let key = ctx.cacheTexture(node)
-  let pos = globalBounds.xy
-
-  ctx.bxy.drawImage(key, pos)
+  ctx.bxy.saveTransform()
+  ctx.bxy.setTransform(node.globalTransform)
+  ctx.bxy.drawImage(key, vec2(0, 0))
+  ctx.bxy.restoreTransform()
 
   if not node.childrenSorted:
     node.children.sort(proc(a, b: Node): int = a.zIndex - b.zIndex)

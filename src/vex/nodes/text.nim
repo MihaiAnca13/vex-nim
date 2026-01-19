@@ -32,6 +32,17 @@ proc newTextNode*(
 ): TextNode =
   TextNode(
     globalTransform: identityTransform,
+    children: @[],
+    localPos: vec2(0, 0),
+    localScale: vec2(1, 1),
+    localRotation: 0.0,
+    dirty: true,
+    visible: true,
+    name: "",
+    size: vec2(0, 0),
+    zIndex: 0,
+    clipChildren: false,
+    childrenSorted: true,
     text: text,
     fontPath: fontPath,
     fontSize: fontSize,
