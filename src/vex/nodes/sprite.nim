@@ -77,7 +77,7 @@ proc draw9Slice(
   drawRegion(left, srcSize.y - bottom, centerWidth, bottom, left, dst.height.float32 - bottom, dstCenterWidth, bottom)
   drawRegion(srcSize.x - right, srcSize.y - bottom, right, bottom, dst.width.float32 - right, dst.height.float32 - bottom, right, bottom)
 
-method draw*(node: SpriteNode, renderCtx: context.RenderContext, image: Image) =
+method draw*(node: SpriteNode, renderCtx: types.RenderContext, image: Image) =
   try:
     if not renderCtx.contains(node.imageKey):
       return

@@ -7,13 +7,7 @@ import ./types
 import ./transform
 
 type
-  RenderContext* = ref object
-    bxy*: Boxy
-    nodeTextures*: Table[Node, string]
-    imageCache*: Table[string, Image]
-    fontCache*: Table[string, Font]
-    nextNodeId*: int
-    viewportSize*: Vec2
+  RenderContext* = types.RenderContext
 
 proc newRenderContext*(viewportSize: Vec2): RenderContext =
   RenderContext(
@@ -84,6 +78,12 @@ proc cacheTexture*(ctx: RenderContext, node: Node): string =
   ctx.bxy.addImage(key, newImage(1, 1))
   ctx.nodeTextures[node] = key
   key
+
+proc uncacheNode*(ctx: RenderContext, node: Node) =
+  if ctx.nodeTextures.hasKey(node):
+    let key = ctx.nodeTextures[node]
+    ctx.bxy.removeImage(key)
+    ctx.nodeTextures.del(node)
 
 proc invalidateNodeCache*(ctx: RenderContext, node: Node) =
   for n, key in ctx.nodeTextures:

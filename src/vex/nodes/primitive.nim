@@ -2,7 +2,6 @@ import std/options
 import pixie
 import vmath
 import ../core/types
-import ../core/context
 import ../core/transform
 
 type
@@ -65,7 +64,7 @@ proc contains*(node: CircleNode, point: Vec2): bool =
   let rad2 = radius * radius
   result = dist2 <= rad2
 
-method draw*(node: RectNode, renderCtx: context.RenderContext, image: Image) =
+method draw*(node: RectNode, renderCtx: RenderContext, image: Image) =
   let ctx = newContext(image)
 
   if node.fill.isSome:
@@ -97,7 +96,7 @@ method draw*(node: RectNode, renderCtx: context.RenderContext, image: Image) =
     except PixieError:
       discard
 
-method draw*(node: CircleNode, renderCtx: context.RenderContext, image: Image) =
+method draw*(node: CircleNode, renderCtx: RenderContext, image: Image) =
   let ctx = newContext(image)
   let radius = node.size.x / 2
   let center = node.size / 2

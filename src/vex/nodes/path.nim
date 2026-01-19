@@ -2,7 +2,6 @@ import std/options
 import pixie
 import vmath
 import ../core/types
-import ../core/context
 import ../core/transform
 
 type
@@ -54,7 +53,7 @@ proc contains*(node: PathNode, point: Vec2): bool =
   localPoint.x >= 0 and localPoint.x < node.size.x and
   localPoint.y >= 0 and localPoint.y < node.size.y
 
-method draw*(node: PathNode, renderCtx: context.RenderContext, image: Image) =
+method draw*(node: PathNode, renderCtx: RenderContext, image: Image) =
   try:
     let path = parsePath(node.pathData)
 

@@ -3,7 +3,6 @@ import std/tables
 import vmath
 import pixie
 import ../core/types
-import ../core/context
 import ../core/transform
 
 type
@@ -159,13 +158,11 @@ proc newHexNode*(coord: HexCoord, layout: HexLayout): HexNode =
 proc contains*(node: HexNode, point: Vec2): bool =
   let localPoint = node.globalToLocal(point)
   let center = node.size / 2.0
-  let dx = localPoint.x - center.x
-  let dy = localPoint.y - center.y
-  let dist2 = dx * dx + dy * dy
-  let radius = center.x
-  dist2 <= radius * radius
+  let hexPoint = localPoint + center
+  let clickedCoord = node.layout.pixelToHex(hexPoint)
+  clickedCoord == node.coord
 
-proc draw*(node: HexNode, renderCtx: context.RenderContext, image: Image) =
+proc draw*(node: HexNode, renderCtx: RenderContext, image: Image) =
   let ctx = newContext(image)
   let center = node.size / 2.0
 

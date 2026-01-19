@@ -1,8 +1,17 @@
-import std/[options, hashes]
+import std/[options, hashes, tables]
 import vmath
 import pixie
+import boxy
 
 type
+  RenderContext* = ref object
+    bxy*: Boxy
+    nodeTextures*: Table[Node, string]
+    imageCache*: Table[string, Image]
+    fontCache*: Table[string, Font]
+    nextNodeId*: int
+    viewportSize*: Vec2
+
   Node* = ref object of RootObj
     parent*: Option[Node]
     children*: seq[Node]
@@ -111,7 +120,7 @@ proc contains*(node: Node, point: Vec2): bool =
   point.x >= bounds.x and point.x < bounds.x + bounds.w and
   point.y >= bounds.y and point.y < bounds.y + bounds.h
 
-method draw*(node: Node, ctx: auto, image: auto) {.base.} =
+method draw*(node: Node, ctx: RenderContext, image: Image) {.base.} =
   discard
 
 proc findChildByName*(node: Node, name: string): Option[Node] =
