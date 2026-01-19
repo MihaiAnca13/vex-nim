@@ -158,9 +158,15 @@ proc newHexNode*(coord: HexCoord, layout: HexLayout): HexNode =
 proc contains*(node: HexNode, point: Vec2): bool =
   let localPoint = node.globalToLocal(point)
   let center = node.size / 2.0
-  let hexPoint = localPoint + center
-  let clickedCoord = node.layout.pixelToHex(hexPoint)
-  clickedCoord == node.coord
+  let relX = localPoint.x - center.x
+  let relY = localPoint.y - center.y
+
+  let size = node.layout.size
+  let r = if node.layout.orientation == PointyTopped: size.x else: size.y
+
+  abs(relX) <= r and abs(relY) <= r * sqrt(3.0'f32) / 2.0 and
+    abs(relX * 0.5 + relY * sqrt(3.0'f32) / 2.0) <= r and
+    abs(relX * 0.5 - relY * sqrt(3.0'f32) / 2.0) <= r
 
 proc draw*(node: HexNode, renderCtx: RenderContext, image: Image) =
   let ctx = newContext(image)

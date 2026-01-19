@@ -46,7 +46,26 @@ proc contains*(node: TextNode, point: Vec2): bool =
   localPoint.x >= 0 and localPoint.x < node.size.x and
   localPoint.y >= 0 and localPoint.y < node.size.y
 
+proc measure*(node: TextNode, ctx: types.RenderContext) =
+  try:
+    let font = ctx.getFont(node.fontPath)
+    font.size = node.fontSize
+
+    let bounds = if node.maxWidth > 0:
+      vec2(node.maxWidth, Inf.float32)
+    else:
+      vec2(Inf.float32, Inf.float32)
+
+    let arrangement = font.typeset(node.text, bounds)
+    let layout = arrangement.layoutBounds()
+    node.size = vec2(layout.x, layout.y)
+  except KeyError:
+    node.size = vec2(0, 0)
+
 method draw*(node: TextNode, renderCtx: types.RenderContext, image: Image) =
+  if node.size.x == 0 or node.size.y == 0:
+    node.measure(renderCtx)
+
   try:
     let font = renderCtx.getFont(node.fontPath)
     font.size = node.fontSize

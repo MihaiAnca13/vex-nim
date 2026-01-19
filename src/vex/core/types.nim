@@ -23,6 +23,7 @@ type
     visible*: bool
     name*: string
     size*: Vec2
+    zIndex*: int
 
   EventType* = enum
     EventMouseDown
@@ -63,7 +64,8 @@ proc newNode*(): Node =
     dirty: true,
     visible: true,
     name: "",
-    size: vec2(0, 0)
+    size: vec2(0, 0),
+    zIndex: 0
   )
 
 proc markDirty*(node: Node)
@@ -112,8 +114,16 @@ proc updateGlobalTransform*(node: Node) =
 
 proc markDirty*(node: Node) =
   node.dirty = true
+
+proc markDirtyUp*(node: Node) =
+  node.markDirty()
+  if node.parent.isSome:
+    node.parent.get().markDirtyUp()
+
+proc markDirtyDown*(node: Node) =
+  node.markDirty()
   for child in node.children:
-    child.markDirty()
+    child.markDirtyDown()
 
 proc contains*(node: Node, point: Vec2): bool =
   let bounds = rect(0, 0, node.size.x, node.size.y)

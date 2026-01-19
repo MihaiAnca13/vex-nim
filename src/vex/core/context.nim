@@ -1,10 +1,13 @@
 import std/tables
+import std/options
+import std/algorithm
 import bumpy
 import boxy
 import pixie
 import vmath
 import ./types
 import ./transform
+import ./events
 
 type
   RenderContext* = types.RenderContext
@@ -91,6 +94,14 @@ proc invalidateNodeCache*(ctx: RenderContext, node: Node) =
   ctx.nodeTextures.clear()
   ctx.nextNodeId = 0
 
+proc handleEvent*(ctx: RenderContext, root: Node, event: var types.InputEvent): bool =
+  let hitResult = hitTest(root, event.position)
+  if hitResult.isSome:
+    event.target = hitResult.get().node
+    discard dispatchEvent(hitResult.get().node, event)
+    return true
+  false
+
 proc drawNode*(ctx: RenderContext, node: Node) =
   if not node.visible:
     return
@@ -113,6 +124,8 @@ proc drawNode*(ctx: RenderContext, node: Node) =
   let pos = globalBounds.xy
 
   ctx.bxy.drawImage(key, pos)
+
+  node.children = sorted(node.children, proc(a, b: Node): int = a.zIndex - b.zIndex)
 
   for child in node.children:
     ctx.drawNode(child)
