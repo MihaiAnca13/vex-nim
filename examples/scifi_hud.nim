@@ -108,7 +108,7 @@ uiRoot.addChild(panel)
 window.onFrame = proc() =
   # Animate the grid slightly (Rotate)
   hexGrid.localRotation += 0.001
-  hexGrid.markDirty() # Important: Mark dirty to re-rasterize rotation
+  # hexGrid.markDirty() # Important: Mark dirty to re-rasterize rotation
 
   # Draw
   ctx.draw(root)

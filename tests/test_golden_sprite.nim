@@ -1,11 +1,8 @@
-import std/os
-import std/options
+import std/[options, tables]
 import vmath
 import pixie
 
 import ../src/vex/core/types
-import ../src/vex/core/context
-import ../src/vex/core/transform
 import ../src/vex/nodes/primitive
 import ../src/vex/nodes/sprite
 import ./golden_test_utils
@@ -17,13 +14,30 @@ proc main*() =
   ensureGoldenDir()
 
   let testImage = newImage(200, 200)
-  let paint = newPaint(SolidPaint)
-  paint.color = color(0.9, 0.3, 0.3, 1.0)
-  testImage.fill(paint)
+  let imgCtx = testImage.newContext()
+  imgCtx.fillStyle = color(0.15, 0.15, 0.15, 1.0)
+  imgCtx.fillRect(rect(0, 0, 200, 200))
+  imgCtx.fillStyle = color(0.9, 0.3, 0.3, 1.0)
+  imgCtx.fillRect(rect(20, 20, 160, 160))
+  imgCtx.fillStyle = color(0.9, 0.9, 0.2, 1.0)
+  imgCtx.fillRect(rect(0, 0, 20, 20))
+  imgCtx.fillRect(rect(180, 0, 20, 20))
+  imgCtx.fillRect(rect(0, 180, 20, 20))
+  imgCtx.fillRect(rect(180, 180, 20, 20))
+
+  let renderCtx = RenderContext(
+    bxy: nil,
+    nodeTextures: initTable[Node, string](),
+    imageCache: initTable[string, Image](),
+    fontCache: initTable[string, Font](),
+    nextNodeId: 0,
+    viewportSize: vec2(0, 0)
+  )
+  renderCtx.imageCache["test_image"] = testImage
 
   let bg = newRectNode(vec2(800, 600))
   let paintBg = newPaint(SolidPaint)
-  paintBg.color = color(0.15, 0.15, 0.2, 1.0)
+  paintBg.color = color(0.12, 0.12, 0.18, 1.0)
   bg.fill = some(paintBg)
 
   let sprite1 = newSpriteNode("test_image", vec2(100, 100))
@@ -32,7 +46,7 @@ proc main*() =
   let sprite2 = newSpriteNode("test_image", vec2(150, 100))
   sprite2.localPos = vec2(200, 50)
 
-  let sprite3 = newSpriteNodeWithSlice("test_image", vec2(150, 150), vec4(20, 20, 20, 20))
+  let sprite3 = newSpriteNodeWithSlice("test_image", vec2(240, 140), vec4(20, 20, 20, 20))
   sprite3.localPos = vec2(400, 50)
 
   bg.addChild(sprite1)
@@ -40,7 +54,7 @@ proc main*() =
   bg.addChild(sprite3)
 
   echo "1. Rendering SpriteNode examples..."
-  renderSpriteSceneToPng(testImage, bg, "test_sprite_visuals.png")
+  renderToPng(bg, "test_sprite_visuals.png", renderCtx)
 
   echo ""
   echo "Golden images saved to: ", goldenDir

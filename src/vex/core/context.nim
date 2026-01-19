@@ -37,6 +37,10 @@ proc newRenderContext*(viewportSize: Vec2): RenderContext =
 
 ## Checks if a texture with the given key exists.
 proc contains*(ctx: RenderContext, key: string): bool =
+  if ctx.imageCache.hasKey(key):
+    return true
+  if ctx.bxy.isNil:
+    return false
   ctx.bxy.contains(key)
 
 ## Returns the size of an image by key.

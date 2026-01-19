@@ -1,4 +1,3 @@
-import std/os
 import std/options
 import vmath
 import pixie
