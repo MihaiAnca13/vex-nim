@@ -55,16 +55,18 @@ proc beginFrame*(ctx: RenderContext) =
 proc endFrame*(ctx: RenderContext) =
   ctx.bxy.endFrame()
 
-proc rasterizeNode*(node: Node): Image =
-  result = newImage(node.size.x.int, node.size.y.int)
-  result.fill(rgba(0, 0, 0, 0))
+proc rasterizeNode*(ctx: RenderContext, node: Node): Image =
+  let image = newImage(node.size.x.int, node.size.y.int)
+  image.fill(rgba(0, 0, 0, 0))
+  types.draw(node, ctx, image)
+  image
 
 proc cacheTexture*(ctx: RenderContext, node: Node): string =
   let key = "node_" & $ctx.nextNodeId
   inc ctx.nextNodeId
 
   if node.size.x > 0 and node.size.y > 0:
-    let image = rasterizeNode(node)
+    let image = ctx.rasterizeNode(node)
     ctx.bxy.addImage(key, image)
   else:
     ctx.bxy.addImage(key, newImage(1, 1))

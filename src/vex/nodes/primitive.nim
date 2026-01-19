@@ -65,8 +65,7 @@ proc contains*(node: CircleNode, point: Vec2): bool =
   let rad2 = radius * radius
   result = dist2 <= rad2
 
-proc draw*(node: RectNode, renderCtx: context.RenderContext) =
-  let image = newImage(node.size.x.int, node.size.y.int)
+proc draw*(node: RectNode, renderCtx: context.RenderContext, image: Image) =
   let ctx = newContext(image)
 
   if node.fill.isSome:
@@ -92,14 +91,7 @@ proc draw*(node: RectNode, renderCtx: context.RenderContext) =
         rect(vec2(0, 0), node.size)
       )
 
-  let key = "rectnode_" & $cast[int](node)
-  renderCtx.addImage(key, image)
-
-  let globalPos = node.getWorldPosition()
-  renderCtx.drawImage(key, globalPos)
-
-proc draw*(node: CircleNode, renderCtx: context.RenderContext) =
-  let image = newImage(node.size.x.int, node.size.y.int)
+proc draw*(node: CircleNode, renderCtx: context.RenderContext, image: Image) =
   let ctx = newContext(image)
   let radius = node.size.x / 2
   let center = node.size / 2
@@ -116,9 +108,3 @@ proc draw*(node: CircleNode, renderCtx: context.RenderContext) =
     let path = newPath()
     path.circle(center.x, center.y, radius)
     ctx.stroke(path)
-
-  let key = "circlenode_" & $cast[int](node)
-  renderCtx.addImage(key, image)
-
-  let globalPos = node.getWorldPosition()
-  renderCtx.drawImage(key, globalPos)

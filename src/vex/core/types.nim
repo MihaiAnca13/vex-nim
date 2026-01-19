@@ -34,8 +34,6 @@ type
     modifierKeys*: set[ModifierKey]
     target*: Node
 
-  RenderContext* = object
-
   StackItem* = tuple[node: Node, visited: bool]
 
 const
@@ -113,7 +111,7 @@ proc contains*(node: Node, point: Vec2): bool =
   point.x >= bounds.x and point.x < bounds.x + bounds.w and
   point.y >= bounds.y and point.y < bounds.y + bounds.h
 
-proc draw*(node: Node, ctx: RenderContext) {.raises: [].} =
+proc draw*[T](node: Node, ctx: T, image: Image) {.raises: [].} =
   discard
 
 proc findChildByName*(node: Node, name: string): Option[Node] =
