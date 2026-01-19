@@ -1,7 +1,9 @@
-import std/[os, strutils, streams]
+import std/[os]
+import vmath
 import pixie
 
 import ../src/vex/core/types
+import ../src/vex/core/transform
 
 const goldenDir* = currentSourcePath.parentDir() / "golden"
 
@@ -21,6 +23,30 @@ proc renderToPng*(node: Node, filename: string, width = 800, height = 600) =
     ctx.translate(node.globalTransform.m[6], node.globalTransform.m[7])
     ctx.scale(node.globalTransform.m[0], node.globalTransform.m[4])
     node.draw(ctx)
+
+  image.writeFile(filepath)
+  echo "Rendered: ", filepath
+
+proc renderSpriteSceneToPng*(srcImage: Image, root: Node, filename: string, width = 800, height = 600) =
+  ensureGoldenDir()
+  let filepath = goldenDir / filename
+
+  let image = newImage(width, height)
+  image.fill(rgba(0, 0, 0, 0))
+
+  root.updateGlobalTransform()
+
+  for node in root.traverse():
+    let nodeImage = newImage(node.size.x.int, node.size.y.int)
+    nodeImage.fill(rgba(0, 0, 0, 0))
+
+    let nodeCtx = nodeImage.newContext()
+    nodeCtx.drawImage(srcImage, 0, 0, min(srcImage.width.float32, node.size.x), min(srcImage.height.float32, node.size.y))
+
+    let ctx = image.newContext()
+    let globalBounds = node.getGlobalBounds()
+    ctx.translate(globalBounds.x, globalBounds.y)
+    ctx.drawImage(nodeImage, 0, 0, node.size.x, node.size.y)
 
   image.writeFile(filepath)
   echo "Rendered: ", filepath

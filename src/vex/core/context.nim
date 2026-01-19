@@ -62,15 +62,26 @@ proc rasterizeNode*(ctx: RenderContext, node: Node): Image =
   image
 
 proc cacheTexture*(ctx: RenderContext, node: Node): string =
+  if node.dirty:
+    let key = "node_" & $ctx.nextNodeId
+    inc ctx.nextNodeId
+
+    if node.size.x > 0 and node.size.y > 0:
+      let image = ctx.rasterizeNode(node)
+      ctx.bxy.addImage(key, image)
+    else:
+      ctx.bxy.addImage(key, newImage(1, 1))
+
+    ctx.nodeTextures[node] = key
+    node.dirty = false
+    return key
+
+  if ctx.nodeTextures.hasKey(node):
+    return ctx.nodeTextures[node]
+
   let key = "node_" & $ctx.nextNodeId
   inc ctx.nextNodeId
-
-  if node.size.x > 0 and node.size.y > 0:
-    let image = ctx.rasterizeNode(node)
-    ctx.bxy.addImage(key, image)
-  else:
-    ctx.bxy.addImage(key, newImage(1, 1))
-
+  ctx.bxy.addImage(key, newImage(1, 1))
   ctx.nodeTextures[node] = key
   key
 
@@ -83,6 +94,8 @@ proc invalidateNodeCache*(ctx: RenderContext, node: Node) =
 proc drawNode*(ctx: RenderContext, node: Node) =
   if not node.visible:
     return
+
+  node.updateGlobalTransform()
 
   let globalBounds = node.getGlobalBounds()
 

@@ -111,7 +111,7 @@ proc contains*(node: Node, point: Vec2): bool =
   point.x >= bounds.x and point.x < bounds.x + bounds.w and
   point.y >= bounds.y and point.y < bounds.y + bounds.h
 
-proc draw*[T](node: Node, ctx: T, image: Image) {.raises: [].} =
+method draw*(node: Node, ctx: auto, image: auto) {.base.} =
   discard
 
 proc findChildByName*(node: Node, name: string): Option[Node] =

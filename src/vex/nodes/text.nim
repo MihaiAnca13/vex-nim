@@ -46,26 +46,29 @@ proc contains*(node: TextNode, point: Vec2): bool =
   localPoint.x >= 0 and localPoint.x < node.size.x and
   localPoint.y >= 0 and localPoint.y < node.size.y
 
-proc draw*(node: TextNode, renderCtx: context.RenderContext, image: Image) =
-  let font = renderCtx.getFont(node.fontPath)
-  font.size = node.fontSize
-  font.paint.color = node.color
+method draw*(node: TextNode, renderCtx: context.RenderContext, image: Image) =
+  try:
+    let font = renderCtx.getFont(node.fontPath)
+    font.size = node.fontSize
+    font.paint.color = node.color
 
-  let bounds = if node.maxWidth > 0: vec2(node.maxWidth, node.size.y) else: vec2(node.size.x, node.size.y)
-  let arrangement = font.typeset(node.text, bounds)
+    let bounds = if node.maxWidth > 0: vec2(node.maxWidth, node.size.y) else: vec2(node.size.x, node.size.y)
+    let arrangement = font.typeset(node.text, bounds)
 
-  let layout = arrangement.layoutBounds()
-  let textWidth = layout.x
-  let textHeight = layout.y
+    let layout = arrangement.layoutBounds()
+    let textWidth = layout.x
+    let textHeight = layout.y
 
-  let xOffset = case node.horizontalAlign
-    of AlignLeft: 0.0
-    of AlignCenter: max(0.0, (node.size.x - textWidth) / 2)
-    of AlignRight: max(0.0, node.size.x - textWidth)
+    let xOffset = case node.horizontalAlign
+      of AlignLeft: 0.0
+      of AlignCenter: max(0.0, (node.size.x - textWidth) / 2)
+      of AlignRight: max(0.0, node.size.x - textWidth)
 
-  let yOffset = case node.verticalAlign
-    of AlignTop: 0.0
-    of AlignCenter: max(0.0, (node.size.y - textHeight) / 2)
-    of AlignBottom: max(0.0, node.size.y - textHeight)
+    let yOffset = case node.verticalAlign
+      of AlignTop: 0.0
+      of AlignCenter: max(0.0, (node.size.y - textHeight) / 2)
+      of AlignBottom: max(0.0, node.size.y - textHeight)
 
-  image.fillText(arrangement, translate(vec2(xOffset, yOffset)))
+    image.fillText(arrangement, translate(vec2(xOffset, yOffset)))
+  except KeyError, PixieError:
+    discard

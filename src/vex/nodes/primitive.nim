@@ -65,46 +65,58 @@ proc contains*(node: CircleNode, point: Vec2): bool =
   let rad2 = radius * radius
   result = dist2 <= rad2
 
-proc draw*(node: RectNode, renderCtx: context.RenderContext, image: Image) =
+method draw*(node: RectNode, renderCtx: context.RenderContext, image: Image) =
   let ctx = newContext(image)
 
   if node.fill.isSome:
-    ctx.fillStyle = node.fill.get()
-    if node.cornerRadius > 0:
-      ctx.fillRoundedRect(
-        rect(vec2(0, 0), node.size),
-        node.cornerRadius
-      )
-    else:
-      ctx.fillRect(rect(vec2(0, 0), node.size))
+    try:
+      ctx.fillStyle = node.fill.get()
+      if node.cornerRadius > 0:
+        ctx.fillRoundedRect(
+          rect(vec2(0, 0), node.size),
+          node.cornerRadius
+        )
+      else:
+        ctx.fillRect(rect(vec2(0, 0), node.size))
+    except PixieError:
+      discard
 
   if node.stroke.isSome:
-    ctx.strokeStyle = node.stroke.get()
-    ctx.lineWidth = node.strokeWidth
-    if node.cornerRadius > 0:
-      ctx.strokeRoundedRect(
-        rect(vec2(0, 0), node.size),
-        node.cornerRadius
-      )
-    else:
-      ctx.strokeRect(
-        rect(vec2(0, 0), node.size)
-      )
+    try:
+      ctx.strokeStyle = node.stroke.get()
+      ctx.lineWidth = node.strokeWidth
+      if node.cornerRadius > 0:
+        ctx.strokeRoundedRect(
+          rect(vec2(0, 0), node.size),
+          node.cornerRadius
+        )
+      else:
+        ctx.strokeRect(
+          rect(vec2(0, 0), node.size)
+        )
+    except PixieError:
+      discard
 
-proc draw*(node: CircleNode, renderCtx: context.RenderContext, image: Image) =
+method draw*(node: CircleNode, renderCtx: context.RenderContext, image: Image) =
   let ctx = newContext(image)
   let radius = node.size.x / 2
   let center = node.size / 2
 
   if node.fill.isSome:
-    ctx.fillStyle = node.fill.get()
-    let path = newPath()
-    path.circle(center.x, center.y, radius)
-    ctx.fill(path)
+    try:
+      ctx.fillStyle = node.fill.get()
+      let path = newPath()
+      path.circle(center.x, center.y, radius)
+      ctx.fill(path)
+    except PixieError:
+      discard
 
   if node.stroke.isSome:
-    ctx.strokeStyle = node.stroke.get()
-    ctx.lineWidth = node.strokeWidth
-    let path = newPath()
-    path.circle(center.x, center.y, radius)
-    ctx.stroke(path)
+    try:
+      ctx.strokeStyle = node.stroke.get()
+      ctx.lineWidth = node.strokeWidth
+      let path = newPath()
+      path.circle(center.x, center.y, radius)
+      ctx.stroke(path)
+    except PixieError:
+      discard

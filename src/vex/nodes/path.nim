@@ -54,18 +54,21 @@ proc contains*(node: PathNode, point: Vec2): bool =
   localPoint.x >= 0 and localPoint.x < node.size.x and
   localPoint.y >= 0 and localPoint.y < node.size.y
 
-proc draw*(node: PathNode, renderCtx: context.RenderContext, image: Image) =
-  let path = parsePath(node.pathData)
+method draw*(node: PathNode, renderCtx: context.RenderContext, image: Image) =
+  try:
+    let path = parsePath(node.pathData)
 
-  let paint = if node.fill.isSome: node.fill.get() else: color(1, 1, 1, 1)
+    let paint = if node.fill.isSome: node.fill.get() else: color(1, 1, 1, 1)
 
-  image.fillPath(path, paint)
+    image.fillPath(path, paint)
 
-  if node.stroke.isSome:
-    image.strokePath(
-      path,
-      node.stroke.get(),
-      strokeWidth = node.strokeWidth,
-      lineCap = node.strokeCap,
-      lineJoin = node.strokeJoin
-    )
+    if node.stroke.isSome:
+      image.strokePath(
+        path,
+        node.stroke.get(),
+        strokeWidth = node.strokeWidth,
+        lineCap = node.strokeCap,
+        lineJoin = node.strokeJoin
+      )
+  except PixieError:
+    discard
