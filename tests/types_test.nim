@@ -102,7 +102,17 @@ suite "types.nim - Dirty flag propagation":
     node.markDirty()
     check node.dirty == true
 
-  test "markDirty propagates to children":
+  test "markDirty only marks the node itself":
+    let parent = newNode()
+    let child = newNode()
+    parent.addChild(child)
+    parent.dirty = false
+    child.dirty = false
+    parent.markDirty()
+    check parent.dirty == true
+    check child.dirty == false
+
+  test "markDirtyDown propagates to children":
     let parent = newNode()
     let child1 = newNode()
     let child2 = newNode()
@@ -111,12 +121,12 @@ suite "types.nim - Dirty flag propagation":
     parent.dirty = false
     child1.dirty = false
     child2.dirty = false
-    parent.markDirty()
+    parent.markDirtyDown()
     check parent.dirty == true
     check child1.dirty == true
     check child2.dirty == true
 
-  test "markDirty propagates to grandchildren":
+  test "markDirtyDown propagates to grandchildren":
     let parent = newNode()
     let child = newNode()
     let grandchild = newNode()
@@ -125,7 +135,7 @@ suite "types.nim - Dirty flag propagation":
     parent.dirty = false
     child.dirty = false
     grandchild.dirty = false
-    parent.markDirty()
+    parent.markDirtyDown()
     check grandchild.dirty == true
 
 suite "types.nim - Iterator traverse":

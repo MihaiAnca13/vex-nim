@@ -145,7 +145,6 @@ proc computeGlobalTransform*(node: Node): Mat3 =
 ## Updates globalTransform for the node and all descendants.
 proc updateGlobalTransform*(node: Node) =
   node.globalTransform = node.computeGlobalTransform()
-  node.dirty = false
   for child in node.children:
     child.updateGlobalTransform()
 
