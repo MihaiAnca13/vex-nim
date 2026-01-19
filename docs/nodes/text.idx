@@ -1,0 +1,14 @@
+nimTitle	text	nodes/text.html	module src/vex/nodes/text		0
+nim	TextNode	nodes/text.html#TextNode	type TextNode		8
+nim	AlignLeft	nodes/text.html#AlignLeft	HorizontalAlign.AlignLeft		17
+nim	AlignCenter	nodes/text.html#AlignCenter	HorizontalAlign.AlignCenter		17
+nim	AlignRight	nodes/text.html#AlignRight	HorizontalAlign.AlignRight		17
+nim	HorizontalAlign	nodes/text.html#HorizontalAlign	enum HorizontalAlign		17
+nim	AlignTop	nodes/text.html#AlignTop	VerticalAlign.AlignTop		22
+nim	AlignCenter	nodes/text.html#AlignCenter_2	VerticalAlign.AlignCenter		22
+nim	AlignBottom	nodes/text.html#AlignBottom	VerticalAlign.AlignBottom		22
+nim	VerticalAlign	nodes/text.html#VerticalAlign	enum VerticalAlign		22
+nim	newTextNode	nodes/text.html#newTextNode,string,string,float32,Color	proc newTextNode(text: string; fontPath: string; fontSize: float32 = 16.0;\n            color: Color = color(0, 0, 0, 1)): TextNode		27
+nim	contains	nodes/text.html#contains,TextNode,Vec2	proc contains(node: TextNode; point: Vec2): bool		44
+nim	measure	nodes/text.html#measure,TextNode,	proc measure(node: TextNode; ctx: types.RenderContext)		49
+nim	draw	nodes/text.html#draw.e,TextNode,,Image	method draw(node: TextNode; renderCtx: types.RenderContext; image: Image)		65

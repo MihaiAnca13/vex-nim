@@ -1,0 +1,21 @@
+nimTitle	events	core/events.html	module src/vex/core/events		0
+nim	HitTestResult	core/events.html#HitTestResult	object HitTestResult		7
+nim	PhaseCapturing	core/events.html#PhaseCapturing	EventPhase.PhaseCapturing		11
+nim	PhaseAtTarget	core/events.html#PhaseAtTarget	EventPhase.PhaseAtTarget		11
+nim	PhaseBubbling	core/events.html#PhaseBubbling	EventPhase.PhaseBubbling		11
+nim	EventPhase	core/events.html#EventPhase	enum EventPhase		11
+nim	EventListener	core/events.html#EventListener	object EventListener		16
+nim	hitTest	core/events.html#hitTest,Node,Vec2	proc hitTest(root: Node; position: Vec2): Option[HitTestResult]		21
+nim	hitTestAll	core/events.html#hitTestAll,Node,Vec2	proc hitTestAll(root: Node; position: Vec2): seq[HitTestResult]		30
+nim	dispatchEvent	core/events.html#dispatchEvent,Node,InputEvent	proc dispatchEvent(target: Node; event: var InputEvent): bool		40
+nim	dispatchEventToAncestors	core/events.html#dispatchEventToAncestors,Node,InputEvent	proc dispatchEventToAncestors(startNode: Node; event: var InputEvent;\n                         includeStart = true): bool		44
+nim	createMouseEvent	core/events.html#createMouseEvent,EventType,Vec2,set[ModifierKey]	proc createMouseEvent(eventType: EventType; position: Vec2;\n                 modifiers: set[ModifierKey] = {}): InputEvent		57
+nim	createKeyEvent	core/events.html#createKeyEvent,EventType,int,set[ModifierKey]	proc createKeyEvent(eventType: EventType; key: int; modifiers: set[ModifierKey] = {}): InputEvent		60
+nim	isMouseButton	core/events.html#isMouseButton,InputEvent	proc isMouseButton(event: InputEvent): bool		63
+nim	isKeyEvent	core/events.html#isKeyEvent,InputEvent	proc isKeyEvent(event: InputEvent): bool		66
+nim	getMousePosition	core/events.html#getMousePosition,InputEvent	proc getMousePosition(event: InputEvent): Vec2		69
+nim	getModifierState	core/events.html#getModifierState,InputEvent	proc getModifierState(event: InputEvent): set[ModifierKey]		72
+nim	shouldReceiveEvents	core/events.html#shouldReceiveEvents,Node	proc shouldReceiveEvents(node: Node): bool		75
+nim	getEventPropagationPath	core/events.html#getEventPropagationPath,Node	proc getEventPropagationPath(fromNode: Node): seq[Node]		78
+nim	stopEventPropagation	core/events.html#stopEventPropagation,InputEvent	proc stopEventPropagation(event: var InputEvent)		86
+nim	isEventStopped	core/events.html#isEventStopped,InputEvent	proc isEventStopped(event: InputEvent): bool		89
