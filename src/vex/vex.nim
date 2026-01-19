@@ -13,14 +13,16 @@ import ./nodes/path
 
 import ./layout/alignment
 import ./layout/container
+import ./hex/hex
 
 export types
 export transform
 export events
 export context
-export primitive
-export sprite
-export text
-export path
-export alignment
-export container
+export primitive.RectNode, primitive.CircleNode
+export sprite.SpriteNode
+export text.TextNode, text.HorizontalAlign, text.VerticalAlign
+export path.PathNode
+export alignment.Anchor, alignment.Pivot
+export container.HBox, container.VBox
+export hex.HexOrientation, hex.pointyOrientation, hex.flatOrientation

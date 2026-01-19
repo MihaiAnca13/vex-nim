@@ -85,11 +85,24 @@ method draw*(node: SpriteNode, renderCtx: context.RenderContext, image: Image) =
     let srcImage = renderCtx.getImage(node.imageKey)
     let srcSize = vec2(srcImage.width.float32, srcImage.height.float32)
 
-    if node.sliceInsets == vec4(0, 0, 0, 0):
-      let scaled = srcImage.resize(node.size.x.int, node.size.y.int)
+    let useSourceRect = node.sourceRect.w > 0 and node.sourceRect.h > 0
+    let use9Slice = node.sliceInsets != vec4(0, 0, 0, 0)
+
+    if use9Slice:
+      draw9Slice(srcImage, image, node.sliceInsets, srcSize)
+    elif useSourceRect:
+      let sub = srcImage.subImage(
+        node.sourceRect.x.int,
+        node.sourceRect.y.int,
+        node.sourceRect.w.int,
+        node.sourceRect.h.int
+      )
+      let scaled = sub.resize(image.width, image.height)
       let ctx = newContext(image)
       ctx.drawImage(scaled, 0, 0)
     else:
-      draw9Slice(srcImage, image, node.sliceInsets, srcSize)
+      let scaled = srcImage.resize(image.width, image.height)
+      let ctx = newContext(image)
+      ctx.drawImage(scaled, 0, 0)
   except KeyError, PixieError:
     discard

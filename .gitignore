@@ -35,3 +35,5 @@ dist/
 
 # python
 __pycache__
+
+.sprint_states

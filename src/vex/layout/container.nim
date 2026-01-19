@@ -60,6 +60,7 @@ proc update*(hbox: HBox) =
     if not child.visible:
       continue
     child.localPos = vec2(x, hbox.padding)
+    child.updateGlobalTransform()
     x += child.size.x + hbox.spacing
     if child.size.y > maxHeight:
       maxHeight = child.size.y
@@ -79,6 +80,7 @@ proc update*(vbox: VBox) =
     if not child.visible:
       continue
     child.localPos = vec2(vbox.padding, y)
+    child.updateGlobalTransform()
     y += child.size.y + vbox.spacing
     if child.size.x > maxWidth:
       maxWidth = child.size.x

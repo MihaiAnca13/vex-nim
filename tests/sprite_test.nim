@@ -36,3 +36,18 @@ suite "sprite.nim - SpriteNode":
   test "SpriteNode.size defaults to vec2(100, 100)":
     let node = newSpriteNode("test")
     check node.size == vec2(100, 100)
+
+  test "SpriteNode.sourceRect can be set for sprite sheets":
+    let node = newSpriteNode("sheet")
+    node.sourceRect = rect(32, 64, 96, 128)
+    check node.sourceRect.x == 32
+    check node.sourceRect.y == 64
+    check node.sourceRect.w == 96
+    check node.sourceRect.h == 128
+
+  test "SpriteNode.sourceRect defaults to zero rect":
+    let node = newSpriteNode("test")
+    check node.sourceRect.x == 0
+    check node.sourceRect.y == 0
+    check node.sourceRect.w == 0
+    check node.sourceRect.h == 0

@@ -143,6 +143,10 @@ extract_nim_code_examples("pixie")                      # Get Pixie examples
 
 ---
 
+## 6. REPOSITORY SEARCH (MCP)
+
+The `semantic-search` MCP is available for code search. Use `semantic_repo_search` to find relevant code snippets by meaning.
+
 ## 6. TESTING GUIDELINES
 
 - Use `unittest` for headless tests
@@ -155,65 +159,7 @@ extract_nim_code_examples("pixie")                      # Get Pixie examples
 
 ---
 
-## 7. SPRINT10 WORKFLOW
-
-**Every 10 issues, perform a comprehensive review before continuing.**
-
-### Sprint10 Command
-```
-/sprint10
-```
-
-### Workflow
-1. **Complete 10 issues** - Work through issues normally, updating state file after each
-2. **Review Checkpoint** (when issues_completed == 10):
-   - Run comprehensive codebase review
-   - Document findings in `.vex_review_<date>.md`
-   - Create follow-up issues in beads for any problems found
-   - **BLOCK** - wait for user approval before continuing
-3. **Reset** (after user approval):
-   - Reset `issues_completed = 0`
-   - Set `mode = plan`
-   - Continue with next issue
-
-### Review Checklist
-- [ ] Integration issues (modules not working together)
-- [ ] Design drift (patterns diverging from conventions)
-- [ ] New patterns that should be applied elsewhere
-- [ ] Code quality issues (bugs, performance, clarity)
-- [ ] Missing test coverage
-- [ ] Documentation gaps
-
-### State File
-```
-.vex_workflow_state tracks:
-mode=plan|build|review
-issues_completed=0-10
-current_issue_id=
-last_review_findings=
-```
-
-### Example State Transitions
-```
-1. mode=plan, issues_completed=0 → plan & build issues
-...
-10. mode=build, issues_completed=9 → complete 10th issue
-11. mode=build → issues_completed=10 → switch to review mode
-12. Review Mode: full codebase review, write findings, create issues
-13. BLOCK: wait for user "continue"
-14. User approves → issues_completed=0, mode=plan
-```
-
-### Key Commands
-```bash
-cat .vex_workflow_state           # Check current state
-bd ready --json                   # Get next issue
-bd update <id> --status=in_progress  # Claim issue
-bd close <id> --reason="..."      # Complete issue
-# Update state file after each completion
-```
-
-## Landing the Plane (Session Completion)
+## 7. LANDING THE PLANE (SESSION COMPLETION)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
 

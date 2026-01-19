@@ -67,7 +67,7 @@ proc main*() =
   paintBg.color = color(0.15, 0.15, 0.2, 1.0)
   bg.fill = some(paintBg)
 
-  let fontPath = currentSourcePath.parentDir() / "data" / "Roboto-Regular.ttf"
+  let fontPath = currentSourcePath.parentDir() / "data" / "DejaVuSans.ttf"
 
   if not fontPath.fileExists():
     echo "Warning: Font file not found at: ", fontPath
