@@ -1,6 +1,5 @@
 import vmath
 import ../core/types
-import ../nodes/text
 
 ## Layout containers for automatic child positioning.
 ##
@@ -64,10 +63,9 @@ proc addItem*(vbox: VBox, child: Node) =
 ## This must be called after adding items to measure TextNodes and
 ## calculate the container's size. TextNodes need the RenderContext
 ## to measure their font dimensions.
-proc update*(hbox: HBox, ctx: types.RenderContext) =
+proc update*(hbox: HBox, ctx: types.RenderContext = nil) =
   for child in hbox.children:
-    when child is TextNode:
-      child.measure(ctx)
+    child.measure(ctx)
 
   if hbox.children.len == 0:
     hbox.size = vec2(hbox.padding * 2, hbox.padding * 2)
@@ -93,10 +91,9 @@ proc update*(hbox: HBox, ctx: types.RenderContext) =
 ## This must be called after adding items to measure TextNodes and
 ## calculate the container's size. TextNodes need the RenderContext
 ## to measure their font dimensions.
-proc update*(vbox: VBox, ctx: types.RenderContext) =
+proc update*(vbox: VBox, ctx: types.RenderContext = nil) =
   for child in vbox.children:
-    when child is TextNode:
-      child.measure(ctx)
+    child.measure(ctx)
 
   if vbox.children.len == 0:
     vbox.size = vec2(vbox.padding * 2, vbox.padding * 2)

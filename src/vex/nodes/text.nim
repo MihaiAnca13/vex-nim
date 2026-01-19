@@ -46,7 +46,7 @@ proc contains*(node: TextNode, point: Vec2): bool =
   localPoint.x >= 0 and localPoint.x < node.size.x and
   localPoint.y >= 0 and localPoint.y < node.size.y
 
-proc measure*(node: TextNode, ctx: types.RenderContext) =
+method measure*(node: TextNode, ctx: types.RenderContext) =
   try:
     let font = ctx.getFont(node.fontPath)
     font.size = node.fontSize

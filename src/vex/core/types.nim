@@ -173,6 +173,10 @@ proc contains*(node: Node, point: Vec2): bool =
 method draw*(node: Node, ctx: RenderContext, image: Image) {.base.} =
   discard
 
+## Base measure method. Override in derived types for auto-sizing.
+method measure*(node: Node, ctx: RenderContext) {.base.} =
+  discard
+
 ## Finds a child node by name (recursive search).
 proc findChildByName*(node: Node, name: string): Option[Node] =
   for child in node.children:
