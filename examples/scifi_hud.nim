@@ -97,7 +97,7 @@ stats.addItem(newTextNode("STATUS: ONLINE", FontPath, 14, hex"#4ecca3"))
 panel.addItem(stats)
 
 # Layout Update with new withSize helper
-discard panel.withSize(300, 0) # Auto height, fixed width
+discard panel.withSize(300, 0, ctx) # Auto height, fixed width
 
 let panelBg = newRectNode(panel.size)
 panelBg.localPos = panel.localPos

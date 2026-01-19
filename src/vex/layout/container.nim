@@ -120,12 +120,12 @@ proc update*(vbox: VBox, ctx: types.RenderContext = nil) =
 method measure*(vbox: VBox, ctx: types.RenderContext) =
   vbox.update(ctx)
 
-proc withSize*(hbox: HBox, width, height: float32): HBox =
-  hbox.update()
+proc withSize*(hbox: HBox, width, height: float32, ctx: types.RenderContext = nil): HBox =
+  hbox.update(ctx)
   hbox.size = vec2(width, height)
   hbox
 
-proc withSize*(vbox: VBox, width, height: float32): VBox =
-  vbox.update()
+proc withSize*(vbox: VBox, width, height: float32, ctx: types.RenderContext = nil): VBox =
+  vbox.update(ctx)
   vbox.size = vec2(width, height)
   vbox
