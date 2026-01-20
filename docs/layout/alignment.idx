@@ -1,4 +1,4 @@
-nimTitle	alignment	layout/alignment.html	module src/vex/layout/alignment		0
+nimTitle	alignment	layout/alignment.html	module vex/layout/alignment		0
 nim	TopLeft	layout/alignment.html#TopLeft	Anchor.TopLeft		4
 nim	TopCenter	layout/alignment.html#TopCenter	Anchor.TopCenter		4
 nim	TopRight	layout/alignment.html#TopRight	Anchor.TopRight		4

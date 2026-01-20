@@ -1,4 +1,4 @@
-nimTitle	events	core/events.html	module src/vex/core/events		0
+nimTitle	events	core/events.html	module vex/core/events		0
 nim	HitTestResult	core/events.html#HitTestResult	object HitTestResult		7
 nim	PhaseCapturing	core/events.html#PhaseCapturing	EventPhase.PhaseCapturing		11
 nim	PhaseAtTarget	core/events.html#PhaseAtTarget	EventPhase.PhaseAtTarget		11

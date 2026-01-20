@@ -244,6 +244,12 @@ node.sizePercent = vec2(0.5, 0.8)  # 50% width, 80% height
 
 When the window resizes, call `ctx.resize(newSize)` and `root.requestLayout()` to recalculate all positions:
 
+### Future Work
+
+- Document `autoLayout` clearly with manual-positioning examples
+- Expose an explicit container option for child layout vs manual positioning
+- Add small helper APIs to make anchor vs manual intent obvious
+
 
 ---
 

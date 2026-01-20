@@ -1,34 +1,46 @@
-nimTitle	types	core/types.html	module src/vex/core/types		0
-nim	Node	core/types.html#Node	type Node		12
-nim	RenderContext	core/types.html#RenderContext	type RenderContext		35
-nim	EventMouseDown	core/types.html#EventMouseDown	EventType.EventMouseDown		45
-nim	EventMouseUp	core/types.html#EventMouseUp	EventType.EventMouseUp		45
-nim	EventMouseMove	core/types.html#EventMouseMove	EventType.EventMouseMove		45
-nim	EventKeyDown	core/types.html#EventKeyDown	EventType.EventKeyDown		45
-nim	EventKeyUp	core/types.html#EventKeyUp	EventType.EventKeyUp		45
-nim	EventType	core/types.html#EventType	enum EventType		45
-nim	ModShift	core/types.html#ModShift	ModifierKey.ModShift		54
-nim	ModCtrl	core/types.html#ModCtrl	ModifierKey.ModCtrl		54
-nim	ModAlt	core/types.html#ModAlt	ModifierKey.ModAlt		54
-nim	ModMeta	core/types.html#ModMeta	ModifierKey.ModMeta		54
-nim	ModifierKey	core/types.html#ModifierKey	enum ModifierKey		54
-nim	InputEvent	core/types.html#InputEvent	object InputEvent		62
-nim	StackItem	core/types.html#StackItem	tuple StackItem		70
-nim	defaultPadding	core/types.html#defaultPadding	const defaultPadding		73
-nim	identityTransform	core/types.html#identityTransform	const identityTransform		74
-nim	newNode	core/types.html#newNode	proc newNode(): Node		81
-nim	markDirty	core/types.html#markDirty,Node	proc markDirty(node: Node)		96
-nim	addChild	core/types.html#addChild,Node,Node	proc addChild(parent: Node; child: Node)		102
-nim	removeChild	core/types.html#removeChild,Node,Node	proc removeChild(parent: Node; child: Node)		114
-nim	isAncestorOf	core/types.html#isAncestorOf,Node,Node	proc isAncestorOf(ancestor, node: Node): bool		122
-nim	computeLocalTransform	core/types.html#computeLocalTransform,Node	proc computeLocalTransform(node: Node): Mat3		131
-nim	computeGlobalTransform	core/types.html#computeGlobalTransform,Node	proc computeGlobalTransform(node: Node): Mat3		138
-nim	updateGlobalTransform	core/types.html#updateGlobalTransform,Node	proc updateGlobalTransform(node: Node)		146
-nim	markDirtyUp	core/types.html#markDirtyUp,Node	proc markDirtyUp(node: Node)		157
-nim	markDirtyDown	core/types.html#markDirtyDown,Node	proc markDirtyDown(node: Node)		163
-nim	contains	core/types.html#contains,Node,Vec2	proc contains(node: Node; point: Vec2): bool		169
-nim	draw	core/types.html#draw.e,Node,RenderContext,Image	method draw(node: Node; ctx: RenderContext; image: Image)		175
-nim	findChildByName	core/types.html#findChildByName,Node,string	proc findChildByName(node: Node; name: string): Option[Node]		179
-nim	traverse	core/types.html#traverse.i,Node	iterator traverse(node: Node): Node		189
-nim	traversePostOrder	core/types.html#traversePostOrder.i,Node	iterator traversePostOrder(node: Node): Node		198
-nim	hash	core/types.html#hash,Node	proc hash(node: Node): Hash		213
+nimTitle	types	core/types.html	module vex/core/types		0
+nim	Absolute	core/types.html#Absolute	SizeMode.Absolute		8
+nim	FillParent	core/types.html#FillParent	SizeMode.FillParent		8
+nim	Percent	core/types.html#Percent	SizeMode.Percent		8
+nim	SizeMode	core/types.html#SizeMode	enum SizeMode		8
+nim	Stretch	core/types.html#Stretch	ScaleMode.Stretch		13
+nim	Fit	core/types.html#Fit	ScaleMode.Fit		13
+nim	Fill	core/types.html#Fill	ScaleMode.Fill		13
+nim	KeepAspect	core/types.html#KeepAspect	ScaleMode.KeepAspect		13
+nim	ScaleMode	core/types.html#ScaleMode	enum ScaleMode		13
+nim	Node	core/types.html#Node	type Node		25
+nim	RenderContext	core/types.html#RenderContext	type RenderContext		58
+nim	EventMouseDown	core/types.html#EventMouseDown	EventType.EventMouseDown		68
+nim	EventMouseUp	core/types.html#EventMouseUp	EventType.EventMouseUp		68
+nim	EventMouseMove	core/types.html#EventMouseMove	EventType.EventMouseMove		68
+nim	EventKeyDown	core/types.html#EventKeyDown	EventType.EventKeyDown		68
+nim	EventKeyUp	core/types.html#EventKeyUp	EventType.EventKeyUp		68
+nim	EventType	core/types.html#EventType	enum EventType		68
+nim	ModShift	core/types.html#ModShift	ModifierKey.ModShift		77
+nim	ModCtrl	core/types.html#ModCtrl	ModifierKey.ModCtrl		77
+nim	ModAlt	core/types.html#ModAlt	ModifierKey.ModAlt		77
+nim	ModMeta	core/types.html#ModMeta	ModifierKey.ModMeta		77
+nim	ModifierKey	core/types.html#ModifierKey	enum ModifierKey		77
+nim	InputEvent	core/types.html#InputEvent	object InputEvent		85
+nim	StackItem	core/types.html#StackItem	tuple StackItem		93
+nim	defaultPadding	core/types.html#defaultPadding	const defaultPadding		96
+nim	identityTransform	core/types.html#identityTransform	const identityTransform		97
+nim	newNode	core/types.html#newNode	proc newNode(): Node		104
+nim	markDirty	core/types.html#markDirty,Node	proc markDirty(node: Node)		129
+nim	addChild	core/types.html#addChild,Node,Node	proc addChild(parent: Node; child: Node)		135
+nim	removeChild	core/types.html#removeChild,Node,Node	proc removeChild(parent: Node; child: Node)		147
+nim	isAncestorOf	core/types.html#isAncestorOf,Node,Node	proc isAncestorOf(ancestor, node: Node): bool		155
+nim	computeLocalTransform	core/types.html#computeLocalTransform,Node	proc computeLocalTransform(node: Node): Mat3		164
+nim	computeGlobalTransform	core/types.html#computeGlobalTransform,Node	proc computeGlobalTransform(node: Node): Mat3		171
+nim	updateGlobalTransform	core/types.html#updateGlobalTransform,Node	proc updateGlobalTransform(node: Node)		180
+nim	markDirtyUp	core/types.html#markDirtyUp,Node	proc markDirtyUp(node: Node)		190
+nim	markDirtyDown	core/types.html#markDirtyDown,Node	proc markDirtyDown(node: Node)		196
+nim	invalidateLayout	core/types.html#invalidateLayout,Node	proc invalidateLayout(node: Node)		202
+nim	contains	core/types.html#contains,Node,Vec2	proc contains(node: Node; point: Vec2): bool		206
+nim	draw	core/types.html#draw.e,Node,RenderContext,Image	method draw(node: Node; ctx: RenderContext; image: Image)		212
+nim	measure	core/types.html#measure.e,Node,RenderContext	method measure(node: Node; ctx: RenderContext)		216
+nim	centerIn	core/types.html#centerIn,Node,Vec2	proc centerIn(node: Node; bounds: Vec2)		220
+nim	findChildByName	core/types.html#findChildByName,Node,string	proc findChildByName(node: Node; name: string): Option[Node]		224
+nim	traverse	core/types.html#traverse.i,Node	iterator traverse(node: Node): Node		234
+nim	traversePostOrder	core/types.html#traversePostOrder.i,Node	iterator traversePostOrder(node: Node): Node		243
+nim	hash	core/types.html#hash,Node	proc hash(node: Node): Hash		258

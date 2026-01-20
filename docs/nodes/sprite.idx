@@ -1,6 +1,6 @@
-nimTitle	sprite	nodes/sprite.html	module src/vex/nodes/sprite		0
-nim	SpriteNode	nodes/sprite.html#SpriteNode	type SpriteNode		8
-nim	newSpriteNode	nodes/sprite.html#newSpriteNode,string,Vec2	proc newSpriteNode(imageKey: string; size: Vec2 = vec2(100, 100)): SpriteNode		13
-nim	newSpriteNodeWithSlice	nodes/sprite.html#newSpriteNodeWithSlice,string,Vec2,Vec4	proc newSpriteNodeWithSlice(imageKey: string; size: Vec2; sliceInsets: Vec4): SpriteNode		22
-nim	contains	nodes/sprite.html#contains,SpriteNode,Vec2	proc contains(node: SpriteNode; point: Vec2): bool		35
-nim	draw	nodes/sprite.html#draw.e,SpriteNode,,Image	method draw(node: SpriteNode; renderCtx: types.RenderContext; image: Image)		80
+nimTitle	sprite	nodes/sprite.html	module vex/nodes/sprite		0
+nim	SpriteNode	nodes/sprite.html#SpriteNode	type SpriteNode		9
+nim	newSpriteNode	nodes/sprite.html#newSpriteNode,string,Vec2	proc newSpriteNode(imageKey: string; size: Vec2 = vec2(100, 100)): SpriteNode		14
+nim	newSpriteNodeWithSlice	nodes/sprite.html#newSpriteNodeWithSlice,string,Vec2,Vec4	proc newSpriteNodeWithSlice(imageKey: string; size: Vec2; sliceInsets: Vec4): SpriteNode		43
+nim	contains	nodes/sprite.html#contains,SpriteNode,Vec2	proc contains(node: SpriteNode; point: Vec2): bool		76
+nim	draw	nodes/sprite.html#draw.e,SpriteNode,,Image	method draw(node: SpriteNode; renderCtx: types.RenderContext; image: Image)		121

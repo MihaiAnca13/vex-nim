@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>src/vex/core/transform</title>
+<title>vex/core/transform</title>
 
 <!-- Google fonts -->
 <link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
@@ -24,7 +24,7 @@
 <body>
   <div class="document" id="documentId">
     <div class="container">
-      <h1 class="title">src/vex/core/transform</h1>
+      <h1 class="title">vex/core/transform</h1>
       <div class="row">
   <div class="three columns">
     <div class="theme-select-wrapper">
@@ -70,6 +70,14 @@
   <li><a class="reference" href="#getGlobalBounds%2CNode" title="getGlobalBounds(node: Node): Rect">getGlobalBounds(node: Node): Rect</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">getLocalBounds
+  <li><a class="reference" href="#getLocalBounds%2CNode" title="getLocalBounds(node: Node): Rect">getLocalBounds(node: Node): Rect</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">getLocalBoundsCenter
+  <li><a class="reference" href="#getLocalBoundsCenter%2CNode" title="getLocalBoundsCenter(node: Node): Vec2">getLocalBoundsCenter(node: Node): Vec2</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">getWorldPosition
   <li><a class="reference" href="#getWorldPosition%2CNode" title="getWorldPosition(node: Node): Vec2">getWorldPosition(node: Node): Vec2</a></li>
 
@@ -95,7 +103,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">lerpTransform
-  <li><a class="reference" href="#lerpTransform%2CMat3%2CMat3%2Cfloat32" title="lerpTransform(a, b: Mat3; t: float32): Mat3">lerpTransform(a, b: Mat3; t: float32): Mat3</a></li>
+  <li><a class="reference" href="#lerpTransform%2CMat3%2CMat3%2Cfloat32" title="lerpTransform(a: Mat3; b: Mat3; t: float32): Mat3">lerpTransform(a: Mat3; b: Mat3; t: float32): Mat3</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">localToGlobal
@@ -126,7 +134,9 @@
     
     <div id="tocRoot"></div>
     
-    <p class="module-desc"></p>
+    <p class="module-desc"><p>Transform procedures for coordinate space conversion.</p>
+<p>These utilities handle conversion between local and global coordinate spaces, as well as matrix operations for the scene graph.</p>
+Transforms a 2D point using a 3x3 transformation matrix.Transforms a 2D point using the inverse of a 3x3 transformation matrix. Useful for converting screen coordinates to local node space.Converts a point from local node coordinates to global (world) coordinates.Converts a point from global (world) coordinates to local node coordinates.Transforms a rectangle using a 3x3 transformation matrix. Handles rotation and scale by computing the axis-aligned bounding box of the transformed corners.Gets the global bounding rectangle of a node in screen coordinates.Extracts the world position (translation) from a node's global transform.Extracts the world scale from a node's global transform.Extracts the world rotation (in radians) from a node's global transform.Compares two transformation matrices for equality within a tolerance.Decomposes a transformation matrix into position, scale, and rotation components.Multiplies two transformation matrices (parent * child).Inverts a transformation matrix.Linearly interpolates between two transformation matrices. The parameter t should be between 0.0 (a) and 1.0 (b).</p>
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
   <dl class="item">
@@ -164,6 +174,28 @@
 <div id="getGlobalBounds-procs-all">
   <div id="getGlobalBounds,Node">
   <dt><pre><span class="Keyword">proc</span> <a href="#getGlobalBounds%2CNode"><span class="Identifier">getGlobalBounds</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Rect</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="getLocalBounds-procs-all">
+  <div id="getLocalBounds,Node">
+  <dt><pre><span class="Keyword">proc</span> <a href="#getLocalBounds%2CNode"><span class="Identifier">getLocalBounds</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Rect</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="getLocalBoundsCenter-procs-all">
+  <div id="getLocalBoundsCenter,Node">
+  <dt><pre><span class="Keyword">proc</span> <a href="#getLocalBoundsCenter%2CNode"><span class="Identifier">getLocalBoundsCenter</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Vec2</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -242,7 +274,7 @@
 </div>
 <div id="lerpTransform-procs-all">
   <div id="lerpTransform,Mat3,Mat3,float32">
-  <dt><pre><span class="Keyword">proc</span> <a href="#lerpTransform%2CMat3%2CMat3%2Cfloat32"><span class="Identifier">lerpTransform</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">Mat3</span><span class="Other">;</span> <span class="Identifier">t</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Mat3</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#lerpTransform%2CMat3%2CMat3%2Cfloat32"><span class="Identifier">lerpTransform</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Mat3</span><span class="Other">;</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">Mat3</span><span class="Other">;</span> <span class="Identifier">t</span><span class="Other">:</span> <span class="Identifier">float32</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Mat3</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -308,7 +340,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-19 10:30:35 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 08:31:49 UTC</small>
       </div>
     </div>
   </div>

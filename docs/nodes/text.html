@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>src/vex/nodes/text</title>
+<title>vex/nodes/text</title>
 
 <!-- Google fonts -->
 <link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
@@ -24,7 +24,7 @@
 <body>
   <div class="document" id="documentId">
     <div class="container">
-      <h1 class="title">src/vex/nodes/text</h1>
+      <h1 class="title">vex/nodes/text</h1>
       <div class="row">
   <div class="three columns">
     <div class="theme-select-wrapper">
@@ -82,10 +82,6 @@
   <li><a class="reference" href="#contains%2CTextNode%2CVec2" title="contains(node: TextNode; point: Vec2): bool">contains(node: TextNode; point: Vec2): bool</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">measure
-  <li><a class="reference" href="#measure%2CTextNode%2C" title="measure(node: TextNode; ctx: types.RenderContext)">measure(node: TextNode; ctx: types.RenderContext)</a></li>
-
-</ul>
 <ul class="simple nested-toc-section">newTextNode
   <li><a class="reference" href="#newTextNode%2Cstring%2Cstring%2Cfloat32%2CColor" title="newTextNode(text: string; fontPath: string; fontSize: float32 = 16.0;
             color: Color = color(0, 0, 0, 1)): TextNode">newTextNode(text: string; fontPath: string; fontSize: float32 = 16.0;
@@ -104,6 +100,10 @@
   <li><a class="reference" href="#draw.e%2CTextNode%2C%2CImage" title="draw(node: TextNode; renderCtx: types.RenderContext; image: Image)">draw(node: TextNode; renderCtx: types.RenderContext; image: Image)</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">measure
+  <li><a class="reference" href="#measure.e%2CTextNode%2C" title="measure(node: TextNode; ctx: types.RenderContext)">measure(node: TextNode; ctx: types.RenderContext)</a></li>
+
+</ul>
 
     </ul>
   </details>
@@ -120,7 +120,7 @@
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
   <dl class="item">
-    <a class="reference external" href="../core/types.html">../core/types</a>, <a class="reference external" href="../core/context.html">../core/context</a>, <a class="reference external" href="../core/transform.html">../core/transform</a>
+    <a class="reference external" href="../core/types.html">../core/types</a>, <a class="reference external" href="../core/context.html">../core/context</a>, <a class="reference external" href="../core/transform.html">../core/transform</a>, <a class="reference external" href="../layout/alignment.html">../layout/alignment</a>
   </dl>
 </div>
 <div class="section" id="7">
@@ -177,18 +177,6 @@
 </div>
 
 </div>
-<div id="measure-procs-all">
-  <div id="measure,TextNode,">
-  <dt><pre><span class="Keyword">proc</span> <a href="#measure%2CTextNode%2C"><span class="Identifier">measure</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="text.html#TextNode"><span class="Identifier">TextNode</span></a><span class="Other">;</span> <span class="Identifier">ctx</span><span class="Other">:</span> <span class="Identifier">types</span><span class="Other">.</span><span class="Identifier">RenderContext</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">PixieError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
 <div id="newTextNode-procs-all">
   <div id="newTextNode,string,string,float32,Color">
   <dt><pre><span class="Keyword">proc</span> <a href="#newTextNode%2Cstring%2Cstring%2Cfloat32%2CColor"><span class="Identifier">newTextNode</span></a><span class="Other">(</span><span class="Identifier">text</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">fontPath</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">fontSize</span><span class="Other">:</span> <span class="Identifier">float32</span> <span class="Other">=</span> <span class="FloatNumber">16.0</span><span class="Other">;</span>
@@ -211,8 +199,20 @@
     <div id="draw-methods-all">
   <div id="draw.e,TextNode,,Image">
   <dt><pre><span class="Keyword">method</span> <a href="#draw.e%2CTextNode%2C%2CImage"><span class="Identifier">draw</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="text.html#TextNode"><span class="Identifier">TextNode</span></a><span class="Other">;</span> <span class="Identifier">renderCtx</span><span class="Other">:</span> <span class="Identifier">types</span><span class="Other">.</span><span class="Identifier">RenderContext</span><span class="Other">;</span> <span class="Identifier">image</span><span class="Other">:</span> <span class="Identifier">Image</span><span class="Other">)</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">PixieError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="measure-methods-all">
+  <div id="measure.e,TextNode,">
+  <dt><pre><span class="Keyword">method</span> <a href="#measure.e%2CTextNode%2C"><span class="Identifier">measure</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="text.html#TextNode"><span class="Identifier">TextNode</span></a><span class="Other">;</span> <span class="Identifier">ctx</span><span class="Other">:</span> <span class="Identifier">types</span><span class="Other">.</span><span class="Identifier">RenderContext</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">PixieError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -231,7 +231,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-19 10:30:35 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 08:31:49 UTC</small>
       </div>
     </div>
   </div>

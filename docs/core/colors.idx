@@ -1,0 +1,13 @@
+nimTitle	colors	core/colors.html	module vex/core/colors		0
+nim	hex	core/colors.html#hex.t,string	template hex(color: string): Color		3
+nim	solidPaint	core/colors.html#solidPaint,Color,float32	proc solidPaint(color: Color; opacity: float32 = 1.0): Paint		6
+nim	colBlue	core/colors.html#colBlue	const colBlue		13
+nim	colOrange	core/colors.html#colOrange	const colOrange		14
+nim	colGreen	core/colors.html#colGreen	const colGreen		15
+nim	colRed	core/colors.html#colRed	const colRed		16
+nim	colPurple	core/colors.html#colPurple	const colPurple		17
+nim	colBrown	core/colors.html#colBrown	const colBrown		18
+nim	colPink	core/colors.html#colPink	const colPink		19
+nim	colGray	core/colors.html#colGray	const colGray		20
+nim	colOlive	core/colors.html#colOlive	const colOlive		21
+nim	colCyan	core/colors.html#colCyan	const colCyan		22

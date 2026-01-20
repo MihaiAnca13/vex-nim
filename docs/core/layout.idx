@@ -1,0 +1,3 @@
+nimTitle	layout	core/layout.html	module vex/core/layout		0
+nim	layoutNode	core/layout.html#layoutNode,Node,Vec2,bool	proc layoutNode(node: Node; parentSize: Vec2; isRoot: bool = false)		5
+nim	requestLayout	core/layout.html#requestLayout,Node	proc requestLayout(node: Node)		61

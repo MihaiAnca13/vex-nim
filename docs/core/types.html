@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>src/vex/core/types</title>
+<title>vex/core/types</title>
 
 <!-- Google fonts -->
 <link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
@@ -24,7 +24,7 @@
 <body>
   <div class="document" id="documentId">
     <div class="container">
-      <h1 class="title">src/vex/core/types</h1>
+      <h1 class="title">vex/core/types</h1>
       <div class="row">
   <div class="three columns">
     <div class="theme-select-wrapper">
@@ -52,6 +52,9 @@
     </div>
     <ul class="simple simple-toc" id="toc-list">
   <li>
+  <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
+</li>
+<li>
   <details open>
     <summary><a class="reference reference-toplevel" href="#7" id="57">Types</a></summary>
     <ul class="simple simple-toc-section">
@@ -83,8 +86,18 @@
   name*: string              ## Optional name for debugging
   size*: Vec2                ## Node dimensions (used for hit testing)
   zIndex*: int               ## Rendering order (higher = on top)
-  clipChildren*: bool        ## TODO: Not yet implemented (requires Boxy scissor)
-  childrenSorted*: bool      ## True if children are sorted by zIndex">Node</a></li>
+  clipChildren*: bool        ## When true, children are clipped to parent's bounds
+  childrenSorted*: bool      ## True if children are sorted by zIndex
+  anchor*: Anchor            ## Anchor point for positioning
+  anchorOffset*: Vec2        ## Offset from anchor point in pixels
+  pivot*: Pivot              ## Transform origin point
+  sizeMode*: SizeMode        ## How size is determined
+  sizePercent*: Vec2         ## Percentage of parent size (0.0-1.0)
+  scaleMode*: ScaleMode      ## How content scales when sized
+  minSize*: Vec2             ## Minimum size constraint
+  maxSize*: Vec2             ## Maximum size constraint
+  layoutValid*: bool         ## True if layout is up-to-date
+  autoLayout*: bool          ## When true, layout algorithm positions this node">Node</a></li>
 <li><a class="reference" href="#RenderContext" title="RenderContext = ref object
   bxy*: Boxy                 ## Boxy instance for GPU rendering
   nodeTextures*: Table[Node, string] ## Maps nodes to cached texture keys
@@ -92,6 +105,10 @@
   fontCache*: Table[string, Font] ## Cached fonts by path
   nextNodeId*: int           ## Texture key counter
   viewportSize*: Vec2        ## Current viewport dimensions">RenderContext</a></li>
+<li><a class="reference" href="#ScaleMode" title="ScaleMode = enum
+  Stretch, Fit, Fill, KeepAspect">ScaleMode</a></li>
+<li><a class="reference" href="#SizeMode" title="SizeMode = enum
+  Absolute, FillParent, Percent">SizeMode</a></li>
 <li><a class="reference" href="#StackItem" title="StackItem = tuple[node: Node, visited: bool]">StackItem</a></li>
 
     </ul>
@@ -115,6 +132,10 @@
   <li><a class="reference" href="#addChild%2CNode%2CNode" title="addChild(parent: Node; child: Node)">addChild(parent: Node; child: Node)</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">centerIn
+  <li><a class="reference" href="#centerIn%2CNode%2CVec2" title="centerIn(node: Node; bounds: Vec2)">centerIn(node: Node; bounds: Vec2)</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">computeGlobalTransform
   <li><a class="reference" href="#computeGlobalTransform%2CNode" title="computeGlobalTransform(node: Node): Mat3">computeGlobalTransform(node: Node): Mat3</a></li>
 
@@ -133,6 +154,10 @@
 </ul>
 <ul class="simple nested-toc-section">hash
   <li><a class="reference" href="#hash%2CNode" title="hash(node: Node): Hash">hash(node: Node): Hash</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">invalidateLayout
+  <li><a class="reference" href="#invalidateLayout%2CNode" title="invalidateLayout(node: Node)">invalidateLayout(node: Node)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">isAncestorOf
@@ -173,6 +198,10 @@
     <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">draw
   <li><a class="reference" href="#draw.e%2CNode%2CRenderContext%2CImage" title="draw(node: Node; ctx: RenderContext; image: Image)">draw(node: Node; ctx: RenderContext; image: Image)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">measure
+  <li><a class="reference" href="#measure.e%2CNode%2CRenderContext" title="measure(node: Node; ctx: RenderContext)">measure(node: Node; ctx: RenderContext)</a></li>
 
 </ul>
 
@@ -216,8 +245,14 @@ EventType identifies the type of input event.ModifierKey represents keyboard mod
 <p>Raises assertion if child already has a different parent or if child is already a child of parent.</p>
 <p>Removes a child node from the parent.</p>
 <p>Raises assertion if child is not a child of parent.</p>
-Returns true if <tt class="docutils literal"><span class="pre"><span class="Identifier">ancestor</span></span></tt> is in the parent chain of <tt class="docutils literal"><span class="pre"><span class="Identifier">node</span></span></tt>.Computes the local transformation matrix (position, rotation, scale).Computes the global (world-space) transformation matrix.Updates globalTransform for the node and all descendants.Marks the node as dirty, requiring re-rasterization.Marks this node and all ancestors as dirty (for layout changes).Marks this node and all descendants as dirty.Tests if <tt class="docutils literal"><span class="pre"><span class="Identifier">point</span></span></tt> (in local coordinates) is within the node's bounds.Base draw method. Override in derived types.Finds a child node by name (recursive search).Iterates over the node and all descendants (pre-order).Iterates over the node and all descendants (post-order, children before parents).Hash function for Node (enables use as Table key).</p>
-    <div class="section" id="7">
+Returns true if <tt class="docutils literal"><span class="pre"><span class="Identifier">ancestor</span></span></tt> is in the parent chain of <tt class="docutils literal"><span class="pre"><span class="Identifier">node</span></span></tt>.Computes the local transformation matrix (position, rotation, scale).Computes the global (world-space) transformation matrix.Updates globalTransform for the node only (parent-to-child propagation ensures children are updated correctly when called from root once).Marks the node as dirty, requiring re-rasterization.Marks this node and all ancestors as dirty (for layout changes).Marks this node and all descendants as dirty.Marks this node's layout as invalid, requiring re-layout.Tests if <tt class="docutils literal"><span class="pre"><span class="Identifier">point</span></span></tt> (in local coordinates) is within the node's bounds.Base draw method. Override in derived types.Base measure method. Override in derived types for auto-sizing.Centers the node within the given bounds.Finds a child node by name (recursive search).Iterates over the node and all descendants (pre-order).Iterates over the node and all descendants (post-order, children before parents).Hash function for Node (enables use as Table key).</p>
+    <div class="section" id="6">
+  <h1><a class="toc-backref" href="#6">Imports</a></h1>
+  <dl class="item">
+    <a class="reference external" href="../layout/alignment.html">../layout/alignment</a>
+  </dl>
+</div>
+<div class="section" id="7">
   <h1><a class="toc-backref" href="#7">Types</a></h1>
   <dl class="item">
     <div id="EventType">
@@ -270,8 +305,18 @@ Returns true if <tt class="docutils literal"><span class="pre"><span class="Iden
   <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>              <span class="Comment">## Optional name for debugging</span>
   <span class="Identifier">size</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Vec2</span>                <span class="Comment">## Node dimensions (used for hit testing)</span>
   <span class="Identifier">zIndex</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>               <span class="Comment">## Rendering order (higher = on top)</span>
-  <span class="Identifier">clipChildren</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>        <span class="Comment">## TODO: Not yet implemented (requires Boxy scissor)</span>
-  <span class="Identifier">childrenSorted</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>      <span class="Comment">## True if children are sorted by zIndex</span></pre></dt>
+  <span class="Identifier">clipChildren</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>        <span class="Comment">## When true, children are clipped to parent's bounds</span>
+  <span class="Identifier">childrenSorted</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>      <span class="Comment">## True if children are sorted by zIndex</span>
+  <span class="Identifier">anchor</span><span class="Operator">*</span><span class="Other">:</span> <a href="../layout/alignment.html#Anchor"><span class="Identifier">Anchor</span></a>            <span class="Comment">## Anchor point for positioning</span>
+  <span class="Identifier">anchorOffset</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Vec2</span>        <span class="Comment">## Offset from anchor point in pixels</span>
+  <span class="Identifier">pivot</span><span class="Operator">*</span><span class="Other">:</span> <a href="../layout/alignment.html#Pivot"><span class="Identifier">Pivot</span></a>              <span class="Comment">## Transform origin point</span>
+  <span class="Identifier">sizeMode</span><span class="Operator">*</span><span class="Other">:</span> <a href="types.html#SizeMode"><span class="Identifier">SizeMode</span></a>        <span class="Comment">## How size is determined</span>
+  <span class="Identifier">sizePercent</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Vec2</span>         <span class="Comment">## Percentage of parent size (0.0-1.0)</span>
+  <span class="Identifier">scaleMode</span><span class="Operator">*</span><span class="Other">:</span> <a href="types.html#ScaleMode"><span class="Identifier">ScaleMode</span></a>      <span class="Comment">## How content scales when sized</span>
+  <span class="Identifier">minSize</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Vec2</span>             <span class="Comment">## Minimum size constraint</span>
+  <span class="Identifier">maxSize</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Vec2</span>             <span class="Comment">## Maximum size constraint</span>
+  <span class="Identifier">layoutValid</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>         <span class="Comment">## True if layout is up-to-date</span>
+  <span class="Identifier">autoLayout</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>          <span class="Comment">## When true, layout algorithm positions this node</span></pre></dt>
   <dd>
     
     
@@ -286,6 +331,24 @@ Returns true if <tt class="docutils literal"><span class="pre"><span class="Iden
   <span class="Identifier">fontCache</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">Font</span><span class="Other">]</span> <span class="Comment">## Cached fonts by path</span>
   <span class="Identifier">nextNodeId</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>           <span class="Comment">## Texture key counter</span>
   <span class="Identifier">viewportSize</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Vec2</span>        <span class="Comment">## Current viewport dimensions</span></pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+<div id="ScaleMode">
+  <dt><pre><a href="types.html#ScaleMode"><span class="Identifier">ScaleMode</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">Stretch</span><span class="Other">,</span> <span class="Identifier">Fit</span><span class="Other">,</span> <span class="Identifier">Fill</span><span class="Other">,</span> <span class="Identifier">KeepAspect</span></pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+<div id="SizeMode">
+  <dt><pre><a href="types.html#SizeMode"><span class="Identifier">SizeMode</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
+  <span class="Identifier">Absolute</span><span class="Other">,</span> <span class="Identifier">FillParent</span><span class="Other">,</span> <span class="Identifier">Percent</span></pre></dt>
   <dd>
     
     
@@ -332,6 +395,17 @@ Returns true if <tt class="docutils literal"><span class="pre"><span class="Iden
   <div id="addChild,Node,Node">
   <dt><pre><span class="Keyword">proc</span> <a href="#addChild%2CNode%2CNode"><span class="Identifier">addChild</span></a><span class="Other">(</span><span class="Identifier">parent</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">;</span> <span class="Identifier">child</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="centerIn-procs-all">
+  <div id="centerIn,Node,Vec2">
+  <dt><pre><span class="Keyword">proc</span> <a href="#centerIn%2CNode%2CVec2"><span class="Identifier">centerIn</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">;</span> <span class="Identifier">bounds</span><span class="Other">:</span> <span class="Identifier">Vec2</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -389,6 +463,17 @@ Returns true if <tt class="docutils literal"><span class="pre"><span class="Iden
 <div id="hash-procs-all">
   <div id="hash,Node">
   <dt><pre><span class="Keyword">proc</span> <a href="#hash%2CNode"><span class="Identifier">hash</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Hash</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="invalidateLayout-procs-all">
+  <div id="invalidateLayout,Node">
+  <dt><pre><span class="Keyword">proc</span> <a href="#invalidateLayout%2CNode"><span class="Identifier">invalidateLayout</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -494,6 +579,18 @@ Returns true if <tt class="docutils literal"><span class="pre"><span class="Iden
 </div>
 
 </div>
+<div id="measure-methods-all">
+  <div id="measure.e,Node,RenderContext">
+  <dt><pre><span class="Keyword">method</span> <a href="#measure.e%2CNode%2CRenderContext"><span class="Identifier">measure</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">;</span> <span class="Identifier">ctx</span><span class="Other">:</span> <a href="types.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">)</span> {.<span class="Identifier">base</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
 
   </dl>
 </div>
@@ -532,7 +629,7 @@ Returns true if <tt class="docutils literal"><span class="pre"><span class="Iden
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-19 10:30:35 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 08:31:49 UTC</small>
       </div>
     </div>
   </div>

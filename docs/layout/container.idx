@@ -1,11 +1,17 @@
-nimTitle	container	layout/container.html	module src/vex/layout/container		0
-nim	HBox	layout/container.html#HBox	type HBox		6
-nim	VBox	layout/container.html#VBox	type VBox		10
-nim	newHBox	layout/container.html#newHBox,float32,float32	proc newHBox(spacing: float32 = 4.0; padding: float32 = 4.0): HBox		14
-nim	newVBox	layout/container.html#newVBox,float32,float32	proc newVBox(spacing: float32 = 4.0; padding: float32 = 4.0): VBox		29
-nim	addItem	layout/container.html#addItem,HBox,Node	proc addItem(hbox: HBox; child: Node)		44
-nim	addItem	layout/container.html#addItem,VBox,Node	proc addItem(vbox: VBox; child: Node)		48
-nim	update	layout/container.html#update,HBox,	proc update(hbox: HBox; ctx: types.RenderContext)		52
-nim	update	layout/container.html#update,VBox,	proc update(vbox: VBox; ctx: types.RenderContext)		76
-nimgrp	update	layout/container.html#update-procs-all	proc		52
-nimgrp	additem	layout/container.html#addItem-procs-all	proc		44
+nimTitle	container	layout/container.html	module vex/layout/container		0
+nim	HBox	layout/container.html#HBox	type HBox		12
+nim	VBox	layout/container.html#VBox	type VBox		18
+nim	newHBox	layout/container.html#newHBox,float32,float32	proc newHBox(spacing: float32 = 4.0; padding: float32 = 4.0): HBox		25
+nim	newVBox	layout/container.html#newVBox,float32,float32	proc newVBox(spacing: float32 = 4.0; padding: float32 = 4.0): VBox		56
+nim	addItem	layout/container.html#addItem,HBox,Node	proc addItem(hbox: HBox; child: Node)		87
+nim	addItem	layout/container.html#addItem,VBox,Node	proc addItem(vbox: VBox; child: Node)		93
+nim	update	layout/container.html#update,HBox,ref RenderContext:ObjectType	proc update(hbox: HBox; ctx: types.RenderContext = nil)		103
+nim	measure	layout/container.html#measure.e,HBox,	method measure(hbox: HBox; ctx: types.RenderContext)		146
+nim	update	layout/container.html#update,VBox,ref RenderContext:ObjectType	proc update(vbox: VBox; ctx: types.RenderContext = nil)		154
+nim	measure	layout/container.html#measure.e,VBox,	method measure(vbox: VBox; ctx: types.RenderContext)		197
+nim	withSize	layout/container.html#withSize,HBox,float32,float32,ref RenderContext:ObjectType	proc withSize(hbox: HBox; width, height: float32; ctx: types.RenderContext = nil): HBox		200
+nim	withSize	layout/container.html#withSize,VBox,float32,float32,ref RenderContext:ObjectType	proc withSize(vbox: VBox; width, height: float32; ctx: types.RenderContext = nil): VBox		205
+nimgrp	withsize	layout/container.html#withSize-procs-all	proc		200
+nimgrp	update	layout/container.html#update-procs-all	proc		103
+nimgrp	additem	layout/container.html#addItem-procs-all	proc		87
+nimgrp	measure	layout/container.html#measure-methods-all	method		146

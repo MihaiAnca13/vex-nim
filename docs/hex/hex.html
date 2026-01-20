@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>src/vex/hex/hex</title>
+<title>vex/hex/hex</title>
 
 <!-- Google fonts -->
 <link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
@@ -24,7 +24,7 @@
 <body>
   <div class="document" id="documentId">
     <div class="container">
-      <h1 class="title">src/vex/hex/hex</h1>
+      <h1 class="title">vex/hex/hex</h1>
       <div class="row">
   <div class="three columns">
     <div class="theme-select-wrapper">
@@ -118,10 +118,6 @@
   <li><a class="reference" href="#cubeToAxial%2CCubeCoord" title="cubeToAxial(coord: CubeCoord): HexCoord">cubeToAxial(coord: CubeCoord): HexCoord</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">draw
-  <li><a class="reference" href="#draw%2CHexNode%2CRenderContext%2CImage" title="draw(node: HexNode; renderCtx: RenderContext; image: Image)">draw(node: HexNode; renderCtx: RenderContext; image: Image)</a></li>
-
-</ul>
 <ul class="simple nested-toc-section">getHex
   <li><a class="reference" href="#getHex%2CHexGrid%2CHexCoord" title="getHex(grid: HexGrid; coord: HexCoord): Option[HexNode]">getHex(grid: HexGrid; coord: HexCoord): Option[HexNode]</a></li>
 
@@ -178,6 +174,18 @@
     </ul>
   </details>
 </li>
+<li>
+  <details open>
+    <summary><a class="reference reference-toplevel" href="#14" id="64">Methods</a></summary>
+    <ul class="simple simple-toc-section">
+      <ul class="simple nested-toc-section">draw
+  <li><a class="reference" href="#draw.e%2CHexNode%2CRenderContext%2CImage" title="draw(node: HexNode; renderCtx: RenderContext; image: Image)">draw(node: HexNode; renderCtx: RenderContext; image: Image)</a></li>
+
+</ul>
+
+    </ul>
+  </details>
+</li>
 
 </ul>
 
@@ -186,11 +194,13 @@
     
     <div id="tocRoot"></div>
     
-    <p class="module-desc"></p>
+    <p class="module-desc"><p>Hexagonal grid utilities for strategy games and hexagonal layouts.</p>
+<p>Supports both pointy-topped and flat-topped hex orientations. Uses axial coordinates (q, r) internally with cube coordinate conversions for distance and line calculations.</p>
+Converts axial coordinates to cube coordinates. Cube coordinates use three axes (x, y, z) that sum to zero.Converts cube coordinates to axial coordinates.Rounds fractional cube coordinates to the nearest integer hex.Rounds fractional axial coordinates to the nearest integer hex.Converts hex coordinates to pixel coordinates in screen space.Converts pixel coordinates to the nearest hex coordinate.Returns the offset vector for a hex corner relative to the hex center.Returns the neighbor coordinate in the given direction (0-5).Calculates the distance between two hex coordinates. Returns the number of steps needed to move from a to b.Generates a line of hex coordinates between two points. Includes both endpoints. Returns a single hex when a == b.Creates a new hex layout with the specified orientation, size, and origin.Creates a new hex node at the specified axial coordinates.Rasterizes the hex node to an image using Pixie.Creates a new empty hex grid with the specified layout.Adds a hex at the specified coordinate to the grid. Returns the existing hex if one already exists at that coordinate.Removes a hex at the specified coordinate from the grid.Gets the hex node at the specified coordinate, if it exists.Finds the hex at the specified pixel position, if one exists.Updates the grid's bounding box based on its children. Call this after adding or removing hexes.</p>
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
   <dl class="item">
-    <a class="reference external" href="../core/types.html">../core/types</a>, <a class="reference external" href="../core/transform.html">../core/transform</a>
+    <a class="reference external" href="../core/types.html">../core/types</a>, <a class="reference external" href="../core/transform.html">../core/transform</a>, <a class="reference external" href="../layout/alignment.html">../layout/alignment</a>
   </dl>
 </div>
 <div class="section" id="7">
@@ -359,18 +369,6 @@
 </div>
 
 </div>
-<div id="draw-procs-all">
-  <div id="draw,HexNode,RenderContext,Image">
-  <dt><pre><span class="Keyword">proc</span> <a href="#draw%2CHexNode%2CRenderContext%2CImage"><span class="Identifier">draw</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="hex.html#HexNode"><span class="Identifier">HexNode</span></a><span class="Other">;</span> <span class="Identifier">renderCtx</span><span class="Other">:</span> <a href="../core/types.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">image</span><span class="Other">:</span> <span class="Identifier">Image</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
 <div id="getHex-procs-all">
   <div id="getHex,HexGrid,HexCoord">
   <dt><pre><span class="Keyword">proc</span> <a href="#getHex%2CHexGrid%2CHexCoord"><span class="Identifier">getHex</span></a><span class="Other">(</span><span class="Identifier">grid</span><span class="Other">:</span> <a href="hex.html#HexGrid"><span class="Identifier">HexGrid</span></a><span class="Other">;</span> <span class="Identifier">coord</span><span class="Other">:</span> <a href="hex.html#HexCoord"><span class="Identifier">HexCoord</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><a href="hex.html#HexNode"><span class="Identifier">HexNode</span></a><span class="Other">]</span> {.
@@ -526,6 +524,24 @@
 
   </dl>
 </div>
+<div class="section" id="14">
+  <h1><a class="toc-backref" href="#14">Methods</a></h1>
+  <dl class="item">
+    <div id="draw-methods-all">
+  <div id="draw.e,HexNode,RenderContext,Image">
+  <dt><pre><span class="Keyword">method</span> <a href="#draw.e%2CHexNode%2CRenderContext%2CImage"><span class="Identifier">draw</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="hex.html#HexNode"><span class="Identifier">HexNode</span></a><span class="Other">;</span> <span class="Identifier">renderCtx</span><span class="Other">:</span> <a href="../core/types.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">image</span><span class="Other">:</span> <span class="Identifier">Image</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+
+  </dl>
+</div>
 
   </div>
 </div>
@@ -533,7 +549,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-19 10:30:35 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 08:31:49 UTC</small>
       </div>
     </div>
   </div>

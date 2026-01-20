@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>src/vex/core/context</title>
+<title>vex/core/context</title>
 
 <!-- Google fonts -->
 <link href='https://fonts.googleapis.com/css?family=Lato:400,600,900' rel='stylesheet' type='text/css'/>
@@ -24,7 +24,7 @@
 <body>
   <div class="document" id="documentId">
     <div class="container">
-      <h1 class="title">src/vex/core/context</h1>
+      <h1 class="title">vex/core/context</h1>
       <div class="row">
   <div class="three columns">
     <div class="theme-select-wrapper">
@@ -94,7 +94,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">drawNode
-  <li><a class="reference" href="#drawNode%2CRenderContext%2CNode" title="drawNode(ctx: RenderContext; node: Node)">drawNode(ctx: RenderContext; node: Node)</a></li>
+  <li><a class="reference" href="#drawNode%2CRenderContext%2CNode%2COption%5BRect%5D" title="drawNode(ctx: RenderContext; node: Node; clipRect: Option[Rect] = none(Rect))">drawNode(ctx: RenderContext; node: Node; clipRect: Option[Rect] = none(Rect))</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">endFrame
@@ -117,8 +117,16 @@
   <li><a class="reference" href="#handleEvent%2CRenderContext%2CNode%2C" title="handleEvent(ctx: RenderContext; root: Node; event: var types.InputEvent): bool">handleEvent(ctx: RenderContext; root: Node; event: var types.InputEvent): bool</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">intersect
+  <li><a class="reference" href="#intersect%2CRect%2CRect" title="intersect(a, b: Rect): Rect">intersect(a, b: Rect): Rect</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">invalidateNodeCache
   <li><a class="reference" href="#invalidateNodeCache%2CRenderContext%2CNode" title="invalidateNodeCache(ctx: RenderContext; node: Node)">invalidateNodeCache(ctx: RenderContext; node: Node)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">layout
+  <li><a class="reference" href="#layout%2CRenderContext%2CNode" title="layout(ctx: RenderContext; root: Node)">layout(ctx: RenderContext; root: Node)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">newRenderContext
@@ -153,7 +161,7 @@
     
     <div id="tocRoot"></div>
     
-    <p class="module-desc">RenderContext re-export for convenience.Creates a new RenderContext with the specified viewport size.Checks if a texture with the given key exists.Returns the size of an image by key.<p>Returns a cached image by key.</p>
+    <p class="module-desc">RenderContext re-export for convenience.Computes the intersection of two rectangles.Creates a new RenderContext with the specified viewport size.Checks if a texture with the given key exists.Returns the size of an image by key.<p>Returns a cached image by key.</p>
 <p>Raises KeyError if key not found.</p>
 <p>Returns a font, reading from disk if not cached.</p>
 <p>Fonts are cached after first load for performance.</p>
@@ -164,12 +172,12 @@ Adds an image to the context cache and Boxy atlas.Draws a cached image at the sp
 Removes a node's cached texture from Boxy and the cache.Clears all cached textures.<p>Handles an input event by performing hit testing and dispatch.</p>
 <p>Returns true if an event handler consumed the event.</p>
 <p>Draws a single node and its children.</p>
-<p>Handles culling, texture caching, z-index sorting, and recursive rendering.</p>
-Renders the entire scene graph.Updates the viewport size.Reads the current atlas as an image.</p>
+<p>Handles culling, texture caching, z-index sorting, and recursive rendering. When node.clipChildren is true, children are clipped to the node's bounds.</p>
+Renders the entire scene graph.Updates the viewport size and invalidates layout.Lays out the scene graph for the current viewport size.Reads the current atlas as an image.</p>
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
   <dl class="item">
-    <a class="reference external" href="types.html">types</a>, <a class="reference external" href="transform.html">transform</a>, <a class="reference external" href="events.html">events</a>
+    <a class="reference external" href="types.html">types</a>, <a class="reference external" href="transform.html">transform</a>, <a class="reference external" href="events.html">events</a>, <a class="reference external" href="layout.html">layout</a>
   </dl>
 </div>
 <div class="section" id="7">
@@ -266,8 +274,9 @@ Renders the entire scene graph.Updates the viewport size.Reads the current atlas
 
 </div>
 <div id="drawNode-procs-all">
-  <div id="drawNode,RenderContext,Node">
-  <dt><pre><span class="Keyword">proc</span> <a href="#drawNode%2CRenderContext%2CNode"><span class="Identifier">drawNode</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span> {.
+  <div id="drawNode,RenderContext,Node,Option[Rect]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#drawNode%2CRenderContext%2CNode%2COption%5BRect%5D"><span class="Identifier">drawNode</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">;</span>
+              <span class="Identifier">clipRect</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">Rect</span><span class="Other">]</span> <span class="Other">=</span> <span class="Identifier">none</span><span class="Other">(</span><span class="Identifier">Rect</span><span class="Other">)</span><span class="Other">)</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">PixieError</span><span class="Other">,</span> <span class="Identifier">BoxyError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">GLerror</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
@@ -339,10 +348,32 @@ Renders the entire scene graph.Updates the viewport size.Reads the current atlas
 </div>
 
 </div>
+<div id="intersect-procs-all">
+  <div id="intersect,Rect,Rect">
+  <dt><pre><span class="Keyword">proc</span> <a href="#intersect%2CRect%2CRect"><span class="Identifier">intersect</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">,</span> <span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">Rect</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Rect</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
 <div id="invalidateNodeCache-procs-all">
   <div id="invalidateNodeCache,RenderContext,Node">
   <dt><pre><span class="Keyword">proc</span> <a href="#invalidateNodeCache%2CRenderContext%2CNode"><span class="Identifier">invalidateNodeCache</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">BoxyError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="layout-procs-all">
+  <div id="layout,RenderContext,Node">
+  <dt><pre><span class="Keyword">proc</span> <a href="#layout%2CRenderContext%2CNode"><span class="Identifier">layout</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">root</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -421,7 +452,7 @@ Renders the entire scene graph.Updates the viewport size.Reads the current atlas
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-19 10:30:35 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 08:31:49 UTC</small>
       </div>
     </div>
   </div>

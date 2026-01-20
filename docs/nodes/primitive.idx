@@ -1,11 +1,11 @@
-nimTitle	primitive	nodes/primitive.html	module src/vex/nodes/primitive		0
-nim	RectNode	nodes/primitive.html#RectNode	type RectNode		8
-nim	CircleNode	nodes/primitive.html#CircleNode	type CircleNode		14
-nim	newRectNode	nodes/primitive.html#newRectNode,Vec2	proc newRectNode(size: Vec2 = vec2(100, 100)): RectNode		19
-nim	newCircleNode	nodes/primitive.html#newCircleNode,Vec2	proc newCircleNode(size: Vec2 = vec2(100, 100)): CircleNode		36
-nim	contains	nodes/primitive.html#contains,RectNode,Vec2	proc contains(node: RectNode; point: Vec2): bool		52
-nim	contains	nodes/primitive.html#contains,CircleNode,Vec2	proc contains(node: CircleNode; point: Vec2): bool		57
-nim	draw	nodes/primitive.html#draw.e,RectNode,RenderContext,Image	method draw(node: RectNode; renderCtx: RenderContext; image: Image)		67
-nim	draw	nodes/primitive.html#draw.e,CircleNode,RenderContext,Image	method draw(node: CircleNode; renderCtx: RenderContext; image: Image)		99
-nimgrp	contains	nodes/primitive.html#contains-procs-all	proc		52
-nimgrp	draw	nodes/primitive.html#draw-methods-all	method		67
+nimTitle	primitive	nodes/primitive.html	module vex/nodes/primitive		0
+nim	RectNode	nodes/primitive.html#RectNode	type RectNode		9
+nim	CircleNode	nodes/primitive.html#CircleNode	type CircleNode		15
+nim	newRectNode	nodes/primitive.html#newRectNode,Vec2	proc newRectNode(size: Vec2 = vec2(100, 100)): RectNode		20
+nim	newCircleNode	nodes/primitive.html#newCircleNode,Vec2	proc newCircleNode(size: Vec2 = vec2(100, 100)): CircleNode		50
+nim	contains	nodes/primitive.html#contains,RectNode,Vec2	proc contains(node: RectNode; point: Vec2): bool		79
+nim	contains	nodes/primitive.html#contains,CircleNode,Vec2	proc contains(node: CircleNode; point: Vec2): bool		84
+nim	draw	nodes/primitive.html#draw.e,RectNode,RenderContext,Image	method draw(node: RectNode; renderCtx: RenderContext; image: Image)		94
+nim	draw	nodes/primitive.html#draw.e,CircleNode,RenderContext,Image	method draw(node: CircleNode; renderCtx: RenderContext; image: Image)		126
+nimgrp	contains	nodes/primitive.html#contains-procs-all	proc		79
+nimgrp	draw	nodes/primitive.html#draw-methods-all	method		94
