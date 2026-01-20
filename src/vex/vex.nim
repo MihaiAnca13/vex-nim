@@ -6,6 +6,7 @@ import ./core/transform
 import ./core/events
 import ./core/context
 import ./core/colors
+import ./core/layout
 
 import ./nodes/primitive
 import ./nodes/sprite
@@ -21,6 +22,7 @@ export transform
 export events
 export context
 export colors
+export layout
 export primitive.RectNode, primitive.CircleNode
 export primitive.newRectNode, primitive.newCircleNode
 export sprite.SpriteNode

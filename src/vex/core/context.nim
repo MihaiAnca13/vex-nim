@@ -8,6 +8,7 @@ import vmath
 import ./types
 import ./transform
 import ./events
+import ./layout
 
 ## RenderContext re-export for convenience.
 type
@@ -196,13 +197,20 @@ proc drawNode*(ctx: RenderContext, node: Node, clipRect: Option[Rect] = none(Rec
 ## Renders the entire scene graph.
 proc draw*(ctx: RenderContext, root: Node) =
   ctx.beginFrame()
+  if not root.layoutValid:
+    root.layoutNode(ctx.viewportSize)
   root.updateGlobalTransform()
   ctx.drawNode(root, none(Rect))
   ctx.endFrame()
 
-## Updates the viewport size.
+## Updates the viewport size and invalidates layout.
 proc resize*(ctx: RenderContext, newSize: Vec2) =
   ctx.viewportSize = newSize
+
+## Lays out the scene graph for the current viewport size.
+proc layout*(ctx: RenderContext, root: Node) =
+  if not root.layoutValid:
+    root.layoutNode(ctx.viewportSize)
 
 ## Reads the current atlas as an image.
 proc readAtlas*(ctx: RenderContext): Image =

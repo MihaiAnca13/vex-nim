@@ -2,6 +2,19 @@ import std/[options, hashes, tables]
 import vmath
 import pixie
 import boxy
+import ../layout/alignment
+
+type
+  SizeMode* = enum
+    Absolute
+    FillParent
+    Percent
+
+  ScaleMode* = enum
+    Stretch
+    Fit
+    Fill
+    KeepAspect
 
 ## Node is the base type for all scene graph objects.
 ##
@@ -23,6 +36,15 @@ type
     zIndex*: int                       ## Rendering order (higher = on top)
     clipChildren*: bool                ## When true, children are clipped to parent's bounds
     childrenSorted*: bool              ## True if children are sorted by zIndex
+    anchor*: Anchor                    ## Anchor point for positioning
+    anchorOffset*: Vec2                ## Offset from anchor point in pixels
+    pivot*: Pivot                      ## Transform origin point
+    sizeMode*: SizeMode                ## How size is determined
+    sizePercent*: Vec2                 ## Percentage of parent size (0.0-1.0)
+    scaleMode*: ScaleMode              ## How content scales when sized
+    minSize*: Vec2                     ## Minimum size constraint
+    maxSize*: Vec2                     ## Maximum size constraint
+    layoutValid*: bool                 ## True if layout is up-to-date
 
 ## RenderContext wraps Boxy with texture caching and scene graph rendering.
 ##
@@ -90,7 +112,16 @@ proc newNode*(): Node =
     name: "",
     size: vec2(0, 0),
     zIndex: 0,
-    childrenSorted: true
+    childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false
   )
 
 proc markDirty*(node: Node)
@@ -165,6 +196,10 @@ proc markDirtyDown*(node: Node) =
   for child in node.children:
     child.markDirtyDown()
 
+## Marks this node's layout as invalid, requiring re-layout.
+proc invalidateLayout*(node: Node) =
+  node.layoutValid = false
+
 ## Tests if `point` (in local coordinates) is within the node's bounds.
 proc contains*(node: Node, point: Vec2): bool =
   let bounds = rect(0, 0, node.size.x, node.size.y)
@@ -221,4 +256,4 @@ iterator traversePostOrder*(node: Node): Node =
 proc hash*(node: Node): Hash =
   cast[pointer](node).hash
 
-export EventType, InputEvent, ModifierKey
+export EventType, InputEvent, ModifierKey, SizeMode, ScaleMode

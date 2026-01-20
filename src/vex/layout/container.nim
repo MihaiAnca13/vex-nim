@@ -1,5 +1,6 @@
 import vmath
 import ../core/types
+import ../layout/alignment
 
 ## Layout containers for automatic child positioning.
 ##
@@ -11,10 +12,14 @@ type
   HBox* = ref object of Node
     spacing*: float32
     padding*: float32
+    fillWidth*: bool
+    fillHeight*: bool
 
   VBox* = ref object of Node
     spacing*: float32
     padding*: float32
+    fillWidth*: bool
+    fillHeight*: bool
 
 ## Creates a new horizontal box layout container.
 proc newHBox*(spacing: float32 = 4.0, padding: float32 = 4.0): HBox =
@@ -28,8 +33,21 @@ proc newHBox*(spacing: float32 = 4.0, padding: float32 = 4.0): HBox =
     visible: true,
     name: "",
     size: vec2(0, 0),
+    zIndex: 0,
+    childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
     spacing: spacing,
-    padding: padding
+    padding: padding,
+    fillWidth: false,
+    fillHeight: false
   )
 
 ## Creates a new vertical box layout container.
@@ -44,8 +62,21 @@ proc newVBox*(spacing: float32 = 4.0, padding: float32 = 4.0): VBox =
     visible: true,
     name: "",
     size: vec2(0, 0),
+    zIndex: 0,
+    childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
     spacing: spacing,
-    padding: padding
+    padding: padding,
+    fillWidth: false,
+    fillHeight: false
   )
 
 ## Adds a child to the HBox and marks it as dirty.

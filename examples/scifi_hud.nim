@@ -3,7 +3,7 @@ import vex, windy, opengl, vmath, pixie
 
 # --- Configuration ---
 const
-  WindowSize = ivec2(1280, 720)
+  InitialSize = ivec2(1280, 720)
   HexSize = vec2(40, 40)
   FontPath = "examples/assets/Orbitron.ttf"
   UnitPath = "examples/assets/enemyRed.png"
@@ -20,12 +20,12 @@ let jsonNode = parseFile("examples/assets/map_data.json")
 let mapData = jsonNode.to(MapData)
 
 # --- Window Setup ---
-let window = newWindow("VEX - SciFi Tactical Interface", WindowSize)
+let window = newWindow("VEX - SciFi Tactical Interface", InitialSize)
 makeContextCurrent(window)
 loadExtensions()
 
 # --- Vex Context ---
-let ctx = newRenderContext(WindowSize.vec2)
+let ctx = newRenderContext(InitialSize.vec2)
 
 # Load Resources
 ctx.getFont(FontPath).size = 20
@@ -34,11 +34,14 @@ ctx.addImage("enemyBlue", readImage(UnitBluePath))
 
 # --- Scene Construction ---
 let root = newNode()
-root.size = WindowSize.vec2
+root.sizeMode = FillParent
+root.anchor = TopLeft
 
 # 1. Background Layer (Starfield simulation)
-let bg = newRectNode(WindowSize.vec2)
-bg.fill = some(solidPaint(hex"#1a1a2e")) # Using new hex macro and solidPaint
+let bg = newRectNode(InitialSize.vec2)
+bg.fill = some(solidPaint(hex"#1a1a2e"))
+bg.sizeMode = FillParent
+bg.anchor = TopLeft
 root.addChild(bg)
 
 # 2. Hex Map Container (Centered)
@@ -65,7 +68,8 @@ for tile in mapData.tiles:
 hexGrid.updateGrid()
 
 let gridRoot = newNode()
-gridRoot.localPos = WindowSize.vec2 / 2
+gridRoot.anchor = Center
+gridRoot.anchorOffset = vec2(0, 0)
 root.addChild(gridRoot)
 
 hexGrid.localPos = -hexGrid.getLocalBoundsCenter()
@@ -73,17 +77,21 @@ gridRoot.addChild(hexGrid)
 
 # 3. Ship (Image swap demo)
 let ship2 = newSpriteNode("enemyRed", vec2(48, 48))
-ship2.localPos = vec2(WindowSize.x.float32 - 140, 120)
+ship2.anchor = TopRight
+ship2.anchorOffset = vec2(-140, 120)
 root.addChild(ship2)
 
 # 4. UI Layer (HUD)
-let uiRoot = newRectNode(WindowSize.vec2)
+let uiRoot = newRectNode(InitialSize.vec2)
 uiRoot.fill = none(Paint)
+uiRoot.sizeMode = FillParent
+uiRoot.anchor = TopLeft
 root.addChild(uiRoot)
 
 # -- Side Panel (VBox) --
 let panel = newVBox(spacing = 10, padding = 20)
-panel.localPos = vec2(20, 20)
+panel.anchor = TopLeft
+panel.anchorOffset = vec2(20, 20)
 
 # Title
 let title = newTextNode(mapData.name.toUpperAscii(), FontPath, 28, hex"#e94560")
@@ -115,6 +123,12 @@ var ship2IsBlue = false
 window.onFrame = proc() =
   let dt = 1.0 / 60.0
   swapTimer += dt
+
+  # Handle window resize
+  let windowSize = window.size.vec2
+  if windowSize != ctx.viewportSize:
+    ctx.resize(windowSize)
+    root.requestLayout()
 
   # Animate the grid slightly (Rotate)
   gridRoot.localRotation += 0.001
