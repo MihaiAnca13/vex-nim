@@ -3,6 +3,7 @@ import vmath
 import ../core/types
 import ../core/context
 import ../core/transform
+import ../layout/alignment
 
 type
   TextNode* = ref object of Node
@@ -43,6 +44,16 @@ proc newTextNode*(
     zIndex: 0,
     clipChildren: false,
     childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
+    autoLayout: true,
     text: text,
     fontPath: fontPath,
     fontSize: fontSize,

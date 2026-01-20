@@ -3,6 +3,7 @@ import pixie
 import vmath
 import ../core/types
 import ../core/transform
+import ../layout/alignment
 
 type
   RectNode* = ref object of Node
@@ -30,7 +31,20 @@ proc newRectNode*(size: Vec2 = vec2(100, 100)): RectNode =
     localPos: vec2(0, 0),
     localScale: vec2(1, 1),
     localRotation: 0.0,
-    name: ""
+    name: "",
+    zIndex: 0,
+    clipChildren: false,
+    childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
+    autoLayout: true
   )
 
 proc newCircleNode*(size: Vec2 = vec2(100, 100)): CircleNode =
@@ -46,7 +60,20 @@ proc newCircleNode*(size: Vec2 = vec2(100, 100)): CircleNode =
     localPos: vec2(0, 0),
     localScale: vec2(1, 1),
     localRotation: 0.0,
-    name: ""
+    name: "",
+    zIndex: 0,
+    clipChildren: false,
+    childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
+    autoLayout: true
   )
 
 proc contains*(node: RectNode, point: Vec2): bool =

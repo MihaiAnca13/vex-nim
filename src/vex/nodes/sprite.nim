@@ -3,6 +3,7 @@ import vmath
 import ../core/types
 import ../core/context
 import ../core/transform
+import ../layout/alignment
 
 type
   SpriteNode* = ref object of Node
@@ -23,6 +24,16 @@ proc newSpriteNode*(imageKey: string, size: Vec2 = vec2(100, 100)): SpriteNode =
     zIndex: 0,
     clipChildren: false,
     childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
+    autoLayout: true,
     size: size,
     imageKey: imageKey,
     sourceRect: rect(0, 0, 0, 0),
@@ -46,6 +57,16 @@ proc newSpriteNodeWithSlice*(
     zIndex: 0,
     clipChildren: false,
     childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
+    autoLayout: true,
     size: size,
     imageKey: imageKey,
     sourceRect: rect(0, 0, 0, 0),

@@ -3,6 +3,7 @@ import pixie
 import vmath
 import ../core/types
 import ../core/transform
+import ../layout/alignment
 
 type
   PathNode* = ref object of Node
@@ -26,6 +27,16 @@ proc newPathNode*(pathData: string): PathNode =
     zIndex: 0,
     clipChildren: false,
     childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
+    autoLayout: true,
     pathData: pathData,
     fill: none(Paint),
     stroke: none(Paint),
@@ -66,6 +77,16 @@ proc newHexNode*(radius: float32): PathNode =
     zIndex: 0,
     clipChildren: false,
     childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
+    autoLayout: true,
     globalTransform: identityTransform
   )
 

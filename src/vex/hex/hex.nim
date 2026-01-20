@@ -4,6 +4,7 @@ import vmath
 import pixie
 import ../core/types
 import ../core/transform
+import ../layout/alignment
 
 ## Hexagonal grid utilities for strategy games and hexagonal layouts.
 ##
@@ -173,7 +174,20 @@ proc newHexNode*(coord: HexCoord, layout: HexLayout): HexNode =
     visible: true,
     name: "",
     size: hexSize * 2.0,
-    children: @[]
+    children: @[],
+    zIndex: 0,
+    clipChildren: false,
+    childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
+    autoLayout: false
   )
 
 proc contains*(node: HexNode, point: Vec2): bool =
@@ -247,7 +261,20 @@ proc newHexGrid*(layout: HexLayout): HexGrid =
     visible: true,
     name: "",
     size: vec2(0, 0),
-    children: @[]
+    children: @[],
+    zIndex: 0,
+    clipChildren: false,
+    childrenSorted: true,
+    anchor: TopLeft,
+    anchorOffset: vec2(0, 0),
+    pivot: TopLeft,
+    sizeMode: Absolute,
+    sizePercent: vec2(1, 1),
+    scaleMode: Stretch,
+    minSize: vec2(0, 0),
+    maxSize: vec2(0, 0),
+    layoutValid: false,
+    autoLayout: false
   )
 
 ## Adds a hex at the specified coordinate to the grid.
