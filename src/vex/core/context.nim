@@ -96,8 +96,12 @@ proc rasterizeNode*(ctx: RenderContext, node: Node): Image =
 ## Returns the texture key for the node.
 proc cacheTexture*(ctx: RenderContext, node: Node): string =
   if node.dirty:
-    let key = "node_" & $ctx.nextNodeId
-    inc ctx.nextNodeId
+    let key = if ctx.nodeTextures.hasKey(node):
+      ctx.nodeTextures[node]
+    else:
+      let k = "node_" & $ctx.nextNodeId
+      inc ctx.nextNodeId
+      k
 
     if node.size.x > 0 and node.size.y > 0:
       let image = ctx.rasterizeNode(node)
