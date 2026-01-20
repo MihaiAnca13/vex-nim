@@ -2,7 +2,7 @@ import vmath
 import ../core/types
 import ../layout/alignment
 
-proc layoutNode*(node: Node, parentSize: Vec2) =
+proc layoutNode*(node: Node, parentSize: Vec2, isRoot: bool = false) =
   node.layoutValid = true
 
   var targetSize = node.size
@@ -22,29 +22,32 @@ proc layoutNode*(node: Node, parentSize: Vec2) =
 
   node.size = targetSize
 
-  case node.anchor:
-  of TopLeft:
-    node.localPos = node.anchorOffset
-  of TopCenter:
-    node.localPos = vec2(parentSize.x / 2 - node.size.x / 2, 0) + node.anchorOffset
-  of TopRight:
-    node.localPos = vec2(parentSize.x - node.size.x, 0) + node.anchorOffset
-  of CenterLeft:
-    node.localPos = vec2(0, parentSize.y / 2 - node.size.y / 2) + node.anchorOffset
-  of Center:
-    node.localPos = vec2(parentSize.x / 2 - node.size.x / 2, parentSize.y / 2 - node.size.y / 2) + node.anchorOffset
-  of CenterRight:
-    node.localPos = vec2(parentSize.x - node.size.x, parentSize.y / 2 - node.size.y / 2) + node.anchorOffset
-  of BottomLeft:
-    node.localPos = vec2(0, parentSize.y - node.size.y) + node.anchorOffset
-  of BottomCenter:
-    node.localPos = vec2(parentSize.x / 2 - node.size.x / 2, parentSize.y - node.size.y) + node.anchorOffset
-  of BottomRight:
-    node.localPos = vec2(parentSize.x - node.size.x, parentSize.y - node.size.y) + node.anchorOffset
+  if node.autoLayout:
+    let boundsForAnchor = if isRoot: parentSize else: parentSize
+
+    case node.anchor:
+    of TopLeft:
+      node.localPos = node.anchorOffset
+    of TopCenter:
+      node.localPos = vec2(boundsForAnchor.x / 2 - node.size.x / 2, 0) + node.anchorOffset
+    of TopRight:
+      node.localPos = vec2(boundsForAnchor.x - node.size.x, 0) + node.anchorOffset
+    of CenterLeft:
+      node.localPos = vec2(0, boundsForAnchor.y / 2 - node.size.y / 2) + node.anchorOffset
+    of Center:
+      node.localPos = vec2(boundsForAnchor.x / 2 - node.size.x / 2, boundsForAnchor.y / 2 - node.size.y / 2) + node.anchorOffset
+    of CenterRight:
+      node.localPos = vec2(boundsForAnchor.x - node.size.x, boundsForAnchor.y / 2 - node.size.y / 2) + node.anchorOffset
+    of BottomLeft:
+      node.localPos = vec2(0, boundsForAnchor.y - node.size.y) + node.anchorOffset
+    of BottomCenter:
+      node.localPos = vec2(boundsForAnchor.x / 2 - node.size.x / 2, boundsForAnchor.y - node.size.y) + node.anchorOffset
+    of BottomRight:
+      node.localPos = vec2(boundsForAnchor.x - node.size.x, boundsForAnchor.y - node.size.y) + node.anchorOffset
 
   for child in node.children:
     if not child.layoutValid:
-      child.layoutNode(node.size)
+      child.layoutNode(node.size, false)
 
 proc requestLayout*(node: Node) =
   node.layoutValid = false

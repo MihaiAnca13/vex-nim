@@ -45,6 +45,7 @@ type
     minSize*: Vec2                     ## Minimum size constraint
     maxSize*: Vec2                     ## Maximum size constraint
     layoutValid*: bool                 ## True if layout is up-to-date
+    autoLayout*: bool                  ## When true, layout algorithm positions this node
 
 ## RenderContext wraps Boxy with texture caching and scene graph rendering.
 ##
@@ -121,7 +122,8 @@ proc newNode*(): Node =
     scaleMode: Stretch,
     minSize: vec2(0, 0),
     maxSize: vec2(0, 0),
-    layoutValid: false
+    layoutValid: false,
+    autoLayout: true
   )
 
 proc markDirty*(node: Node)

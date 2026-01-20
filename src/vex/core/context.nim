@@ -198,7 +198,7 @@ proc drawNode*(ctx: RenderContext, node: Node, clipRect: Option[Rect] = none(Rec
 proc draw*(ctx: RenderContext, root: Node) =
   ctx.beginFrame()
   if not root.layoutValid:
-    root.layoutNode(ctx.viewportSize)
+    root.layoutNode(ctx.viewportSize, true)
   root.updateGlobalTransform()
   ctx.drawNode(root, none(Rect))
   ctx.endFrame()
@@ -210,7 +210,7 @@ proc resize*(ctx: RenderContext, newSize: Vec2) =
 ## Lays out the scene graph for the current viewport size.
 proc layout*(ctx: RenderContext, root: Node) =
   if not root.layoutValid:
-    root.layoutNode(ctx.viewportSize)
+    root.layoutNode(ctx.viewportSize, true)
 
 ## Reads the current atlas as an image.
 proc readAtlas*(ctx: RenderContext): Image =

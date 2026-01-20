@@ -34,7 +34,8 @@ ctx.addImage("enemyBlue", readImage(UnitBluePath))
 
 # --- Scene Construction ---
 let root = newNode()
-root.sizeMode = FillParent
+root.size = InitialSize.vec2
+root.autoLayout = true
 root.anchor = TopLeft
 
 # 1. Background Layer (Starfield simulation)
@@ -44,7 +45,7 @@ bg.sizeMode = FillParent
 bg.anchor = TopLeft
 root.addChild(bg)
 
-# 2. Hex Map Container (Centered)
+# 2. Hex Map Container (Centered) - uses manual positioning
 let gridLayout = newHexLayout(pointyOrientation, HexSize, vec2(0,0))
 let hexGrid = newHexGrid(gridLayout)
 
@@ -67,15 +68,16 @@ for tile in mapData.tiles:
 
 hexGrid.updateGrid()
 
+# gridRoot uses manual positioning (autoLayout = false)
 let gridRoot = newNode()
-gridRoot.anchor = Center
-gridRoot.anchorOffset = vec2(0, 0)
+gridRoot.autoLayout = false
+gridRoot.localPos = InitialSize.vec2 / 2
 root.addChild(gridRoot)
 
 hexGrid.localPos = -hexGrid.getLocalBoundsCenter()
 gridRoot.addChild(hexGrid)
 
-# 3. Ship (Image swap demo)
+# 3. Ship (Image swap demo) - uses anchor positioning
 let ship2 = newSpriteNode("enemyRed", vec2(48, 48))
 ship2.anchor = TopRight
 ship2.anchorOffset = vec2(-140, 120)
@@ -86,12 +88,13 @@ let uiRoot = newRectNode(InitialSize.vec2)
 uiRoot.fill = none(Paint)
 uiRoot.sizeMode = FillParent
 uiRoot.anchor = TopLeft
+uiRoot.autoLayout = false  # Manual positioning for UI elements
 root.addChild(uiRoot)
 
 # -- Side Panel (VBox) --
 let panel = newVBox(spacing = 10, padding = 20)
-panel.anchor = TopLeft
-panel.anchorOffset = vec2(20, 20)
+panel.autoLayout = false
+panel.localPos = vec2(20, 20)
 
 # Title
 let title = newTextNode(mapData.name.toUpperAscii(), FontPath, 28, hex"#e94560")
@@ -107,6 +110,7 @@ panel.addItem(stats)
 # Layout Update with new withSize helper
 discard panel.withSize(300, 0, ctx) # Auto height, fixed width
 
+# Panel background - position after panel layout is calculated
 let panelBg = newRectNode(panel.size)
 panelBg.localPos = panel.localPos
 panelBg.fill = some(solidPaint(hex"#16213e", 200.0 / 255.0))
@@ -129,6 +133,9 @@ window.onFrame = proc() =
   if windowSize != ctx.viewportSize:
     ctx.resize(windowSize)
     root.requestLayout()
+    # Update grid root position on resize (center it)
+    gridRoot.localPos = windowSize / 2
+    gridRoot.updateGlobalTransform()
 
   # Animate the grid slightly (Rotate)
   gridRoot.localRotation += 0.001
