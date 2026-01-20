@@ -5,6 +5,7 @@ import ../layout/alignment
 proc layoutNode*(node: Node, parentSize: Vec2, isRoot: bool = false) =
   node.layoutValid = true
 
+  let previousSize = node.size
   var targetSize = node.size
 
   case node.sizeMode:
@@ -21,6 +22,8 @@ proc layoutNode*(node: Node, parentSize: Vec2, isRoot: bool = false) =
   if node.maxSize.y > 0: targetSize.y = min(targetSize.y, node.maxSize.y)
 
   node.size = targetSize
+  if node.size != previousSize:
+    node.markDirty()
 
   if node.autoLayout:
     let boundsForAnchor = if isRoot: parentSize else: parentSize
