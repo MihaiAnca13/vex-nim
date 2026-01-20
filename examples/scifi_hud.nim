@@ -35,6 +35,7 @@ ctx.addImage("enemyBlue", readImage(UnitBluePath))
 # --- Scene Construction ---
 let root = newNode()
 root.size = InitialSize.vec2
+root.sizeMode = FillParent  # Ensure root fills viewport so children get correct parentSize
 root.autoLayout = true
 root.anchor = TopLeft
 
