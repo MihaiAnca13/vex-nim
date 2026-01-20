@@ -1,5 +1,29 @@
  # VEX: Vector & Hex Scene Graph Library
 
+**VEX** is a high-performance 2D retained-mode scene graph library for Nim. It is designed for applications that need sophisticated vector graphics, complex UI layouts, or hex-based game grids - anywhere you need to compose many visual elements into a scene that updates efficiently.
+
+**When to use VEX:**
+- Building desktop or game UIs with complex layouts
+- Creating vector-heavy applications (diagrams, editors, dashboards)
+- Developing hex-grid strategy games
+- Any project combining Pixie (vector drawing) with Boxy (GPU rendering)
+
+**When NOT to use VEX:**
+- Simple single-shape applications (use Pixie directly)
+- Games with many identical sprites (use Boxy directly)
+- Projects that need a full game engine (consider Necsus or Nimo)
+
+**Key Features:**
+- Retained-mode scene graph with parent-child hierarchies
+- Anchor-based responsive layout (UI adapts to window size)
+- HBox/VBox containers for automatic child positioning
+- Vector shapes (rectangles, circles, paths) with Pixie rendering
+- Text rendering with font loading and text wrapping
+- Sprite images with 9-slice scaling support
+- Hex grids for strategy games
+- Efficient dirty-flag system (rasterize once, render many times)
+- Window-agnostic design (works with any windowing library)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nim Version](https://img.shields.io/badge/Nim-2.2+-orange.svg)](https://nim-lang.org/)
 
@@ -192,6 +216,33 @@ Boxy → GPU → Screen
 
 Layout containers (HBox, VBox) automatically position their children.
 See the **Tutorial** section above for usage instructions.
+
+### Responsive Layout with Anchors
+
+VEX supports a complete responsive layout system for building UIs that adapt to window resizing:
+
+```nim
+# Fill the entire parent container
+node.sizeMode = FillParent
+node.anchor = TopLeft
+
+# Center content in its parent
+node.anchor = Center
+
+# Position in top-right with offset
+node.anchor = TopRight
+node.anchorOffset = vec2(-20, 20)
+
+# Size as percentage of parent
+node.sizeMode = Percent
+node.sizePercent = vec2(0.5, 0.8)  # 50% width, 80% height
+```
+
+**Anchor Points:** TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight
+
+**Size Modes:** Absolute (default), FillParent, Percent
+
+When the window resizes, call `ctx.resize(newSize)` and `root.requestLayout()` to recalculate all positions:
 
 
 ---
