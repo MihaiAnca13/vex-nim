@@ -25,7 +25,8 @@ makeContextCurrent(window)
 loadExtensions()
 
 # --- Vex Context ---
-let ctx = newRenderContext(InitialSize.vec2)
+let initialViewport = window.framebufferSize.vec2
+let ctx = newRenderContext(initialViewport)
 
 # Load Resources
 ctx.getFont(FontPath).size = 20
@@ -34,7 +35,7 @@ ctx.addImage("enemyBlue", readImage(UnitBluePath))
 
 # --- Scene Construction ---
 let root = newNode()
-root.size = InitialSize.vec2
+root.size = initialViewport
 root.sizeMode = FillParent  # Ensure root fills viewport so children get correct parentSize
 root.autoLayout = true
 root.anchor = TopLeft
@@ -72,7 +73,7 @@ hexGrid.updateGrid()
 # gridRoot uses manual positioning (autoLayout = false)
 let gridRoot = newNode()
 gridRoot.autoLayout = false
-gridRoot.localPos = InitialSize.vec2 / 2
+gridRoot.localPos = initialViewport / 2
 root.addChild(gridRoot)
 
 hexGrid.localPos = -hexGrid.getLocalBoundsCenter()
@@ -80,6 +81,7 @@ gridRoot.addChild(hexGrid)
 
 # 3. Ship (Image swap demo) - uses anchor positioning
 let ship2 = newSpriteNode("enemyRed", vec2(48, 48))
+ship2.autoLayout = true
 ship2.anchor = TopRight
 ship2.anchorOffset = vec2(-140, 120)
 root.addChild(ship2)
@@ -130,7 +132,7 @@ window.onFrame = proc() =
   swapTimer += dt
 
   # Handle window resize
-  let windowSize = window.size.vec2
+  let windowSize = window.framebufferSize.vec2
   if windowSize != ctx.viewportSize:
     ctx.resize(windowSize)
     root.requestLayout()
