@@ -70,7 +70,7 @@ proc contains*(node: TextNode, point: Vec2): bool =
 
 method measure*(node: TextNode, ctx: types.RenderContext) =
   try:
-    let font = ctx.getFont(node.fontPath)
+    var font = ctx.getFont(node.fontPath).copy()
     font.size = node.fontSize
 
     let bounds = if node.maxWidth > 0:
@@ -78,43 +78,43 @@ method measure*(node: TextNode, ctx: types.RenderContext) =
     else:
       vec2(Inf.float32, Inf.float32)
 
-    let arrangement = font.typeset(node.text, bounds)
-    let layout = arrangement.layoutBounds()
-    node.size = vec2(layout.x, layout.y)
+    if node.size.x <= 0 or node.size.y <= 0:
+      let arrangement = font.typeset(node.text, bounds)
+      let layout = arrangement.layoutBounds()
+      node.size = vec2(layout.x, layout.y)
   except KeyError:
-    node.size = vec2(0, 0)
+    if node.size.x <= 0 or node.size.y <= 0:
+      node.size = vec2(0, 0)
 
 method draw*(node: TextNode, renderCtx: types.RenderContext, image: Image) =
-  if node.size.x == 0 or node.size.y == 0:
+  if node.size.x <= 0 or node.size.y <= 0:
     node.measure(renderCtx)
 
   try:
-    let font = renderCtx.getFont(node.fontPath)
+    var font = renderCtx.getFont(node.fontPath).copy()
     font.size = node.fontSize
     font.paint.color = node.color
 
+    let hasBounds = node.size.x > 0 and node.size.y > 0
     let bounds = if node.maxWidth > 0:
-      vec2(node.maxWidth, node.size.y)
+      vec2(node.maxWidth, (if hasBounds: node.size.y else: Inf.float32))
+    elif hasBounds:
+      node.size
     else:
       vec2(Inf.float32, Inf.float32)
-    let arrangement = font.typeset(node.text, bounds)
 
-    let layout = arrangement.layoutBounds()
-    let textWidth = layout.x
-    let textHeight = layout.y
-    if node.size.x == 0 or node.size.y == 0:
-      node.size = vec2(textWidth, textHeight)
+    let hAlign = case node.horizontalAlign
+      of AlignLeft: LeftAlign
+      of AlignCenter: CenterAlign
+      of AlignRight: RightAlign
 
-    let xOffset = case node.horizontalAlign
-      of AlignLeft: 0.0
-      of AlignCenter: max(0.0, (node.size.x - textWidth) / 2)
-      of AlignRight: max(0.0, node.size.x - textWidth)
+    let vAlign = case node.verticalAlign
+      of AlignTop: TopAlign
+      of AlignCenter: MiddleAlign
+      of AlignBottom: BottomAlign
 
-    let yOffset = case node.verticalAlign
-      of AlignTop: 0.0
-      of AlignCenter: max(0.0, (node.size.y - textHeight) / 2)
-      of AlignBottom: max(0.0, node.size.y - textHeight)
+    let arrangement = font.typeset(node.text, bounds, hAlign, vAlign, wrap = node.maxWidth > 0)
 
-    image.fillText(arrangement, translate(vec2(xOffset, yOffset)))
+    image.fillText(arrangement, mat3())
   except KeyError, PixieError:
     discard

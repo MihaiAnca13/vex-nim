@@ -36,6 +36,16 @@ proc newRenderContext*(viewportSize: Vec2): RenderContext =
     viewportSize: viewportSize
   )
 
+proc newHeadlessRenderContext*(viewportSize: Vec2): RenderContext =
+  RenderContext(
+    bxy: nil,
+    nodeTextures: initTable[Node, string](),
+    imageCache: initTable[string, Image](),
+    fontCache: initTable[string, Font](),
+    nextNodeId: 0,
+    viewportSize: viewportSize
+  )
+
 ## Checks if a texture with the given key exists.
 proc contains*(ctx: RenderContext, key: string): bool =
   if ctx.imageCache.hasKey(key):
@@ -96,6 +106,9 @@ proc rasterizeNode*(ctx: RenderContext, node: Node): Image =
 ## Returns the texture key for the node.
 proc cacheTexture*(ctx: RenderContext, node: Node): string =
   if node.dirty:
+    if node.size.x <= 0 or node.size.y <= 0:
+      node.measure(ctx)
+
     let key = if ctx.nodeTextures.hasKey(node):
       ctx.nodeTextures[node]
     else:
