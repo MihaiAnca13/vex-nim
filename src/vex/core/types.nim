@@ -133,7 +133,7 @@ proc markDirty*(node: Node)
 ## Raises assertion if child already has a different parent
 ## or if child is already a child of parent.
 proc addChild*(parent: Node, child: Node) =
-  doAssert child.parent.isNone or child.parent.get() != parent, "Node already has a different parent"
+  doAssert child.parent.isNone or child.parent.get() == parent, "Node already has a different parent"
   for c in parent.children:
     doAssert c != child, "Node is already a child"
   parent.children.add(child)
