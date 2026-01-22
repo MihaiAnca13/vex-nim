@@ -2,6 +2,10 @@
 
 **VEX** is a high-performance 2D retained-mode scene graph library for Nim. It is designed for applications that need sophisticated vector graphics, complex UI layouts, or hex-based game grids - anywhere you need to compose many visual elements into a scene that updates efficiently.
 
+![Scifi HUD](examples/scifi.png)
+
+See `@examples/scifi_hud.nim` for a demo featuring hex grids, sprite swapping, and responsive layouts.
+
 **When to use VEX:**
 - Building desktop or game UIs with complex layouts
 - Creating vector-heavy applications (diagrams, editors, dashboards)
@@ -11,7 +15,6 @@
 **When NOT to use VEX:**
 - Simple single-shape applications (use Pixie directly)
 - Games with many identical sprites (use Boxy directly)
-- Projects that need a full game engine (consider Necsus or Nimo)
 
 **Key Features:**
 - Retained-mode scene graph with parent-child hierarchies
@@ -348,6 +351,7 @@ See the `examples/` folder for runnable demos:
 - `hello_world.nim` - Basic scene with shapes and text
 - `hex_grid_demo.nim` - Interactive hex grid with click handling
 - `ui_layout_demo.nim` - HBox/VBox layout demonstration
+- `scifi_hud.nim` - Tactical interface with hex grids, sprites, and responsive UI
 
 
 ---
