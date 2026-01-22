@@ -19,6 +19,7 @@ See `@examples/scifi_hud.nim` for a demo featuring hex grids, sprite swapping, a
 **Key Features:**
 - Retained-mode scene graph with parent-child hierarchies
 - Anchor-based responsive layout (UI adapts to window size)
+- `autoLayout` flag for manual vs automatic node positioning
 - HBox/VBox containers for automatic child positioning
 - Vector shapes (rectangles, circles, paths) with Pixie rendering
 - Text rendering with font loading and text wrapping
@@ -26,6 +27,7 @@ See `@examples/scifi_hud.nim` for a demo featuring hex grids, sprite swapping, a
 - Hex grids for strategy games
 - Efficient dirty-flag system (rasterize once, render many times)
 - Window-agnostic design (works with any windowing library)
+- Headless rendering for screenshot-only output
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Nim Version](https://img.shields.io/badge/Nim-2.2+-orange.svg)](https://nim-lang.org/)
@@ -247,12 +249,20 @@ node.sizePercent = vec2(0.5, 0.8)  # 50% width, 80% height
 
 When the window resizes, call `ctx.resize(newSize)` and `root.requestLayout()` to recalculate all positions:
 
-### Future Work
+### Manual Positioning with `autoLayout`
 
-- Document `autoLayout` clearly with manual-positioning examples
-- Expose an explicit container option for child layout vs manual positioning
-- Add small helper APIs to make anchor vs manual intent obvious
+Set `node.autoLayout = false` to skip automatic anchor-based positioning and use manual positioning via `localPos`, `localRotation`, and `localScale`. This is ideal for:
+- Rotating grids or game elements that need transform-only updates
+- UI elements with custom positioning logic
+- Nodes that should not be affected by parent layout changes
 
+```nim
+let gridRoot = newNode()
+gridRoot.autoLayout = false  # Skip automatic layout
+gridRoot.localPos = vec2(400, 300)  # Manual positioning
+gridRoot.localRotation += 0.01  # Continuous rotation (no re-layout needed)
+root.addChild(gridRoot)
+```
 
 ---
 
@@ -326,6 +336,7 @@ src/vex/
 | Procedure | Description |
 |-----------|-------------|
 | `newRenderContext(size)` | Create a new context |
+| `newHeadlessRenderContext(size)` | Create headless context for screenshots |
 | `draw(root)` | Render the scene graph |
 | `handleEvent(root, event)` | Process input events |
 | `resize(size)` | Update viewport size |
