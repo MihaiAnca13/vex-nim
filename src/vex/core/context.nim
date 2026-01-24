@@ -25,6 +25,43 @@ proc intersect*(a, b: Rect): Rect =
   else:
     Rect(x: 0, y: 0, w: 0, h: 0)
 
+proc rectsOverlap(a, b: Rect): bool =
+  a.x < b.x + b.w and
+    a.x + a.w > b.x and
+    a.y < b.y + b.h and
+    a.y + a.h > b.y
+
+proc computeClipRect(
+  node: Node,
+  clipRect: Option[Rect],
+  globalBounds: Rect
+): Option[Rect] =
+  var effectiveClip = clipRect
+  if node.clipChildren and node.size.x > 0 and node.size.y > 0:
+    let nodeRect = rect(globalBounds.x, globalBounds.y, globalBounds.w, globalBounds.h)
+    if effectiveClip.isSome:
+      effectiveClip = some(intersect(effectiveClip.get(), nodeRect))
+    else:
+      effectiveClip = some(nodeRect)
+  effectiveClip
+
+proc shouldDrawNode(
+  ctx: RenderContext,
+  node: Node,
+  clipRect: Option[Rect],
+  globalBounds: Rect
+): tuple[draw: bool, clip: Option[Rect]] =
+  let viewportRect = rect(vec2(0.0'f32, 0.0'f32), ctx.viewportSize)
+  let effectiveClip = computeClipRect(node, clipRect, globalBounds)
+
+  if effectiveClip.isSome and not rectsOverlap(globalBounds, effectiveClip.get()):
+    return (false, effectiveClip)
+
+  if not rectsOverlap(globalBounds, viewportRect):
+    return (false, effectiveClip)
+
+  (true, effectiveClip)
+
 ## Creates a new RenderContext with the specified viewport size.
 proc newRenderContext*(viewportSize: Vec2): RenderContext =
   RenderContext(
@@ -56,6 +93,11 @@ proc contains*(ctx: RenderContext, key: string): bool =
 
 ## Returns the size of an image by key.
 proc getImageSize*(ctx: RenderContext, key: string): Vec2 =
+  if ctx.imageCache.hasKey(key):
+    let image = ctx.imageCache[key]
+    return vec2(image.width.float32, image.height.float32)
+  if ctx.bxy.isNil:
+    return vec2(0, 0)
   let size = ctx.bxy.getImageSize(key)
   vec2(size.x.float32, size.y.float32)
 
@@ -77,19 +119,26 @@ proc getFont*(ctx: RenderContext, path: string): Font =
 
 ## Adds an image to the context cache and Boxy atlas.
 proc addImage*(ctx: RenderContext, key: string, image: Image) =
-  ctx.bxy.addImage(key, image)
+  if not ctx.bxy.isNil:
+    ctx.bxy.addImage(key, image)
   ctx.imageCache[key] = image
 
 ## Draws a cached image at the specified position.
 proc drawImage*(ctx: RenderContext, key: string, pos: Vec2, tint: Color = color(1, 1, 1, 1)) =
+  if ctx.bxy.isNil:
+    return
   ctx.bxy.drawImage(key, pos, tint)
 
 ## Begins a new frame with the specified viewport size.
 proc beginFrame*(ctx: RenderContext) =
+  if ctx.bxy.isNil:
+    return
   ctx.bxy.beginFrame(ctx.viewportSize.ivec2)
 
 ## Ends the current frame.
 proc endFrame*(ctx: RenderContext) =
+  if ctx.bxy.isNil:
+    return
   ctx.bxy.endFrame()
 
 ## Rasterizes a node to an Image using Pixie.
@@ -105,6 +154,8 @@ proc rasterizeNode*(ctx: RenderContext, node: Node): Image =
 ##
 ## Returns the texture key for the node.
 proc cacheTexture*(ctx: RenderContext, node: Node): string =
+  if ctx.bxy.isNil:
+    return ""
   if node.dirty:
     if node.size.x <= 0 or node.size.y <= 0:
       node.measure(ctx)
@@ -137,6 +188,8 @@ proc cacheTexture*(ctx: RenderContext, node: Node): string =
 
 ## Removes a node's cached texture from Boxy and the cache.
 proc uncacheNode*(ctx: RenderContext, node: Node) =
+  if ctx.bxy.isNil:
+    return
   if ctx.nodeTextures.hasKey(node):
     let key = ctx.nodeTextures[node]
     ctx.bxy.removeImage(key)
@@ -144,6 +197,10 @@ proc uncacheNode*(ctx: RenderContext, node: Node) =
 
 ## Clears all cached textures.
 proc invalidateNodeCache*(ctx: RenderContext, node: Node) =
+  if ctx.bxy.isNil:
+    ctx.nodeTextures.clear()
+    ctx.nextNodeId = 0
+    return
   for n, key in ctx.nodeTextures:
     ctx.bxy.removeImage(key)
   ctx.nodeTextures.clear()
@@ -169,33 +226,8 @@ proc drawNode*(ctx: RenderContext, node: Node, clipRect: Option[Rect] = none(Rec
     return
 
   let globalBounds = node.getGlobalBounds()
-
-  let viewportRect = rect(vec2(0.0'f32, 0.0'f32), ctx.viewportSize)
-
-  var effectiveClip = clipRect
-  if node.clipChildren and node.size.x > 0 and node.size.y > 0:
-    let nodeRect = rect(globalBounds.x, globalBounds.y, globalBounds.w, globalBounds.h)
-    if effectiveClip.isSome:
-      effectiveClip = some(intersect(effectiveClip.get(), nodeRect))
-    else:
-      effectiveClip = some(nodeRect)
-
-  if effectiveClip.isSome:
-    let c = effectiveClip.get()
-    if not (
-      globalBounds.x < c.x + c.w and
-      globalBounds.x + globalBounds.w > c.x and
-      globalBounds.y < c.y + c.h and
-      globalBounds.y + globalBounds.h > c.y
-    ):
-      return
-
-  if not (
-    globalBounds.x < viewportRect.x + viewportRect.w and
-    globalBounds.x + globalBounds.w > viewportRect.x and
-    globalBounds.y < viewportRect.y + viewportRect.h and
-    globalBounds.y + globalBounds.h > viewportRect.y
-  ):
+  let (shouldDraw, effectiveClip) = ctx.shouldDrawNode(node, clipRect, globalBounds)
+  if not shouldDraw:
     return
 
   let key = ctx.cacheTexture(node)
@@ -213,6 +245,8 @@ proc drawNode*(ctx: RenderContext, node: Node, clipRect: Option[Rect] = none(Rec
 
 ## Renders the entire scene graph.
 proc draw*(ctx: RenderContext, root: Node) =
+  if ctx.bxy.isNil:
+    return
   ctx.beginFrame()
   if not root.layoutValid:
     root.layoutNode(ctx.viewportSize, true)
@@ -229,6 +263,51 @@ proc layout*(ctx: RenderContext, root: Node) =
   if not root.layoutValid:
     root.layoutNode(ctx.viewportSize, true)
 
+proc drawNodeToImage(
+  ctx: RenderContext,
+  node: Node,
+  target: Image,
+  clipRect: Option[Rect]
+) =
+  if not node.visible:
+    return
+
+  let globalBounds = node.getGlobalBounds()
+  let (shouldDraw, effectiveClip) = ctx.shouldDrawNode(node, clipRect, globalBounds)
+  if not shouldDraw:
+    return
+
+  if node.size.x <= 0 or node.size.y <= 0:
+    node.measure(ctx)
+
+  if node.size.x > 0 and node.size.y > 0:
+    let image = ctx.rasterizeNode(node)
+    try:
+      target.draw(image, node.globalTransform, NormalBlend)
+    except PixieError:
+      discard
+
+  if not node.childrenSorted:
+    node.children.sort(proc(a, b: Node): int = a.zIndex - b.zIndex)
+    node.childrenSorted = true
+
+  for child in node.children:
+    ctx.drawNodeToImage(child, target, effectiveClip)
+
+proc renderToImage*(ctx: RenderContext, root: Node): Image =
+  let width = max(ctx.viewportSize.x.int, 1)
+  let height = max(ctx.viewportSize.y.int, 1)
+  let image = newImage(width, height)
+  image.fill(rgba(0, 0, 0, 0))
+
+  if not root.layoutValid:
+    root.layoutNode(ctx.viewportSize, true)
+  root.updateGlobalTransform()
+  ctx.drawNodeToImage(root, image, none(Rect))
+  image
+
 ## Reads the current atlas as an image.
 proc readAtlas*(ctx: RenderContext): Image =
+  if ctx.bxy.isNil:
+    return newImage(1, 1)
   ctx.bxy.readAtlas()
