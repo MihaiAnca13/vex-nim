@@ -70,7 +70,9 @@ proc newRenderContext*(viewportSize: Vec2): RenderContext =
     imageCache: initTable[string, Image](),
     fontCache: initTable[string, Font](),
     nextNodeId: 0,
-    viewportSize: viewportSize
+    viewportSize: viewportSize,
+    resizeCallbacks: @[],
+    rootNode: nil
   )
 
 proc newHeadlessRenderContext*(viewportSize: Vec2): RenderContext =
@@ -80,7 +82,9 @@ proc newHeadlessRenderContext*(viewportSize: Vec2): RenderContext =
     imageCache: initTable[string, Image](),
     fontCache: initTable[string, Font](),
     nextNodeId: 0,
-    viewportSize: viewportSize
+    viewportSize: viewportSize,
+    resizeCallbacks: @[],
+    rootNode: nil
   )
 
 ## Checks if a texture with the given key exists.
@@ -254,9 +258,24 @@ proc draw*(ctx: RenderContext, root: Node) =
   ctx.drawNode(root, none(Rect))
   ctx.endFrame()
 
-## Updates the viewport size and invalidates layout.
+## Updates the viewport size, invokes callbacks, and invalidates layout.
 proc resize*(ctx: RenderContext, newSize: Vec2) =
   ctx.viewportSize = newSize
+  for callback in ctx.resizeCallbacks:
+    callback(newSize)
+  if not ctx.rootNode.isNil:
+    ctx.rootNode.invalidateLayout()
+
+## Sets the root node for automatic layout invalidation on resize.
+proc setRoot*(ctx: RenderContext, root: Node) =
+  ctx.rootNode = root
+
+## Registers a callback to be invoked when the viewport is resized.
+##
+## The callback receives the new viewport size as an argument.
+## Useful for responsive UI that adapts to window size changes.
+proc onResize*(ctx: RenderContext, callback: proc(newSize: Vec2)) =
+  ctx.resizeCallbacks.add(callback)
 
 ## Lays out the scene graph for the current viewport size.
 proc layout*(ctx: RenderContext, root: Node) =

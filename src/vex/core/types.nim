@@ -54,6 +54,7 @@ type
 ## - Texture cache for rasterized nodes
 ## - Font and image caches
 ## - Viewport dimensions
+## - Resize callbacks for responsive UI
 type
   RenderContext* = ref object
     bxy*: Boxy                        ## Boxy instance for GPU rendering
@@ -62,6 +63,8 @@ type
     fontCache*: Table[string, Font]    ## Cached fonts by path
     nextNodeId*: int                   ## Texture key counter
     viewportSize*: Vec2                ## Current viewport dimensions
+    resizeCallbacks*: seq[proc(newSize: Vec2)] ## Callbacks invoked on resize
+    rootNode*: Node                    ## Root node for layout invalidation
 
 ## EventType identifies the type of input event.
 type
