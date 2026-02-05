@@ -16,6 +16,7 @@ import ./nodes/path
 import ./layout/alignment
 import ./layout/container
 import ./hex/hex
+import ./debug/layout_overlay
 
 export types
 export transform
@@ -38,3 +39,7 @@ export container.addItem, container.update, container.withSize
 export hex.HexOrientation, hex.pointyOrientation, hex.flatOrientation
 export hex.newHexLayout, hex.newHexGrid
 export hex.addHex, hex.removeHex, hex.getHex, hex.hexAt, hex.updateGrid
+export layout_overlay.DebugOverlay, layout_overlay.newDebugOverlay
+export layout_overlay.setEnabled, layout_overlay.setShowBounds, layout_overlay.setShowAnchors
+export layout_overlay.setShowLayoutInfo, layout_overlay.setShowClipRegions, layout_overlay.setShowHierarchy
+export layout_overlay.setTargetNode, layout_overlay.toggle
