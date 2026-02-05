@@ -114,18 +114,19 @@ proc newSectionHeader*(
   label: string,
   fontPath: string = "tests/data/DejaVuSans.ttf",
   fontSize: float32 = 12.0,
-  color: Color = colGray
+  color: Color = colGray,
+  lineColor: Color = colGray
 ): SectionHeader =
   let labelNode = newTextNode(label.toUpperAscii(), fontPath, fontSize, color)
   labelNode.horizontalAlign = AlignCenter
   labelNode.verticalAlign = AlignCenter
 
   let lineLeft = newRectNode()
-  lineLeft.fill = some(solidPaint(color(0.85, 0.85, 0.85, 1.0)))
+  lineLeft.fill = some(solidPaint(lineColor))
   lineLeft.size = vec2(20, 1)
 
   let lineRight = newRectNode()
-  lineRight.fill = some(solidPaint(color(0.85, 0.85, 0.85, 1.0)))
+  lineRight.fill = some(solidPaint(lineColor))
   lineRight.size = vec2(20, 1)
 
   SectionHeader(
