@@ -20,6 +20,8 @@ import ./layout/flow
 import ./hex/hex
 import ./debug/layout_overlay
 
+import ./ui/primitives as uip
+
 export types
 export transform
 export events
@@ -41,8 +43,13 @@ export container.addItem, container.update, container.withSize
 export grid.Grid, grid.newGrid, grid.addItem
 export flow.Flow, flow.newFlow, flow.addItem
 export hex.HexOrientation, hex.pointyOrientation, hex.flatOrientation
-export hex.newHexLayout, hex.newHexGrid
-export hex.addHex, hex.removeHex, hex.getHex, hex.hexAt, hex.updateGrid
+export uip.NavBarItem, uip.newNavBarItem
+export uip.Card, uip.newCard, uip.setCardContent
+export uip.SectionHeader, uip.newSectionHeader
+export uip.Badge, uip.newBadge
+export uip.Chip, uip.newChip
+export uip.LabelValueRow, uip.newLabelValueRow, uip.setValue
+export uip.NavBar, uip.newNavBar, uip.addNavItem, uip.setActiveItem
 export layout_overlay.DebugOverlay, layout_overlay.newDebugOverlay
 export layout_overlay.setEnabled, layout_overlay.setShowBounds, layout_overlay.setShowAnchors
 export layout_overlay.setShowLayoutInfo, layout_overlay.setShowClipRegions, layout_overlay.setShowHierarchy
