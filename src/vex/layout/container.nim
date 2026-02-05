@@ -5,7 +5,9 @@ import ../layout/alignment
 ## Layout containers for automatic child positioning.
 ##
 ## HBox arranges children horizontally, VBox arranges them vertically.
-## Both support spacing and padding, and automatically calculate their size.
+## Grid arranges children in a 2D grid.
+## Flow arranges children like wrapped text (flex-wrap behavior).
+##
 ## IMPORTANT: Call `update(ctx)` after adding items to calculate layout.
 
 type

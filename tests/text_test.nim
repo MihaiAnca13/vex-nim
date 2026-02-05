@@ -46,3 +46,33 @@ suite "text.nim - TextNode":
   test "TextNode.maxWidth defaults to 0":
     let node = newTextNode("Hello", "/fonts/test.ttf")
     check node.maxWidth == 0.0
+
+  test "TextNode.maxWidth can be set":
+    let node = newTextNode("Hello", "/fonts/test.ttf")
+    node.maxWidth = 100.0
+    check node.maxWidth == 100.0
+
+  test "TextNode horizontalAlign can be changed":
+    let node = newTextNode("Hello", "/fonts/test.ttf")
+    node.horizontalAlign = AlignCenter
+    check node.horizontalAlign == AlignCenter
+
+    node.horizontalAlign = AlignRight
+    check node.horizontalAlign == AlignRight
+
+  test "TextNode verticalAlign can be changed":
+    let node = newTextNode("Hello", "/fonts/test.ttf")
+    node.verticalAlign = AlignCenter
+    check node.verticalAlign == AlignCenter
+
+    node.verticalAlign = AlignBottom
+    check node.verticalAlign == AlignBottom
+
+  test "TextNode contains works for hit testing":
+    let node = newTextNode("Hello", "/fonts/test.ttf", 16.0)
+    node.size = vec2(100, 20)
+    check node.contains(vec2(10, 10)) == true
+    check node.contains(vec2(50, 10)) == true
+    check node.contains(vec2(0, 0)) == true
+    check node.contains(vec2(100, 10)) == false
+    check node.contains(vec2(50, 20)) == false

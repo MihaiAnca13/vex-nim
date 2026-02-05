@@ -15,6 +15,8 @@ import ./nodes/path
 
 import ./layout/alignment
 import ./layout/container
+import ./layout/grid
+import ./layout/flow
 import ./hex/hex
 import ./debug/layout_overlay
 
@@ -36,6 +38,8 @@ export alignment.Anchor, alignment.Pivot
 export container.HBox, container.VBox
 export container.newHBox, container.newVBox
 export container.addItem, container.update, container.withSize
+export grid.Grid, grid.newGrid, grid.addItem
+export flow.Flow, flow.newFlow, flow.addItem
 export hex.HexOrientation, hex.pointyOrientation, hex.flatOrientation
 export hex.newHexLayout, hex.newHexGrid
 export hex.addHex, hex.removeHex, hex.getHex, hex.hexAt, hex.updateGrid
