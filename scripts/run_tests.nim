@@ -1,24 +1,40 @@
-import std/[os, sequtils, strutils]
+import std/[algorithm, os, sequtils, strutils]
 
-const testDir = currentSourcePath.parentDir() / "tests"
+const testDir = currentSourcePath.parentDir().parentDir() / "tests"
+
+proc isRunnableUnitTest(path: string): bool =
+  let name = path.extractFilename
+  "golden" notin name and
+    not name.endsWith("_visual_test.nim") and
+    name != "test_utils.nim" and
+    name != "golden_test_utils.nim"
 
 proc runUnitTests*() =
   echo "Running unit tests..."
   echo "========================"
 
-  let unitTestFiles = testDir.listFiles().filterIt(
-    it.name.startsWith("test_") and it.name.endsWith(".nim") and
-    "golden" notin it.name
-  )
+  var discovered: seq[string] = @[]
+  discovered.add(toSeq(walkFiles(testDir / "*_test.nim")))
+  discovered.add(toSeq(walkFiles(testDir / "test_*.nim")))
+
+  let unitTestFiles = discovered
+    .filterIt(isRunnableUnitTest(it))
+    .deduplicate()
+    .sorted(cmp[string])
 
   if unitTestFiles.len == 0:
     echo "No unit test files found in ", testDir
     return
 
   for testFile in unitTestFiles:
-    echo "\nRunning: ", testFile.name
-    let testName = testFile.name.changeFileExt("")
-    let result = execShellCmd("nim c -r --hints:off --warnings:off " & testFile)
+    let testFileName = testFile.extractFilename
+    echo "\nRunning: ", testFileName
+    let testName = testFileName.changeFileExt("")
+    let nimcacheDir = ".nimcache_tests_" & testName
+    let result = execShellCmd(
+      "~/.nimble/bin/nim c -r --path:src --nimcache:" & nimcacheDir &
+      " --hints:off --warnings:off " & testFile
+    )
     if result == 0:
       echo "  PASS: ", testName
     else:
