@@ -75,6 +75,7 @@ proc newRenderContext*(viewportSize: Vec2): RenderContext =
     rootNode: nil
   )
 
+## Creates a render context without a Boxy backend for offscreen rendering.
 proc newHeadlessRenderContext*(viewportSize: Vec2): RenderContext =
   RenderContext(
     bxy: nil,
@@ -313,6 +314,7 @@ proc drawNodeToImage(
   for child in node.children:
     ctx.drawNodeToImage(child, target, effectiveClip)
 
+## Renders the scene graph into a pixie `Image` in headless mode.
 proc renderToImage*(ctx: RenderContext, root: Node): Image =
   let width = max(ctx.viewportSize.x.int, 1)
   let height = max(ctx.viewportSize.y.int, 1)

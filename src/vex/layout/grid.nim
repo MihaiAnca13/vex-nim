@@ -3,6 +3,7 @@ import ../core/types
 import ../layout/alignment
 
 type
+  ## Grid container that places children in rows and columns.
   Grid* = ref object of Node
     columns*: int
     rows*: int
@@ -13,6 +14,7 @@ type
     fillWidth*: bool
     fillHeight*: bool
 
+## Creates a new grid layout container.
 proc newGrid*(
   columns: int = 0,
   rows: int = 0,
@@ -56,11 +58,13 @@ proc newGrid*(
     fillHeight: fillHeight
   )
 
+## Adds a child to the grid and marks layout dirty.
 proc addItem*(grid: Grid, child: Node) =
   grid.addChild(child)
   child.autoLayout = false
   grid.markDirty()
 
+## Measures children, computes cell size, and positions items.
 proc update*(grid: Grid, ctx: types.RenderContext = nil) =
   for child in grid.children:
     child.measure(ctx)

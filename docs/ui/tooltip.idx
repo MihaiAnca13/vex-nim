@@ -1,0 +1,17 @@
+nimTitle	tooltip	ui/tooltip.html	module vex/ui/tooltip		0
+nim	TooltipAuto	ui/tooltip.html#TooltipAuto	TooltipPosition.TooltipAuto		13
+nim	TooltipTop	ui/tooltip.html#TooltipTop	TooltipPosition.TooltipTop		13
+nim	TooltipBottom	ui/tooltip.html#TooltipBottom	TooltipPosition.TooltipBottom		13
+nim	TooltipLeft	ui/tooltip.html#TooltipLeft	TooltipPosition.TooltipLeft		13
+nim	TooltipRight	ui/tooltip.html#TooltipRight	TooltipPosition.TooltipRight		13
+nim	TooltipPosition	ui/tooltip.html#TooltipPosition	enum TooltipPosition		13
+nim	Tooltip	ui/tooltip.html#Tooltip	type Tooltip		21
+nim	newTooltip	ui/tooltip.html#newTooltip,string,string,float32,TooltipPosition,float32	proc newTooltip(text: string; fontPath: string; fontSize: float32 = 13.0;\n           position: TooltipPosition = TooltipAuto;\n           maxWidth: float32 = DefaultTooltipMaxWidth): Tooltip		39
+nim	measureTooltip	ui/tooltip.html#measureTooltip,Tooltip,RenderContext	proc measureTooltip(tooltip: Tooltip; ctx: RenderContext)		89
+nim	updatePosition	ui/tooltip.html#updatePosition,Tooltip,Vec2	proc updatePosition(tooltip: Tooltip; viewportSize: Vec2)		100
+nim	clampToViewport	ui/tooltip.html#clampToViewport,Tooltip,Vec2	proc clampToViewport(tooltip: Tooltip; viewportSize: Vec2)		159
+nim	show	ui/tooltip.html#show,Tooltip,Node,Vec2,RenderContext	proc show(tooltip: Tooltip; target: Node; viewportSize: Vec2; ctx: RenderContext)		175
+nim	hide	ui/tooltip.html#hide,Tooltip	proc hide(tooltip: Tooltip)		184
+nim	setText	ui/tooltip.html#setText,Tooltip,string	proc setText(tooltip: Tooltip; text: string)		189
+nim	measure	ui/tooltip.html#measure.e,Tooltip,RenderContext	method measure(tooltip: Tooltip; ctx: RenderContext)		194
+nim	draw	ui/tooltip.html#draw.e,Tooltip,RenderContext,Image	method draw(tooltip: Tooltip; renderCtx: RenderContext; image: Image)		197

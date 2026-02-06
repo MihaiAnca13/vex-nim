@@ -10,11 +10,13 @@ import ../nodes/primitive
 import ../nodes/text
 
 type
+  ## Single navigation item for `NavBar`.
   NavBarItem* = ref object of Node
     label*: string
     icon*: Option[Node]
     isActive*: bool
 
+## Creates a new navigation bar item.
 proc newNavBarItem*(label: string, icon: Node = nil): NavBarItem =
   NavBarItem(
     children: @[],
@@ -45,12 +47,14 @@ proc newNavBarItem*(label: string, icon: Node = nil): NavBarItem =
   )
 
 type
+  ## Card container with optional title and background node.
   Card* = ref object of VBox
     titleNode*: Option[TextNode]
     bgNode*: RectNode
 
 const DefaultFontPath* = "tests/data/DejaVuSans.ttf"
 
+## Creates a card container with optional title text.
 proc newCard*(title: string = ""): Card =
   let bgNode = newRectNode()
   bgNode.fill = some(solidPaint(color(0.98, 0.98, 0.98, 1.0)))
@@ -100,16 +104,19 @@ proc newCard*(title: string = ""): Card =
     bgNode: bgNode
   )
 
+## Adds a content node into the card container.
 proc setCardContent*(card: Card, content: Node) =
   card.addChild(content)
   content.autoLayout = false
 
 type
+  ## Header row with text and decorative separator lines.
   SectionHeader* = ref object of HBox
     labelNode*: TextNode
     lineLeft*: Option[RectNode]
     lineRight*: Option[RectNode]
 
+## Creates a section header with configurable label and line color.
 proc newSectionHeader*(
   label: string,
   fontPath: string = "tests/data/DejaVuSans.ttf",
@@ -162,10 +169,12 @@ proc newSectionHeader*(
   )
 
 type
+  ## Compact text badge with rounded background.
   Badge* = ref object of HBox
     bgNode*: RectNode
     textNode*: TextNode
 
+## Creates a badge widget.
 proc newBadge*(
   text: string,
   bgColor: Color = colBlue,
@@ -213,11 +222,13 @@ proc newBadge*(
   )
 
 type
+  ## Pill-shaped chip with optional close affordance.
   Chip* = ref object of HBox
     bgNode*: RectNode
     textNode*: TextNode
     closeButton*: Option[RectNode]
 
+## Creates a chip widget.
 proc newChip*(
   label: string,
   onClose: proc() = nil,
@@ -275,10 +286,12 @@ proc newChip*(
   )
 
 type
+  ## Two-column row that displays a label and a value.
   LabelValueRow* = ref object of HBox
     labelNode*: TextNode
     valueNode*: TextNode
 
+## Creates a label/value row.
 proc newLabelValueRow*(
   label: string,
   value: string,
@@ -327,16 +340,19 @@ proc newLabelValueRow*(
     valueNode: valueNode
   )
 
+## Updates the value text in a label/value row.
 proc setValue*(row: LabelValueRow, value: string) =
   row.valueNode.text = value
   row.valueNode.markDirty()
 
 type
+  ## Horizontal navigation bar composed of `NavBarItem` entries.
   NavBar* = ref object of HBox
     items*: seq[NavBarItem]
     activeItem*: Option[NavBarItem]
     bgNode*: RectNode
 
+## Creates a new navigation bar.
 proc newNavBar*(
   bgColor: Color = color(0.95, 0.95, 0.95, 1.0),
   height: float32 = 48.0
@@ -377,12 +393,14 @@ proc newNavBar*(
     bgNode: bgNode
   )
 
+## Appends a navigation item to the bar.
 proc addNavItem*(nav: NavBar, item: NavBarItem) =
   nav.addChild(item)
   item.autoLayout = false
   nav.items.add(item)
   nav.markDirty()
 
+## Marks a navigation item as active and deactivates others.
 proc setActiveItem*(nav: NavBar, item: NavBarItem) =
   for i in nav.items:
     i.isActive = false

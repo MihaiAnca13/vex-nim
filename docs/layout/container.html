@@ -125,7 +125,8 @@
     <div id="tocRoot"></div>
     
     <p class="module-desc"><p>Layout containers for automatic child positioning.</p>
-<p>HBox arranges children horizontally, VBox arranges them vertically. Both support spacing and padding, and automatically calculate their size. IMPORTANT: Call <tt class="docutils literal"><span class="pre"><span class="Identifier">update</span><span class="Punctuation">(</span><span class="Identifier">ctx</span><span class="Punctuation">)</span></span></tt> after adding items to calculate layout.</p>
+<p>HBox arranges children horizontally, VBox arranges them vertically. Grid arranges children in a 2D grid. Flow arranges children like wrapped text (flex-wrap behavior).</p>
+<p>IMPORTANT: Call <tt class="docutils literal"><span class="pre"><span class="Identifier">update</span><span class="Punctuation">(</span><span class="Identifier">ctx</span><span class="Punctuation">)</span></span></tt> after adding items to calculate layout.</p>
 Creates a new horizontal box layout container.Creates a new vertical box layout container.Adds a child to the HBox and marks it as dirty.Adds a child to the VBox and marks it as dirty.<p>Recalculates the HBox layout.</p>
 <p>This must be called after adding items to measure TextNodes and calculate the container's size. TextNodes need the RenderContext to measure their font dimensions.</p>
 <p>Recalculates the VBox layout.</p>
@@ -294,7 +295,7 @@ Creates a new horizontal box layout container.Creates a new vertical box layout 
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 08:31:49 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-02-06 13:29:06 UTC</small>
       </div>
     </div>
   </div>

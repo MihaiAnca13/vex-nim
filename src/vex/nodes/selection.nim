@@ -8,12 +8,14 @@ import ../layout/alignment
 import ../nodes/primitive
 
 type
+  ## Visual styles available for `SelectionOverlay`.
   SelectionStyle* = enum
     SelectionStyleBorder
     SelectionStyleGlow
     SelectionStyleFill
     SelectionStyleDashed
 
+  ## Selection highlight node that follows a target node.
   SelectionOverlay* = ref object of Node
     target*: Option[Node]
     style*: SelectionStyle
@@ -33,6 +35,7 @@ const
   DefaultDashLength = 8.0
   DefaultDashGap = 4.0
 
+## Creates a new selection overlay with configurable style parameters.
 proc newSelectionOverlay*(
   style: SelectionStyle = SelectionStyleBorder,
   color: Color = DefaultSelectionColor,
@@ -75,10 +78,12 @@ proc newSelectionOverlay*(
 
 proc updateTransform*(overlay: SelectionOverlay)
 
+## Attaches overlay to a target node and syncs transform.
 proc attachTo*(overlay: SelectionOverlay, target: Node) =
   overlay.target = some(target)
   overlay.updateTransform()
 
+## Recomputes overlay position and size from attached target.
 proc updateTransform*(overlay: SelectionOverlay) =
   if overlay.target.isNone:
     return
@@ -96,21 +101,25 @@ proc updateTransform*(overlay: SelectionOverlay) =
   
   overlay.dirty = true
 
+## Shows overlay and refreshes target-relative transform.
 proc show*(overlay: SelectionOverlay) =
   overlay.isVisible = true
   overlay.visible = true
   overlay.dirty = true
   overlay.updateTransform()
 
+## Hides overlay.
 proc hide*(overlay: SelectionOverlay) =
   overlay.isVisible = false
   overlay.visible = false
 
+## Changes overlay style and refreshes transform.
 proc setStyle*(overlay: SelectionOverlay, style: SelectionStyle) =
   overlay.style = style
   overlay.dirty = true
   overlay.updateTransform()
 
+## Sets overlay color.
 proc setColor*(overlay: SelectionOverlay, color: Color) =
   overlay.color = color
   overlay.dirty = true

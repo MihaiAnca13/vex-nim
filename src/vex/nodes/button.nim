@@ -9,12 +9,14 @@ import ./primitive
 import ./text
 
 type
+  ## Visual states supported by `Button`.
   ButtonState* = enum
     ButtonStateNormal
     ButtonStateHover
     ButtonStateActive
     ButtonStateDisabled
 
+  ## Color palette used by `Button` for each state.
   ButtonColors* = object
     normalBg*: Color
     hoverBg*: Color
@@ -25,6 +27,7 @@ type
     activeText*: Color
     disabledText*: Color
 
+  ## Clickable UI button with built-in hover/active/disabled states.
   Button* = ref object of Node
     label*: TextNode
     bg*: RectNode
@@ -45,6 +48,7 @@ proc defaultButtonColors(): ButtonColors =
     disabledText: color(0.5, 0.5, 0.5, 1.0)
   )
 
+## Creates a new button node with centered text label.
 proc newButton*(
   text: string,
   fontPath: string,
@@ -93,6 +97,7 @@ proc newButton*(
     cornerRadius: 4.0
   )
 
+## Applies current button state colors to background and label.
 proc updateVisualState*(btn: Button) =
   let (bgColor, textColor) = case btn.state
     of ButtonStateNormal: (btn.colors.normalBg, btn.colors.normalText)
@@ -105,29 +110,36 @@ proc updateVisualState*(btn: Button) =
   btn.label.color = textColor
   btn.label.dirty = true
 
+## Sets button state and refreshes visuals when state changed.
 proc setState*(btn: Button, newState: ButtonState) =
   if btn.state != newState:
     btn.state = newState
     btn.updateVisualState()
 
+## Enables or disables the button.
 proc setEnabled*(btn: Button, enabled: bool) =
   btn.setState(if enabled: ButtonStateNormal else: ButtonStateDisabled)
 
+## Returns `true` when button is not disabled.
 proc isEnabled*(btn: Button): bool =
   btn.state != ButtonStateDisabled
 
+## Transitions button to hover state when enabled.
 proc handleMouseEnter*(btn: Button) =
   if btn.isEnabled():
     btn.setState(ButtonStateHover)
 
+## Transitions button to normal state when enabled.
 proc handleMouseLeave*(btn: Button) =
   if btn.isEnabled():
     btn.setState(ButtonStateNormal)
 
+## Transitions button to active state when enabled.
 proc handleMouseDown*(btn: Button) =
   if btn.isEnabled():
     btn.setState(ButtonStateActive)
 
+## Handles mouse release and fires `onClick` when appropriate.
 proc handleMouseUp*(btn: Button) =
   if btn.isEnabled():
     if btn.state == ButtonStateActive:
@@ -135,10 +147,12 @@ proc handleMouseUp*(btn: Button) =
       if not btn.onClick.isNil:
         btn.onClick()
 
+## Replaces button label text.
 proc setText*(btn: Button, text: string) =
   btn.label.text = text
   btn.label.dirty = true
 
+## Hit tests a screen-space point against button bounds.
 proc contains*(btn: Button, point: Vec2): bool =
   let localPoint = btn.globalToLocal(point)
   localPoint.x >= 0 and localPoint.x < btn.size.x and

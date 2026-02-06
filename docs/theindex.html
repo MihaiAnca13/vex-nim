@@ -25,14 +25,22 @@
   <div class="document" id="documentId">
     <div class="container">
       <h1 class="title">Index</h1>
-      Modules: <a href="core/colors.html">core/colors</a>, <a href="core/context.html">core/context</a>, <a href="core/events.html">core/events</a>, <a href="core/layout.html">core/layout</a>, <a href="core/transform.html">core/transform</a>, <a href="core/types.html">core/types</a>, <a href="hex/hex.html">hex/hex</a>, <a href="layout/alignment.html">layout/alignment</a>, <a href="layout/container.html">layout/container</a>, <a href="nodes/path.html">nodes/path</a>, <a href="nodes/primitive.html">nodes/primitive</a>, <a href="nodes/sprite.html">nodes/sprite</a>, <a href="nodes/text.html">nodes/text</a>, <a href="vex.html">vex</a>.<br/><p /><h2>API symbols</h2>
+      Modules: <a href="core/colors.html">core/colors</a>, <a href="core/context.html">core/context</a>, <a href="core/events.html">core/events</a>, <a href="core/layout.html">core/layout</a>, <a href="core/transform.html">core/transform</a>, <a href="core/types.html">core/types</a>, <a href="debug/layout_overlay.html">debug/layout_overlay</a>, <a href="hex/hex.html">hex/hex</a>, <a href="layout/alignment.html">layout/alignment</a>, <a href="layout/container.html">layout/container</a>, <a href="layout/flow.html">layout/flow</a>, <a href="layout/grid.html">layout/grid</a>, <a href="nodes/button.html">nodes/button</a>, <a href="nodes/path.html">nodes/path</a>, <a href="nodes/primitive.html">nodes/primitive</a>, <a href="nodes/selection.html">nodes/selection</a>, <a href="nodes/sprite.html">nodes/sprite</a>, <a href="nodes/text.html">nodes/text</a>, <a href="ui/dialog.html">ui/dialog</a>, <a href="ui/primitives.html">ui/primitives</a>, <a href="ui/tooltip.html">ui/tooltip</a>, <a href="vex.html">vex</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="Absolute" href="#Absolute"><span>Absolute:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="types: SizeMode.Absolute" href="core/types.html#Absolute">types: SizeMode.Absolute</a></li>
           </ul></dd>
+<dt><a name="addButton" href="#addButton"><span>addButton:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="dialog: proc addButton(dialog: Dialog; button: Button)" href="ui/dialog.html#addButton%2CDialog%2CButton">dialog: proc addButton(dialog: Dialog; button: Button)</a></li>
+          </ul></dd>
 <dt><a name="addChild" href="#addChild"><span>addChild:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="types: proc addChild(parent: Node; child: Node)" href="core/types.html#addChild%2CNode%2CNode">types: proc addChild(parent: Node; child: Node)</a></li>
+          </ul></dd>
+<dt><a name="addContent" href="#addContent"><span>addContent:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="dialog: proc addContent(dialog: Dialog; node: Node)" href="ui/dialog.html#addContent%2CDialog%2CNode">dialog: proc addContent(dialog: Dialog; node: Node)</a></li>
           </ul></dd>
 <dt><a name="addHex" href="#addHex"><span>addHex:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -47,6 +55,14 @@
           data-doc-search-tag="container: proc addItem(hbox: HBox; child: Node)" href="layout/container.html#addItem%2CHBox%2CNode">container: proc addItem(hbox: HBox; child: Node)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="container: proc addItem(vbox: VBox; child: Node)" href="layout/container.html#addItem%2CVBox%2CNode">container: proc addItem(vbox: VBox; child: Node)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="flow: proc addItem(flow: Flow; child: Node)" href="layout/flow.html#addItem%2CFlow%2CNode">flow: proc addItem(flow: Flow; child: Node)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="grid: proc addItem(grid: Grid; child: Node)" href="layout/grid.html#addItem%2CGrid%2CNode">grid: proc addItem(grid: Grid; child: Node)</a></li>
+          </ul></dd>
+<dt><a name="addNavItem" href="#addNavItem"><span>addNavItem:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc addNavItem(nav: NavBar; item: NavBarItem)" href="ui/primitives.html#addNavItem%2CNavBar%2CNavBarItem">primitives: proc addNavItem(nav: NavBar; item: NavBarItem)</a></li>
           </ul></dd>
 <dt><a name="AlignBottom" href="#AlignBottom"><span>AlignBottom:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -82,6 +98,10 @@
 <li><a class="reference external"
           data-doc-search-tag="alignment: proc anchorPoint(rectSize: Vec2; anchor: Anchor): Vec2" href="layout/alignment.html#anchorPoint%2CVec2%2CAnchor">alignment: proc anchorPoint(rectSize: Vec2; anchor: Anchor): Vec2</a></li>
           </ul></dd>
+<dt><a name="attachTo" href="#attachTo"><span>attachTo:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: proc attachTo(overlay: SelectionOverlay; target: Node)" href="nodes/selection.html#attachTo%2CSelectionOverlay%2CNode">selection: proc attachTo(overlay: SelectionOverlay; target: Node)</a></li>
+          </ul></dd>
 <dt><a name="axialRound" href="#axialRound"><span>axialRound:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hex: proc axialRound(q, r: float32): HexCoord" href="hex/hex.html#axialRound%2Cfloat32%2Cfloat32">hex: proc axialRound(q, r: float32): HexCoord</a></li>
@@ -89,6 +109,10 @@
 <dt><a name="axialToCube" href="#axialToCube"><span>axialToCube:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hex: proc axialToCube(coord: HexCoord): CubeCoord" href="hex/hex.html#axialToCube%2CHexCoord">hex: proc axialToCube(coord: HexCoord): CubeCoord</a></li>
+          </ul></dd>
+<dt><a name="Badge" href="#Badge"><span>Badge:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: type Badge" href="ui/primitives.html#Badge">primitives: type Badge</a></li>
           </ul></dd>
 <dt><a name="beginFrame" href="#beginFrame"><span>beginFrame:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -112,9 +136,41 @@
           <li><a class="reference external"
           data-doc-search-tag="alignment: Pivot.BottomRight" href="layout/alignment.html#BottomRight_2">alignment: Pivot.BottomRight</a></li>
           </ul></dd>
+<dt><a name="Button" href="#Button"><span>Button:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: type Button" href="nodes/button.html#Button">button: type Button</a></li>
+          </ul></dd>
+<dt><a name="ButtonColors" href="#ButtonColors"><span>ButtonColors:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: object ButtonColors" href="nodes/button.html#ButtonColors">button: object ButtonColors</a></li>
+          </ul></dd>
+<dt><a name="ButtonState" href="#ButtonState"><span>ButtonState:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: enum ButtonState" href="nodes/button.html#ButtonState">button: enum ButtonState</a></li>
+          </ul></dd>
+<dt><a name="ButtonStateActive" href="#ButtonStateActive"><span>ButtonStateActive:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: ButtonState.ButtonStateActive" href="nodes/button.html#ButtonStateActive">button: ButtonState.ButtonStateActive</a></li>
+          </ul></dd>
+<dt><a name="ButtonStateDisabled" href="#ButtonStateDisabled"><span>ButtonStateDisabled:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: ButtonState.ButtonStateDisabled" href="nodes/button.html#ButtonStateDisabled">button: ButtonState.ButtonStateDisabled</a></li>
+          </ul></dd>
+<dt><a name="ButtonStateHover" href="#ButtonStateHover"><span>ButtonStateHover:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: ButtonState.ButtonStateHover" href="nodes/button.html#ButtonStateHover">button: ButtonState.ButtonStateHover</a></li>
+          </ul></dd>
+<dt><a name="ButtonStateNormal" href="#ButtonStateNormal"><span>ButtonStateNormal:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: ButtonState.ButtonStateNormal" href="nodes/button.html#ButtonStateNormal">button: ButtonState.ButtonStateNormal</a></li>
+          </ul></dd>
 <dt><a name="cacheTexture" href="#cacheTexture"><span>cacheTexture:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="context: proc cacheTexture(ctx: RenderContext; node: Node): string" href="core/context.html#cacheTexture%2CRenderContext%2CNode">context: proc cacheTexture(ctx: RenderContext; node: Node): string</a></li>
+          </ul></dd>
+<dt><a name="Card" href="#Card"><span>Card:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: type Card" href="ui/primitives.html#Card">primitives: type Card</a></li>
           </ul></dd>
 <dt><a name="Center" href="#Center"><span>Center:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -125,6 +181,10 @@
 <dt><a name="centerIn" href="#centerIn"><span>centerIn:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="types: proc centerIn(node: Node; bounds: Vec2)" href="core/types.html#centerIn%2CNode%2CVec2">types: proc centerIn(node: Node; bounds: Vec2)</a></li>
+          </ul></dd>
+<dt><a name="centerInViewport" href="#centerInViewport"><span>centerInViewport:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="dialog: proc centerInViewport(dialog: Dialog; viewportSize: Vec2)" href="ui/dialog.html#centerInViewport%2CDialog%2CVec2">dialog: proc centerInViewport(dialog: Dialog; viewportSize: Vec2)</a></li>
           </ul></dd>
 <dt><a name="CenterLeft" href="#CenterLeft"><span>CenterLeft:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -138,9 +198,21 @@
           <li><a class="reference external"
           data-doc-search-tag="alignment: Pivot.CenterRight" href="layout/alignment.html#CenterRight_2">alignment: Pivot.CenterRight</a></li>
           </ul></dd>
+<dt><a name="Chip" href="#Chip"><span>Chip:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: type Chip" href="ui/primitives.html#Chip">primitives: type Chip</a></li>
+          </ul></dd>
 <dt><a name="CircleNode" href="#CircleNode"><span>CircleNode:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="primitive: type CircleNode" href="nodes/primitive.html#CircleNode">primitive: type CircleNode</a></li>
+          </ul></dd>
+<dt><a name="clampToViewport" href="#clampToViewport"><span>clampToViewport:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: proc clampToViewport(tooltip: Tooltip; viewportSize: Vec2)" href="ui/tooltip.html#clampToViewport%2CTooltip%2CVec2">tooltip: proc clampToViewport(tooltip: Tooltip; viewportSize: Vec2)</a></li>
+          </ul></dd>
+<dt><a name="closeDialog" href="#closeDialog"><span>closeDialog:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="dialog: proc closeDialog(dialog: Dialog)" href="ui/dialog.html#closeDialog%2CDialog">dialog: proc closeDialog(dialog: Dialog)</a></li>
           </ul></dd>
 <dt><a name="colBlue" href="#colBlue"><span>colBlue:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -202,6 +274,8 @@
           <li><a class="reference external"
           data-doc-search-tag="hex: proc contains(node: HexNode; point: Vec2): bool" href="hex/hex.html#contains%2CHexNode%2CVec2">hex: proc contains(node: HexNode; point: Vec2): bool</a></li>
           <li><a class="reference external"
+          data-doc-search-tag="button: proc contains(btn: Button; point: Vec2): bool" href="nodes/button.html#contains%2CButton%2CVec2">button: proc contains(btn: Button; point: Vec2): bool</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="path: proc contains(node: PathNode; point: Vec2): bool" href="nodes/path.html#contains%2CPathNode%2CVec2">path: proc contains(node: PathNode; point: Vec2): bool</a></li>
           <li><a class="reference external"
           data-doc-search-tag="primitive: proc contains(node: CircleNode; point: Vec2): bool" href="nodes/primitive.html#contains%2CCircleNode%2CVec2">primitive: proc contains(node: CircleNode; point: Vec2): bool</a></li>
@@ -234,13 +308,25 @@
 <li><a class="reference external"
           data-doc-search-tag="hex: proc cubeToAxial(coord: CubeCoord): HexCoord" href="hex/hex.html#cubeToAxial%2CCubeCoord">hex: proc cubeToAxial(coord: CubeCoord): HexCoord</a></li>
           </ul></dd>
+<dt><a name="DebugOverlay" href="#DebugOverlay"><span>DebugOverlay:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: type DebugOverlay" href="debug/layout_overlay.html#DebugOverlay">layout_overlay: type DebugOverlay</a></li>
+          </ul></dd>
 <dt><a name="decomposeTransform" href="#decomposeTransform"><span>decomposeTransform:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="transform: proc decomposeTransform(m: Mat3): tuple[pos: Vec2, scale: Vec2, rotation: float32]" href="core/transform.html#decomposeTransform%2CMat3">transform: proc decomposeTransform(m: Mat3): tuple[pos: Vec2, scale: Vec2, rotation: float32]</a></li>
           </ul></dd>
+<dt><a name="DefaultFontPath" href="#DefaultFontPath"><span>DefaultFontPath:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: const DefaultFontPath" href="ui/primitives.html#DefaultFontPath">primitives: const DefaultFontPath</a></li>
+          </ul></dd>
 <dt><a name="defaultPadding" href="#defaultPadding"><span>defaultPadding:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="types: const defaultPadding" href="core/types.html#defaultPadding">types: const defaultPadding</a></li>
+          </ul></dd>
+<dt><a name="Dialog" href="#Dialog"><span>Dialog:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="dialog: type Dialog" href="ui/dialog.html#Dialog">dialog: type Dialog</a></li>
           </ul></dd>
 <dt><a name="dispatchEvent" href="#dispatchEvent"><span>dispatchEvent:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -258,7 +344,11 @@
           <li><a class="reference external"
           data-doc-search-tag="types: method draw(node: Node; ctx: RenderContext; image: Image)" href="core/types.html#draw.e%2CNode%2CRenderContext%2CImage">types: method draw(node: Node; ctx: RenderContext; image: Image)</a></li>
           <li><a class="reference external"
+          data-doc-search-tag="layout_overlay: method draw(overlay: DebugOverlay; renderCtx: RenderContext; image: Image)" href="debug/layout_overlay.html#draw.e%2CDebugOverlay%2CRenderContext%2CImage">layout_overlay: method draw(overlay: DebugOverlay; renderCtx: RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="hex: method draw(node: HexNode; renderCtx: RenderContext; image: Image)" href="hex/hex.html#draw.e%2CHexNode%2CRenderContext%2CImage">hex: method draw(node: HexNode; renderCtx: RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="button: method draw(btn: Button; renderCtx: types.RenderContext; image: Image)" href="nodes/button.html#draw.e%2CButton%2C%2CImage">button: method draw(btn: Button; renderCtx: types.RenderContext; image: Image)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="path: method draw(node: PathNode; renderCtx: RenderContext; image: Image)" href="nodes/path.html#draw.e%2CPathNode%2CRenderContext%2CImage">path: method draw(node: PathNode; renderCtx: RenderContext; image: Image)</a></li>
           <li><a class="reference external"
@@ -266,9 +356,51 @@
           <li><a class="reference external"
           data-doc-search-tag="primitive: method draw(node: RectNode; renderCtx: RenderContext; image: Image)" href="nodes/primitive.html#draw.e%2CRectNode%2CRenderContext%2CImage">primitive: method draw(node: RectNode; renderCtx: RenderContext; image: Image)</a></li>
           <li><a class="reference external"
+          data-doc-search-tag="selection: method draw(overlay: SelectionOverlay; renderCtx: RenderContext; image: Image)" href="nodes/selection.html#draw.e%2CSelectionOverlay%2CRenderContext%2CImage">selection: method draw(overlay: SelectionOverlay; renderCtx: RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="sprite: method draw(node: SpriteNode; renderCtx: types.RenderContext; image: Image)" href="nodes/sprite.html#draw.e%2CSpriteNode%2C%2CImage">sprite: method draw(node: SpriteNode; renderCtx: types.RenderContext; image: Image)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="text: method draw(node: TextNode; renderCtx: types.RenderContext; image: Image)" href="nodes/text.html#draw.e%2CTextNode%2C%2CImage">text: method draw(node: TextNode; renderCtx: types.RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="dialog: method draw(dialog: Dialog; renderCtx: RenderContext; image: Image)" href="ui/dialog.html#draw.e%2CDialog%2CRenderContext%2CImage">dialog: method draw(dialog: Dialog; renderCtx: RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method draw(badge: Badge; renderCtx: types.RenderContext; image: Image)" href="ui/primitives.html#draw.e%2CBadge%2C%2CImage">primitives: method draw(badge: Badge; renderCtx: types.RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method draw(card: Card; renderCtx: types.RenderContext; image: Image)" href="ui/primitives.html#draw.e%2CCard%2C%2CImage">primitives: method draw(card: Card; renderCtx: types.RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method draw(chip: Chip; renderCtx: types.RenderContext; image: Image)" href="ui/primitives.html#draw.e%2CChip%2C%2CImage">primitives: method draw(chip: Chip; renderCtx: types.RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method draw(row: LabelValueRow; renderCtx: types.RenderContext; image: Image)" href="ui/primitives.html#draw.e%2CLabelValueRow%2C%2CImage">primitives: method draw(row: LabelValueRow; renderCtx: types.RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method draw(nav: NavBar; renderCtx: types.RenderContext; image: Image)" href="ui/primitives.html#draw.e%2CNavBar%2C%2CImage">primitives: method draw(nav: NavBar; renderCtx: types.RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method draw(header: SectionHeader; renderCtx: types.RenderContext; image: Image)" href="ui/primitives.html#draw.e%2CSectionHeader%2C%2CImage">primitives: method draw(header: SectionHeader; renderCtx: types.RenderContext; image: Image)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tooltip: method draw(tooltip: Tooltip; renderCtx: RenderContext; image: Image)" href="ui/tooltip.html#draw.e%2CTooltip%2CRenderContext%2CImage">tooltip: method draw(tooltip: Tooltip; renderCtx: RenderContext; image: Image)</a></li>
+          </ul></dd>
+<dt><a name="drawDebugAnchor" href="#drawDebugAnchor"><span>drawDebugAnchor:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc drawDebugAnchor(overlay: DebugOverlay; ctx: RenderContext; image: Image;
+                node: Node)" href="debug/layout_overlay.html#drawDebugAnchor%2CDebugOverlay%2CRenderContext%2CImage%2CNode">layout_overlay: proc drawDebugAnchor(overlay: DebugOverlay; ctx: RenderContext; image: Image;
+                node: Node)</a></li>
+          </ul></dd>
+<dt><a name="drawDebugBounds" href="#drawDebugBounds"><span>drawDebugBounds:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc drawDebugBounds(overlay: DebugOverlay; ctx: RenderContext; image: Image;
+                node: Node)" href="debug/layout_overlay.html#drawDebugBounds%2CDebugOverlay%2CRenderContext%2CImage%2CNode">layout_overlay: proc drawDebugBounds(overlay: DebugOverlay; ctx: RenderContext; image: Image;
+                node: Node)</a></li>
+          </ul></dd>
+<dt><a name="drawDebugClipRegion" href="#drawDebugClipRegion"><span>drawDebugClipRegion:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc drawDebugClipRegion(overlay: DebugOverlay; ctx: RenderContext; image: Image;
+                    node: Node)" href="debug/layout_overlay.html#drawDebugClipRegion%2CDebugOverlay%2CRenderContext%2CImage%2CNode">layout_overlay: proc drawDebugClipRegion(overlay: DebugOverlay; ctx: RenderContext; image: Image;
+                    node: Node)</a></li>
+          </ul></dd>
+<dt><a name="drawDebugNode" href="#drawDebugNode"><span>drawDebugNode:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc drawDebugNode(overlay: DebugOverlay; ctx: RenderContext; image: Image;
+              node: Node)" href="debug/layout_overlay.html#drawDebugNode%2CDebugOverlay%2CRenderContext%2CImage%2CNode">layout_overlay: proc drawDebugNode(overlay: DebugOverlay; ctx: RenderContext; image: Image;
+              node: Node)</a></li>
           </ul></dd>
 <dt><a name="drawImage" href="#drawImage"><span>drawImage:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -340,9 +472,17 @@
 <li><a class="reference external"
           data-doc-search-tag="hex: HexOrientation.FlatTopped" href="hex/hex.html#FlatTopped">hex: HexOrientation.FlatTopped</a></li>
           </ul></dd>
+<dt><a name="Flow" href="#Flow"><span>Flow:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="flow: type Flow" href="layout/flow.html#Flow">flow: type Flow</a></li>
+          </ul></dd>
 <dt><a name="getAnchorOffset" href="#getAnchorOffset"><span>getAnchorOffset:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="alignment: proc getAnchorOffset(anchor: Anchor): Vec2" href="layout/alignment.html#getAnchorOffset%2CAnchor">alignment: proc getAnchorOffset(anchor: Anchor): Vec2</a></li>
+          </ul></dd>
+<dt><a name="getDebugColor" href="#getDebugColor"><span>getDebugColor:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc getDebugColor(node: Node): Color" href="debug/layout_overlay.html#getDebugColor%2CNode">layout_overlay: proc getDebugColor(node: Node): Color</a></li>
           </ul></dd>
 <dt><a name="getEventPropagationPath" href="#getEventPropagationPath"><span>getEventPropagationPath:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -404,9 +544,33 @@
 <li><a class="reference external"
           data-doc-search-tag="transform: proc globalToLocal(node: Node; globalPoint: Vec2): Vec2" href="core/transform.html#globalToLocal%2CNode%2CVec2">transform: proc globalToLocal(node: Node; globalPoint: Vec2): Vec2</a></li>
           </ul></dd>
+<dt><a name="Grid" href="#Grid"><span>Grid:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="grid: type Grid" href="layout/grid.html#Grid">grid: type Grid</a></li>
+          </ul></dd>
 <dt><a name="handleEvent" href="#handleEvent"><span>handleEvent:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="context: proc handleEvent(ctx: RenderContext; root: Node; event: var types.InputEvent): bool" href="core/context.html#handleEvent%2CRenderContext%2CNode%2C">context: proc handleEvent(ctx: RenderContext; root: Node; event: var types.InputEvent): bool</a></li>
+          </ul></dd>
+<dt><a name="handleMouseDown" href="#handleMouseDown"><span>handleMouseDown:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: proc handleMouseDown(btn: Button)" href="nodes/button.html#handleMouseDown%2CButton">button: proc handleMouseDown(btn: Button)</a></li>
+          </ul></dd>
+<dt><a name="handleMouseEnter" href="#handleMouseEnter"><span>handleMouseEnter:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: proc handleMouseEnter(btn: Button)" href="nodes/button.html#handleMouseEnter%2CButton">button: proc handleMouseEnter(btn: Button)</a></li>
+          </ul></dd>
+<dt><a name="handleMouseLeave" href="#handleMouseLeave"><span>handleMouseLeave:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: proc handleMouseLeave(btn: Button)" href="nodes/button.html#handleMouseLeave%2CButton">button: proc handleMouseLeave(btn: Button)</a></li>
+          </ul></dd>
+<dt><a name="handleMouseUp" href="#handleMouseUp"><span>handleMouseUp:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: proc handleMouseUp(btn: Button)" href="nodes/button.html#handleMouseUp%2CButton">button: proc handleMouseUp(btn: Button)</a></li>
+          </ul></dd>
+<dt><a name="handleOverlayClick" href="#handleOverlayClick"><span>handleOverlayClick:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="dialog: proc handleOverlayClick(dialog: Dialog): bool" href="ui/dialog.html#handleOverlayClick%2CDialog">dialog: proc handleOverlayClick(dialog: Dialog): bool</a></li>
           </ul></dd>
 <dt><a name="hash" href="#hash"><span>hash:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -468,6 +632,12 @@
 <li><a class="reference external"
           data-doc-search-tag="hex: proc hexToPixel(layout: HexLayout; coord: HexCoord): Vec2" href="hex/hex.html#hexToPixel%2CHexLayout%2CHexCoord">hex: proc hexToPixel(layout: HexLayout; coord: HexCoord): Vec2</a></li>
           </ul></dd>
+<dt><a name="hide" href="#hide"><span>hide:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: proc hide(overlay: SelectionOverlay)" href="nodes/selection.html#hide%2CSelectionOverlay">selection: proc hide(overlay: SelectionOverlay)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tooltip: proc hide(tooltip: Tooltip)" href="ui/tooltip.html#hide%2CTooltip">tooltip: proc hide(tooltip: Tooltip)</a></li>
+          </ul></dd>
 <dt><a name="hitTest" href="#hitTest"><span>hitTest:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="events: proc hitTest(root: Node; position: Vec2): Option[HitTestResult]" href="core/events.html#hitTest%2CNode%2CVec2">events: proc hitTest(root: Node; position: Vec2): Option[HitTestResult]</a></li>
@@ -512,6 +682,10 @@
 <li><a class="reference external"
           data-doc-search-tag="types: proc isAncestorOf(ancestor, node: Node): bool" href="core/types.html#isAncestorOf%2CNode%2CNode">types: proc isAncestorOf(ancestor, node: Node): bool</a></li>
           </ul></dd>
+<dt><a name="isEnabled" href="#isEnabled"><span>isEnabled:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: proc isEnabled(btn: Button): bool" href="nodes/button.html#isEnabled%2CButton">button: proc isEnabled(btn: Button): bool</a></li>
+          </ul></dd>
 <dt><a name="isEventStopped" href="#isEventStopped"><span>isEventStopped:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="events: proc isEventStopped(event: InputEvent): bool" href="core/events.html#isEventStopped%2CInputEvent">events: proc isEventStopped(event: InputEvent): bool</a></li>
@@ -531,6 +705,10 @@
 <dt><a name="KeepAspect" href="#KeepAspect"><span>KeepAspect:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="types: ScaleMode.KeepAspect" href="core/types.html#KeepAspect">types: ScaleMode.KeepAspect</a></li>
+          </ul></dd>
+<dt><a name="LabelValueRow" href="#LabelValueRow"><span>LabelValueRow:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: type LabelValueRow" href="ui/primitives.html#LabelValueRow">primitives: type LabelValueRow</a></li>
           </ul></dd>
 <dt><a name="layout" href="#layout"><span>layout:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -568,7 +746,33 @@
           <li><a class="reference external"
           data-doc-search-tag="container: method measure(vbox: VBox; ctx: types.RenderContext)" href="layout/container.html#measure.e%2CVBox%2C">container: method measure(vbox: VBox; ctx: types.RenderContext)</a></li>
           <li><a class="reference external"
+          data-doc-search-tag="flow: method measure(flow: Flow; ctx: types.RenderContext)" href="layout/flow.html#measure.e%2CFlow%2C">flow: method measure(flow: Flow; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="grid: method measure(grid: Grid; ctx: types.RenderContext)" href="layout/grid.html#measure.e%2CGrid%2C">grid: method measure(grid: Grid; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="button: method measure(btn: Button; ctx: types.RenderContext)" href="nodes/button.html#measure.e%2CButton%2C">button: method measure(btn: Button; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="text: method measure(node: TextNode; ctx: types.RenderContext)" href="nodes/text.html#measure.e%2CTextNode%2C">text: method measure(node: TextNode; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="dialog: method measure(dialog: Dialog; ctx: RenderContext)" href="ui/dialog.html#measure.e%2CDialog%2CRenderContext">dialog: method measure(dialog: Dialog; ctx: RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method measure(badge: Badge; ctx: types.RenderContext)" href="ui/primitives.html#measure.e%2CBadge%2C">primitives: method measure(badge: Badge; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method measure(card: Card; ctx: types.RenderContext)" href="ui/primitives.html#measure.e%2CCard%2C">primitives: method measure(card: Card; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method measure(chip: Chip; ctx: types.RenderContext)" href="ui/primitives.html#measure.e%2CChip%2C">primitives: method measure(chip: Chip; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method measure(row: LabelValueRow; ctx: types.RenderContext)" href="ui/primitives.html#measure.e%2CLabelValueRow%2C">primitives: method measure(row: LabelValueRow; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method measure(nav: NavBar; ctx: types.RenderContext)" href="ui/primitives.html#measure.e%2CNavBar%2C">primitives: method measure(nav: NavBar; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="primitives: method measure(header: SectionHeader; ctx: types.RenderContext)" href="ui/primitives.html#measure.e%2CSectionHeader%2C">primitives: method measure(header: SectionHeader; ctx: types.RenderContext)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tooltip: method measure(tooltip: Tooltip; ctx: RenderContext)" href="ui/tooltip.html#measure.e%2CTooltip%2CRenderContext">tooltip: method measure(tooltip: Tooltip; ctx: RenderContext)</a></li>
+          </ul></dd>
+<dt><a name="measureTooltip" href="#measureTooltip"><span>measureTooltip:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: proc measureTooltip(tooltip: Tooltip; ctx: RenderContext)" href="ui/tooltip.html#measureTooltip%2CTooltip%2CRenderContext">tooltip: proc measureTooltip(tooltip: Tooltip; ctx: RenderContext)</a></li>
           </ul></dd>
 <dt><a name="ModAlt" href="#ModAlt"><span>ModAlt:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -590,13 +794,81 @@
 <li><a class="reference external"
           data-doc-search-tag="types: ModifierKey.ModShift" href="core/types.html#ModShift">types: ModifierKey.ModShift</a></li>
           </ul></dd>
+<dt><a name="NavBar" href="#NavBar"><span>NavBar:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: type NavBar" href="ui/primitives.html#NavBar">primitives: type NavBar</a></li>
+          </ul></dd>
+<dt><a name="NavBarItem" href="#NavBarItem"><span>NavBarItem:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: type NavBarItem" href="ui/primitives.html#NavBarItem">primitives: type NavBarItem</a></li>
+          </ul></dd>
+<dt><a name="newBadge" href="#newBadge"><span>newBadge:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc newBadge(text: string; bgColor: Color = colBlue;
+         textColor: Color = color(1, 1, 1, 1);
+         fontPath: string = &quot;tests/data/DejaVuSans.ttf&quot;;
+         fontSize: float32 = 11.0): Badge" href="ui/primitives.html#newBadge%2Cstring%2CColor%2CColor%2Cstring%2Cfloat32">primitives: proc newBadge(text: string; bgColor: Color = colBlue;
+         textColor: Color = color(1, 1, 1, 1);
+         fontPath: string = &quot;tests/data/DejaVuSans.ttf&quot;;
+         fontSize: float32 = 11.0): Badge</a></li>
+          </ul></dd>
+<dt><a name="newButton" href="#newButton"><span>newButton:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: proc newButton(text: string; fontPath: string; fontSize: float32 = 16.0;
+          size: Vec2 = vec2(120, 40);
+          colors: ButtonColors = defaultButtonColors()): Button" href="nodes/button.html#newButton%2Cstring%2Cstring%2Cfloat32%2CVec2%2CButtonColors">button: proc newButton(text: string; fontPath: string; fontSize: float32 = 16.0;
+          size: Vec2 = vec2(120, 40);
+          colors: ButtonColors = defaultButtonColors()): Button</a></li>
+          </ul></dd>
+<dt><a name="newCard" href="#newCard"><span>newCard:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc newCard(title: string = &quot;&quot;): Card" href="ui/primitives.html#newCard%2Cstring">primitives: proc newCard(title: string = &quot;&quot;): Card</a></li>
+          </ul></dd>
+<dt><a name="newChip" href="#newChip"><span>newChip:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc newChip(label: string; onClose: proc () = nil;
+        bgColor: Color = color(0.9, 0.9, 0.9, 1.0);
+        textColor: Color = color(0.3, 0.3, 0.3, 1.0);
+        fontPath: string = &quot;tests/data/DejaVuSans.ttf&quot;; fontSize: float32 = 12.0): Chip" href="ui/primitives.html#newChip%2Cstring%2Cproc%29%2CColor%2CColor%2Cstring%2Cfloat32">primitives: proc newChip(label: string; onClose: proc () = nil;
+        bgColor: Color = color(0.9, 0.9, 0.9, 1.0);
+        textColor: Color = color(0.3, 0.3, 0.3, 1.0);
+        fontPath: string = &quot;tests/data/DejaVuSans.ttf&quot;; fontSize: float32 = 12.0): Chip</a></li>
+          </ul></dd>
 <dt><a name="newCircleNode" href="#newCircleNode"><span>newCircleNode:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="primitive: proc newCircleNode(size: Vec2 = vec2(100, 100)): CircleNode" href="nodes/primitive.html#newCircleNode%2CVec2">primitive: proc newCircleNode(size: Vec2 = vec2(100, 100)): CircleNode</a></li>
           </ul></dd>
+<dt><a name="newDebugOverlay" href="#newDebugOverlay"><span>newDebugOverlay:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc newDebugOverlay(): DebugOverlay" href="debug/layout_overlay.html#newDebugOverlay">layout_overlay: proc newDebugOverlay(): DebugOverlay</a></li>
+          </ul></dd>
+<dt><a name="newDialog" href="#newDialog"><span>newDialog:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="dialog: proc newDialog(title: string; fontPath: string; width: float32 = DefaultDialogWidth;
+          dismissOnOverlay: bool = true): Dialog" href="ui/dialog.html#newDialog%2Cstring%2Cstring%2Cfloat32%2Cbool">dialog: proc newDialog(title: string; fontPath: string; width: float32 = DefaultDialogWidth;
+          dismissOnOverlay: bool = true): Dialog</a></li>
+          </ul></dd>
+<dt><a name="newFlow" href="#newFlow"><span>newFlow:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="flow: proc newFlow(maxWidth: float32 = 0.0): Flow" href="layout/flow.html#newFlow%2Cfloat32">flow: proc newFlow(maxWidth: float32 = 0.0): Flow</a></li>
+          </ul></dd>
+<dt><a name="newGrid" href="#newGrid"><span>newGrid:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="grid: proc newGrid(columns: int = 0; rows: int = 0; columnSpacing: float32 = 4.0;
+        rowSpacing: float32 = 4.0; cellWidth: float32 = 0.0;
+        cellHeight: float32 = 0.0; fillWidth: bool = false;
+        fillHeight: bool = false): Grid" href="layout/grid.html#newGrid%2Cint%2Cint%2Cfloat32%2Cfloat32%2Cfloat32%2Cfloat32%2Cbool%2Cbool">grid: proc newGrid(columns: int = 0; rows: int = 0; columnSpacing: float32 = 4.0;
+        rowSpacing: float32 = 4.0; cellWidth: float32 = 0.0;
+        cellHeight: float32 = 0.0; fillWidth: bool = false;
+        fillHeight: bool = false): Grid</a></li>
+          </ul></dd>
 <dt><a name="newHBox" href="#newHBox"><span>newHBox:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="container: proc newHBox(spacing: float32 = 4.0; padding: float32 = 4.0): HBox" href="layout/container.html#newHBox%2Cfloat32%2Cfloat32">container: proc newHBox(spacing: float32 = 4.0; padding: float32 = 4.0): HBox</a></li>
+          </ul></dd>
+<dt><a name="newHeadlessRenderContext" href="#newHeadlessRenderContext"><span>newHeadlessRenderContext:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="context: proc newHeadlessRenderContext(viewportSize: Vec2): RenderContext" href="core/context.html#newHeadlessRenderContext%2CVec2">context: proc newHeadlessRenderContext(viewportSize: Vec2): RenderContext</a></li>
           </ul></dd>
 <dt><a name="newHexGrid" href="#newHexGrid"><span>newHexGrid:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -611,6 +883,24 @@
           data-doc-search-tag="hex: proc newHexNode(coord: HexCoord; layout: HexLayout): HexNode" href="hex/hex.html#newHexNode%2CHexCoord%2CHexLayout">hex: proc newHexNode(coord: HexCoord; layout: HexLayout): HexNode</a></li>
           <li><a class="reference external"
           data-doc-search-tag="path: proc newHexNode(radius: float32): PathNode" href="nodes/path.html#newHexNode%2Cfloat32">path: proc newHexNode(radius: float32): PathNode</a></li>
+          </ul></dd>
+<dt><a name="newLabelValueRow" href="#newLabelValueRow"><span>newLabelValueRow:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc newLabelValueRow(label: string; value: string; labelColor: Color = colGray;
+                 valueColor: Color = color(0.2, 0.2, 0.2, 1.0);
+                 fontPath: string = &quot;tests/data/DejaVuSans.ttf&quot;;
+                 labelSize: float32 = 12.0; valueSize: float32 = 14.0): LabelValueRow" href="ui/primitives.html#newLabelValueRow%2Cstring%2Cstring%2CColor%2CColor%2Cstring%2Cfloat32%2Cfloat32">primitives: proc newLabelValueRow(label: string; value: string; labelColor: Color = colGray;
+                 valueColor: Color = color(0.2, 0.2, 0.2, 1.0);
+                 fontPath: string = &quot;tests/data/DejaVuSans.ttf&quot;;
+                 labelSize: float32 = 12.0; valueSize: float32 = 14.0): LabelValueRow</a></li>
+          </ul></dd>
+<dt><a name="newNavBar" href="#newNavBar"><span>newNavBar:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc newNavBar(bgColor: Color = color(0.95, 0.95, 0.95, 1.0); height: float32 = 48.0): NavBar" href="ui/primitives.html#newNavBar%2CColor%2Cfloat32">primitives: proc newNavBar(bgColor: Color = color(0.95, 0.95, 0.95, 1.0); height: float32 = 48.0): NavBar</a></li>
+          </ul></dd>
+<dt><a name="newNavBarItem" href="#newNavBarItem"><span>newNavBarItem:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc newNavBarItem(label: string; icon: Node = nil): NavBarItem" href="ui/primitives.html#newNavBarItem%2Cstring%2CNode">primitives: proc newNavBarItem(label: string; icon: Node = nil): NavBarItem</a></li>
           </ul></dd>
 <dt><a name="newNode" href="#newNode"><span>newNode:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -628,6 +918,24 @@
 <li><a class="reference external"
           data-doc-search-tag="context: proc newRenderContext(viewportSize: Vec2): RenderContext" href="core/context.html#newRenderContext%2CVec2">context: proc newRenderContext(viewportSize: Vec2): RenderContext</a></li>
           </ul></dd>
+<dt><a name="newSectionHeader" href="#newSectionHeader"><span>newSectionHeader:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc newSectionHeader(label: string; fontPath: string = &quot;tests/data/DejaVuSans.ttf&quot;;
+                 fontSize: float32 = 12.0; color: Color = colGray;
+                 lineColor: Color = colGray): SectionHeader" href="ui/primitives.html#newSectionHeader%2Cstring%2Cstring%2Cfloat32%2CColor%2CColor">primitives: proc newSectionHeader(label: string; fontPath: string = &quot;tests/data/DejaVuSans.ttf&quot;;
+                 fontSize: float32 = 12.0; color: Color = colGray;
+                 lineColor: Color = colGray): SectionHeader</a></li>
+          </ul></dd>
+<dt><a name="newSelectionOverlay" href="#newSelectionOverlay"><span>newSelectionOverlay:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: proc newSelectionOverlay(style: SelectionStyle = SelectionStyleBorder;
+                    color: Color = DefaultSelectionColor;
+                    borderWidth: float32 = DefaultBorderWidth;
+                    glowRadius: float32 = DefaultGlowRadius): SelectionOverlay" href="nodes/selection.html#newSelectionOverlay%2CSelectionStyle%2CColor%2Cfloat32%2Cfloat32">selection: proc newSelectionOverlay(style: SelectionStyle = SelectionStyleBorder;
+                    color: Color = DefaultSelectionColor;
+                    borderWidth: float32 = DefaultBorderWidth;
+                    glowRadius: float32 = DefaultGlowRadius): SelectionOverlay</a></li>
+          </ul></dd>
 <dt><a name="newSpriteNode" href="#newSpriteNode"><span>newSpriteNode:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="sprite: proc newSpriteNode(imageKey: string; size: Vec2 = vec2(100, 100)): SpriteNode" href="nodes/sprite.html#newSpriteNode%2Cstring%2CVec2">sprite: proc newSpriteNode(imageKey: string; size: Vec2 = vec2(100, 100)): SpriteNode</a></li>
@@ -642,6 +950,14 @@
             color: Color = color(0, 0, 0, 1)): TextNode" href="nodes/text.html#newTextNode%2Cstring%2Cstring%2Cfloat32%2CColor">text: proc newTextNode(text: string; fontPath: string; fontSize: float32 = 16.0;
             color: Color = color(0, 0, 0, 1)): TextNode</a></li>
           </ul></dd>
+<dt><a name="newTooltip" href="#newTooltip"><span>newTooltip:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: proc newTooltip(text: string; fontPath: string; fontSize: float32 = 13.0;
+           position: TooltipPosition = TooltipAuto;
+           maxWidth: float32 = DefaultTooltipMaxWidth): Tooltip" href="ui/tooltip.html#newTooltip%2Cstring%2Cstring%2Cfloat32%2CTooltipPosition%2Cfloat32">tooltip: proc newTooltip(text: string; fontPath: string; fontSize: float32 = 13.0;
+           position: TooltipPosition = TooltipAuto;
+           maxWidth: float32 = DefaultTooltipMaxWidth): Tooltip</a></li>
+          </ul></dd>
 <dt><a name="newVBox" href="#newVBox"><span>newVBox:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="container: proc newVBox(spacing: float32 = 4.0; padding: float32 = 4.0): VBox" href="layout/container.html#newVBox%2Cfloat32%2Cfloat32">container: proc newVBox(spacing: float32 = 4.0; padding: float32 = 4.0): VBox</a></li>
@@ -649,6 +965,14 @@
 <dt><a name="Node" href="#Node"><span>Node:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="types: type Node" href="core/types.html#Node">types: type Node</a></li>
+          </ul></dd>
+<dt><a name="onResize" href="#onResize"><span>onResize:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="context: proc onResize(ctx: RenderContext; callback: proc (newSize: Vec2))" href="core/context.html#onResize%2CRenderContext%2Cproc%28Vec2%29">context: proc onResize(ctx: RenderContext; callback: proc (newSize: Vec2))</a></li>
+          </ul></dd>
+<dt><a name="open" href="#open"><span>open:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="dialog: proc open(dialog: Dialog; viewportSize: Vec2)" href="ui/dialog.html#open%2CDialog%2CVec2">dialog: proc open(dialog: Dialog; viewportSize: Vec2)</a></li>
           </ul></dd>
 <dt><a name="PathNode" href="#PathNode"><span>PathNode:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -720,6 +1044,10 @@
           <li><a class="reference external"
           data-doc-search-tag="types: type RenderContext" href="core/types.html#RenderContext">types: type RenderContext</a></li>
           </ul></dd>
+<dt><a name="renderToImage" href="#renderToImage"><span>renderToImage:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="context: proc renderToImage(ctx: RenderContext; root: Node): Image" href="core/context.html#renderToImage%2CRenderContext%2CNode">context: proc renderToImage(ctx: RenderContext; root: Node): Image</a></li>
+          </ul></dd>
 <dt><a name="requestLayout" href="#requestLayout"><span>requestLayout:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="layout: proc requestLayout(node: Node)" href="core/layout.html#requestLayout%2CNode">layout: proc requestLayout(node: Node)</a></li>
@@ -732,9 +1060,107 @@
 <li><a class="reference external"
           data-doc-search-tag="types: enum ScaleMode" href="core/types.html#ScaleMode">types: enum ScaleMode</a></li>
           </ul></dd>
+<dt><a name="SectionHeader" href="#SectionHeader"><span>SectionHeader:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: type SectionHeader" href="ui/primitives.html#SectionHeader">primitives: type SectionHeader</a></li>
+          </ul></dd>
+<dt><a name="SelectionOverlay" href="#SelectionOverlay"><span>SelectionOverlay:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: type SelectionOverlay" href="nodes/selection.html#SelectionOverlay">selection: type SelectionOverlay</a></li>
+          </ul></dd>
+<dt><a name="SelectionStyle" href="#SelectionStyle"><span>SelectionStyle:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: enum SelectionStyle" href="nodes/selection.html#SelectionStyle">selection: enum SelectionStyle</a></li>
+          </ul></dd>
+<dt><a name="SelectionStyleBorder" href="#SelectionStyleBorder"><span>SelectionStyleBorder:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: SelectionStyle.SelectionStyleBorder" href="nodes/selection.html#SelectionStyleBorder">selection: SelectionStyle.SelectionStyleBorder</a></li>
+          </ul></dd>
+<dt><a name="SelectionStyleDashed" href="#SelectionStyleDashed"><span>SelectionStyleDashed:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: SelectionStyle.SelectionStyleDashed" href="nodes/selection.html#SelectionStyleDashed">selection: SelectionStyle.SelectionStyleDashed</a></li>
+          </ul></dd>
+<dt><a name="SelectionStyleFill" href="#SelectionStyleFill"><span>SelectionStyleFill:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: SelectionStyle.SelectionStyleFill" href="nodes/selection.html#SelectionStyleFill">selection: SelectionStyle.SelectionStyleFill</a></li>
+          </ul></dd>
+<dt><a name="SelectionStyleGlow" href="#SelectionStyleGlow"><span>SelectionStyleGlow:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: SelectionStyle.SelectionStyleGlow" href="nodes/selection.html#SelectionStyleGlow">selection: SelectionStyle.SelectionStyleGlow</a></li>
+          </ul></dd>
+<dt><a name="setActiveItem" href="#setActiveItem"><span>setActiveItem:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc setActiveItem(nav: NavBar; item: NavBarItem)" href="ui/primitives.html#setActiveItem%2CNavBar%2CNavBarItem">primitives: proc setActiveItem(nav: NavBar; item: NavBarItem)</a></li>
+          </ul></dd>
+<dt><a name="setCardContent" href="#setCardContent"><span>setCardContent:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc setCardContent(card: Card; content: Node)" href="ui/primitives.html#setCardContent%2CCard%2CNode">primitives: proc setCardContent(card: Card; content: Node)</a></li>
+          </ul></dd>
+<dt><a name="setColor" href="#setColor"><span>setColor:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: proc setColor(overlay: SelectionOverlay; color: Color)" href="nodes/selection.html#setColor%2CSelectionOverlay%2CColor">selection: proc setColor(overlay: SelectionOverlay; color: Color)</a></li>
+          </ul></dd>
+<dt><a name="setEnabled" href="#setEnabled"><span>setEnabled:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc setEnabled(overlay: DebugOverlay; enabled: bool)" href="debug/layout_overlay.html#setEnabled%2CDebugOverlay%2Cbool">layout_overlay: proc setEnabled(overlay: DebugOverlay; enabled: bool)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="button: proc setEnabled(btn: Button; enabled: bool)" href="nodes/button.html#setEnabled%2CButton%2Cbool">button: proc setEnabled(btn: Button; enabled: bool)</a></li>
+          </ul></dd>
+<dt><a name="setRoot" href="#setRoot"><span>setRoot:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="context: proc setRoot(ctx: RenderContext; root: Node)" href="core/context.html#setRoot%2CRenderContext%2CNode">context: proc setRoot(ctx: RenderContext; root: Node)</a></li>
+          </ul></dd>
+<dt><a name="setShowAnchors" href="#setShowAnchors"><span>setShowAnchors:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc setShowAnchors(overlay: DebugOverlay; show: bool)" href="debug/layout_overlay.html#setShowAnchors%2CDebugOverlay%2Cbool">layout_overlay: proc setShowAnchors(overlay: DebugOverlay; show: bool)</a></li>
+          </ul></dd>
+<dt><a name="setShowBounds" href="#setShowBounds"><span>setShowBounds:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc setShowBounds(overlay: DebugOverlay; show: bool)" href="debug/layout_overlay.html#setShowBounds%2CDebugOverlay%2Cbool">layout_overlay: proc setShowBounds(overlay: DebugOverlay; show: bool)</a></li>
+          </ul></dd>
+<dt><a name="setShowClipRegions" href="#setShowClipRegions"><span>setShowClipRegions:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc setShowClipRegions(overlay: DebugOverlay; show: bool)" href="debug/layout_overlay.html#setShowClipRegions%2CDebugOverlay%2Cbool">layout_overlay: proc setShowClipRegions(overlay: DebugOverlay; show: bool)</a></li>
+          </ul></dd>
+<dt><a name="setShowHierarchy" href="#setShowHierarchy"><span>setShowHierarchy:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc setShowHierarchy(overlay: DebugOverlay; show: bool)" href="debug/layout_overlay.html#setShowHierarchy%2CDebugOverlay%2Cbool">layout_overlay: proc setShowHierarchy(overlay: DebugOverlay; show: bool)</a></li>
+          </ul></dd>
+<dt><a name="setShowLayoutInfo" href="#setShowLayoutInfo"><span>setShowLayoutInfo:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc setShowLayoutInfo(overlay: DebugOverlay; show: bool)" href="debug/layout_overlay.html#setShowLayoutInfo%2CDebugOverlay%2Cbool">layout_overlay: proc setShowLayoutInfo(overlay: DebugOverlay; show: bool)</a></li>
+          </ul></dd>
+<dt><a name="setState" href="#setState"><span>setState:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: proc setState(btn: Button; newState: ButtonState)" href="nodes/button.html#setState%2CButton%2CButtonState">button: proc setState(btn: Button; newState: ButtonState)</a></li>
+          </ul></dd>
+<dt><a name="setStyle" href="#setStyle"><span>setStyle:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: proc setStyle(overlay: SelectionOverlay; style: SelectionStyle)" href="nodes/selection.html#setStyle%2CSelectionOverlay%2CSelectionStyle">selection: proc setStyle(overlay: SelectionOverlay; style: SelectionStyle)</a></li>
+          </ul></dd>
+<dt><a name="setTargetNode" href="#setTargetNode"><span>setTargetNode:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc setTargetNode(overlay: DebugOverlay; node: Node)" href="debug/layout_overlay.html#setTargetNode%2CDebugOverlay%2CNode">layout_overlay: proc setTargetNode(overlay: DebugOverlay; node: Node)</a></li>
+          </ul></dd>
+<dt><a name="setText" href="#setText"><span>setText:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: proc setText(btn: Button; text: string)" href="nodes/button.html#setText%2CButton%2Cstring">button: proc setText(btn: Button; text: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tooltip: proc setText(tooltip: Tooltip; text: string)" href="ui/tooltip.html#setText%2CTooltip%2Cstring">tooltip: proc setText(tooltip: Tooltip; text: string)</a></li>
+          </ul></dd>
+<dt><a name="setValue" href="#setValue"><span>setValue:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="primitives: proc setValue(row: LabelValueRow; value: string)" href="ui/primitives.html#setValue%2CLabelValueRow%2Cstring">primitives: proc setValue(row: LabelValueRow; value: string)</a></li>
+          </ul></dd>
 <dt><a name="shouldReceiveEvents" href="#shouldReceiveEvents"><span>shouldReceiveEvents:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="events: proc shouldReceiveEvents(node: Node): bool" href="core/events.html#shouldReceiveEvents%2CNode">events: proc shouldReceiveEvents(node: Node): bool</a></li>
+          </ul></dd>
+<dt><a name="show" href="#show"><span>show:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: proc show(overlay: SelectionOverlay)" href="nodes/selection.html#show%2CSelectionOverlay">selection: proc show(overlay: SelectionOverlay)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="tooltip: proc show(tooltip: Tooltip; target: Node; viewportSize: Vec2; ctx: RenderContext)" href="ui/tooltip.html#show%2CTooltip%2CNode%2CVec2%2CRenderContext">tooltip: proc show(tooltip: Tooltip; target: Node; viewportSize: Vec2; ctx: RenderContext)</a></li>
           </ul></dd>
 <dt><a name="SizeMode" href="#SizeMode"><span>SizeMode:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -763,6 +1189,38 @@
 <dt><a name="TextNode" href="#TextNode"><span>TextNode:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="text: type TextNode" href="nodes/text.html#TextNode">text: type TextNode</a></li>
+          </ul></dd>
+<dt><a name="toggle" href="#toggle"><span>toggle:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="layout_overlay: proc toggle(overlay: DebugOverlay)" href="debug/layout_overlay.html#toggle%2CDebugOverlay">layout_overlay: proc toggle(overlay: DebugOverlay)</a></li>
+          </ul></dd>
+<dt><a name="Tooltip" href="#Tooltip"><span>Tooltip:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: type Tooltip" href="ui/tooltip.html#Tooltip">tooltip: type Tooltip</a></li>
+          </ul></dd>
+<dt><a name="TooltipAuto" href="#TooltipAuto"><span>TooltipAuto:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: TooltipPosition.TooltipAuto" href="ui/tooltip.html#TooltipAuto">tooltip: TooltipPosition.TooltipAuto</a></li>
+          </ul></dd>
+<dt><a name="TooltipBottom" href="#TooltipBottom"><span>TooltipBottom:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: TooltipPosition.TooltipBottom" href="ui/tooltip.html#TooltipBottom">tooltip: TooltipPosition.TooltipBottom</a></li>
+          </ul></dd>
+<dt><a name="TooltipLeft" href="#TooltipLeft"><span>TooltipLeft:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: TooltipPosition.TooltipLeft" href="ui/tooltip.html#TooltipLeft">tooltip: TooltipPosition.TooltipLeft</a></li>
+          </ul></dd>
+<dt><a name="TooltipPosition" href="#TooltipPosition"><span>TooltipPosition:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: enum TooltipPosition" href="ui/tooltip.html#TooltipPosition">tooltip: enum TooltipPosition</a></li>
+          </ul></dd>
+<dt><a name="TooltipRight" href="#TooltipRight"><span>TooltipRight:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: TooltipPosition.TooltipRight" href="ui/tooltip.html#TooltipRight">tooltip: TooltipPosition.TooltipRight</a></li>
+          </ul></dd>
+<dt><a name="TooltipTop" href="#TooltipTop"><span>TooltipTop:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: TooltipPosition.TooltipTop" href="ui/tooltip.html#TooltipTop">tooltip: TooltipPosition.TooltipTop</a></li>
           </ul></dd>
 <dt><a name="TopCenter" href="#TopCenter"><span>TopCenter:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -811,6 +1269,10 @@
           data-doc-search-tag="container: proc update(hbox: HBox; ctx: types.RenderContext = nil)" href="layout/container.html#update%2CHBox%2Cref%20RenderContext%3AObjectType">container: proc update(hbox: HBox; ctx: types.RenderContext = nil)</a></li>
           <li><a class="reference external"
           data-doc-search-tag="container: proc update(vbox: VBox; ctx: types.RenderContext = nil)" href="layout/container.html#update%2CVBox%2Cref%20RenderContext%3AObjectType">container: proc update(vbox: VBox; ctx: types.RenderContext = nil)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="flow: proc update(flow: Flow; ctx: types.RenderContext = nil)" href="layout/flow.html#update%2CFlow%2Cref%20RenderContext%3AObjectType">flow: proc update(flow: Flow; ctx: types.RenderContext = nil)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="grid: proc update(grid: Grid; ctx: types.RenderContext = nil)" href="layout/grid.html#update%2CGrid%2Cref%20RenderContext%3AObjectType">grid: proc update(grid: Grid; ctx: types.RenderContext = nil)</a></li>
           </ul></dd>
 <dt><a name="updateGlobalTransform" href="#updateGlobalTransform"><span>updateGlobalTransform:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -819,6 +1281,18 @@
 <dt><a name="updateGrid" href="#updateGrid"><span>updateGrid:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="hex: proc updateGrid(grid: HexGrid)" href="hex/hex.html#updateGrid%2CHexGrid">hex: proc updateGrid(grid: HexGrid)</a></li>
+          </ul></dd>
+<dt><a name="updatePosition" href="#updatePosition"><span>updatePosition:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="tooltip: proc updatePosition(tooltip: Tooltip; viewportSize: Vec2)" href="ui/tooltip.html#updatePosition%2CTooltip%2CVec2">tooltip: proc updatePosition(tooltip: Tooltip; viewportSize: Vec2)</a></li>
+          </ul></dd>
+<dt><a name="updateTransform" href="#updateTransform"><span>updateTransform:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="selection: proc updateTransform(overlay: SelectionOverlay)" href="nodes/selection.html#updateTransform%2CSelectionOverlay">selection: proc updateTransform(overlay: SelectionOverlay)</a></li>
+          </ul></dd>
+<dt><a name="updateVisualState" href="#updateVisualState"><span>updateVisualState:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="button: proc updateVisualState(btn: Button)" href="nodes/button.html#updateVisualState%2CButton">button: proc updateVisualState(btn: Button)</a></li>
           </ul></dd>
 <dt><a name="VBox" href="#VBox"><span>VBox:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -838,7 +1312,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 08:31:49 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-02-06 13:29:06 UTC</small>
       </div>
     </div>
   </div>

@@ -9,6 +9,7 @@ import ../nodes/primitive
 import ../nodes/text
 
 type
+  ## Preferred placement for a tooltip relative to its target.
   TooltipPosition* = enum
     TooltipAuto
     TooltipTop
@@ -16,6 +17,7 @@ type
     TooltipLeft
     TooltipRight
 
+  ## Floating tooltip node anchored to a target node.
   Tooltip* = ref object of Node
     contentNode*: TextNode
     bgNode*: RectNode
@@ -33,6 +35,7 @@ const
   DefaultTooltipPadding = 8.0
   DefaultTooltipMaxWidth = 250.0
 
+## Creates a tooltip with text content and placement policy.
 proc newTooltip*(
   text: string,
   fontPath: string,
@@ -82,6 +85,7 @@ proc newTooltip*(
     padding: DefaultTooltipPadding
   )
 
+## Measures text content and updates tooltip bounds.
 proc measureTooltip*(tooltip: Tooltip, ctx: RenderContext) =
   tooltip.contentNode.measure(ctx)
   
@@ -92,6 +96,7 @@ proc measureTooltip*(tooltip: Tooltip, ctx: RenderContext) =
   tooltip.bgNode.size = tooltip.size
   tooltip.layoutValid = true
 
+## Positions tooltip relative to the current target node.
 proc updatePosition*(tooltip: Tooltip, viewportSize: Vec2) =
   if tooltip.targetNode.isNone:
     return
@@ -150,6 +155,7 @@ proc updatePosition*(tooltip: Tooltip, viewportSize: Vec2) =
   tooltip.contentNode.localPos = vec2(tooltip.padding, tooltip.padding)
   tooltip.dirty = true
 
+## Clamps tooltip position inside viewport bounds.
 proc clampToViewport*(tooltip: Tooltip, viewportSize: Vec2) =
   var pos = tooltip.localPos
   
@@ -165,6 +171,7 @@ proc clampToViewport*(tooltip: Tooltip, viewportSize: Vec2) =
   
   tooltip.localPos = pos
 
+## Shows tooltip for `target` and updates size and position.
 proc show*(tooltip: Tooltip, target: Node, viewportSize: Vec2, ctx: RenderContext) =
   tooltip.targetNode = some(target)
   tooltip.visible = true
@@ -173,10 +180,12 @@ proc show*(tooltip: Tooltip, target: Node, viewportSize: Vec2, ctx: RenderContex
   tooltip.clampToViewport(viewportSize)
   tooltip.dirty = true
 
+## Hides tooltip and clears target binding.
 proc hide*(tooltip: Tooltip) =
   tooltip.visible = false
   tooltip.targetNode = none(Node)
 
+## Updates tooltip text and invalidates measured layout.
 proc setText*(tooltip: Tooltip, text: string) =
   tooltip.contentNode.text = text
   tooltip.contentNode.dirty = true

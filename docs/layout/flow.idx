@@ -1,0 +1,6 @@
+nimTitle	flow	layout/flow.html	module vex/layout/flow		0
+nim	Flow	layout/flow.html#Flow	type Flow		8
+nim	newFlow	layout/flow.html#newFlow,float32	proc newFlow(maxWidth: float32 = 0.0): Flow		15
+nim	addItem	layout/flow.html#addItem,Flow,Node	proc addItem(flow: Flow; child: Node)		46
+nim	update	layout/flow.html#update,Flow,ref RenderContext:ObjectType	proc update(flow: Flow; ctx: types.RenderContext = nil)		52
+nim	measure	layout/flow.html#measure.e,Flow,	method measure(flow: Flow; ctx: types.RenderContext)		134

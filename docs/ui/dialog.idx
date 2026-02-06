@@ -1,0 +1,11 @@
+nimTitle	dialog	ui/dialog.html	module vex/ui/dialog		0
+nim	Dialog	ui/dialog.html#Dialog	type Dialog		15
+nim	closeDialog	ui/dialog.html#closeDialog,Dialog	proc closeDialog(dialog: Dialog)		33
+nim	newDialog	ui/dialog.html#newDialog,string,string,float32,bool	proc newDialog(title: string; fontPath: string; width: float32 = DefaultDialogWidth;\n          dismissOnOverlay: bool = true): Dialog		36
+nim	centerInViewport	ui/dialog.html#centerInViewport,Dialog,Vec2	proc centerInViewport(dialog: Dialog; viewportSize: Vec2)		103
+nim	addContent	ui/dialog.html#addContent,Dialog,Node	proc addContent(dialog: Dialog; node: Node)		112
+nim	addButton	ui/dialog.html#addButton,Dialog,Button	proc addButton(dialog: Dialog; button: Button)		117
+nim	open	ui/dialog.html#open,Dialog,Vec2	proc open(dialog: Dialog; viewportSize: Vec2)		122
+nim	handleOverlayClick	ui/dialog.html#handleOverlayClick,Dialog	proc handleOverlayClick(dialog: Dialog): bool		136
+nim	measure	ui/dialog.html#measure.e,Dialog,RenderContext	method measure(dialog: Dialog; ctx: RenderContext)		175
+nim	draw	ui/dialog.html#draw.e,Dialog,RenderContext,Image	method draw(dialog: Dialog; renderCtx: RenderContext; image: Image)		188

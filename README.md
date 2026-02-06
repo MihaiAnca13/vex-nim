@@ -19,12 +19,17 @@ See `@examples/scifi_hud.nim` for a demo featuring hex grids, sprite swapping, a
 **Key Features:**
 - Retained-mode scene graph with parent-child hierarchies
 - Anchor-based responsive layout (UI adapts to window size)
+- Resize callback hooks (`ctx.onResize`) for responsive updates
 - `autoLayout` flag for manual vs automatic node positioning
 - HBox/VBox containers for automatic child positioning
+- Grid and Flow layout containers for tiled and wrapped content
 - Vector shapes (rectangles, circles, paths) with Pixie rendering
 - Text rendering with font loading and text wrapping
 - Sprite images with 9-slice scaling support
 - Hex grids for strategy games
+- UI primitives: Card, SectionHeader, Badge, Chip, LabelValueRow, NavBar
+- Interactive widgets: Button, Tooltip, SelectionOverlay, Dialog
+- Debug layout overlay for inspecting bounds/anchors/clip regions
 - Efficient dirty-flag system (rasterize once, render many times)
 - Window-agnostic design (works with any windowing library)
 - Headless rendering for screenshot-only output
@@ -305,16 +310,26 @@ src/vex/
 │   ├── primitive.nim    # RectNode, CircleNode (Basic shapes)
 │   ├── sprite.nim       # SpriteNode (Images, 9-Slice)
 │   ├── text.nim         # TextNode (Font rendering, Wrapping)
-│   └── path.nim         # PathNode (Complex vector paths/Hexes)
-└── layout/
-    ├── alignment.nim    # Anchor and Pivot logic
-    └── container.nim    # HBox, VBox (Layout containers)
+│   ├── path.nim         # PathNode (Complex vector paths/Hexes)
+│   ├── button.nim       # Stateful button widget
+│   └── selection.nim    # Selection overlays for node highlighting
+├── layout/
+│   ├── alignment.nim    # Anchor and Pivot logic
+│   ├── container.nim    # HBox, VBox (Layout containers)
+│   ├── grid.nim         # Grid layout container
+│   └── flow.nim         # Wrapping flow layout container
+├── ui/
+│   ├── primitives.nim   # Higher-level UI building blocks
+│   ├── tooltip.nim      # Tooltip widget
+│   └── dialog.nim       # Modal dialog widget
+└── debug/
+    └── layout_overlay.nim  # Runtime layout/debug visualization
 ```
 
 
 ---
 
-## 6. API Reference
+## 7. API Reference
 
 ### Node Types
 
@@ -327,8 +342,21 @@ src/vex/
 | `SpriteNode` | Image rendering with 9-slice scaling |
 | `HexNode` | Hexagonal tile for strategy games |
 | `PathNode` | Custom SVG-style vector paths |
+| `Button` | Interactive button with hover/active/disabled states |
+| `SelectionOverlay` | Highlight overlay attached to a target node |
 | `HBox` | Horizontal layout container |
 | `VBox` | Vertical layout container |
+| `Grid` | Row/column layout with fixed or measured cell sizes |
+| `Flow` | Wrapping layout for chips/tags/pills |
+| `Card` | UI card container with optional title |
+| `SectionHeader` | Header row with decorative lines |
+| `Badge` | Compact text badge |
+| `Chip` | Pill-style label widget |
+| `LabelValueRow` | Two-column key/value display row |
+| `NavBar` | Horizontal navigation bar |
+| `Tooltip` | Floating hint anchored to a node |
+| `Dialog` | Modal dialog with overlay and buttons |
+| `DebugOverlay` | Debug rendering for bounds/anchors/clipping |
 | `HexGrid` | Grid of HexNodes with spatial queries |
 
 ### RenderContext Procedures
@@ -340,6 +368,8 @@ src/vex/
 | `draw(root)` | Render the scene graph |
 | `handleEvent(root, event)` | Process input events |
 | `resize(size)` | Update viewport size |
+| `onResize(callback)` | Register resize callback for responsive UI |
+| `renderToImage(root)` | Render scene graph to Pixie image (headless) |
 | `cacheTexture(node)` | Force texture regeneration |
 
 ### Node Procedures
@@ -355,25 +385,28 @@ src/vex/
 
 ---
 
-## 7. Examples
+## 8. Examples
 
 See the `examples/` folder for runnable demos:
 
 - `hello_world.nim` - Basic scene with shapes and text
 - `hex_grid_demo.nim` - Interactive hex grid with click handling
 - `ui_layout_demo.nim` - HBox/VBox layout demonstration
+- `responsive_demo.nim` - Resize callback and responsive layout behavior
+- `ui_primitives_demo.nim` - Card, badges, chips, nav bar, section headers
+- `ui_primitives_headless.nim` - Headless rendering of UI primitives to image
 - `scifi_hud.nim` - Tactical interface with hex grids, sprites, and responsive UI
 
 
 ---
 
-## 8. Contributing
+## 9. Contributing
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 
 ---
 
-## 9. License
+## 10. License
 
 MIT License - see [LICENSE](LICENSE) for details. 

@@ -11,6 +11,7 @@ import ../nodes/text
 import ../nodes/button
 
 type
+  ## Modal dialog with overlay, title bar, content area, and action row.
   Dialog* = ref object of Node
     content*: VBox
     overlay*: RectNode
@@ -31,6 +32,7 @@ const
 
 proc closeDialog*(dialog: Dialog)
 
+## Creates a new dialog with title and default modal visuals.
 proc newDialog*(
   title: string,
   fontPath: string,
@@ -97,6 +99,7 @@ proc newDialog*(
   
   dialog
 
+## Centers the dialog and resizes overlay to match viewport.
 proc centerInViewport*(dialog: Dialog, viewportSize: Vec2) =
   dialog.localPos = vec2(
     viewportSize.x / 2 - dialog.size.x / 2,
@@ -105,26 +108,31 @@ proc centerInViewport*(dialog: Dialog, viewportSize: Vec2) =
   dialog.overlay.size = viewportSize
   dialog.overlay.localPos = vec2(0, 0)
 
+## Adds a content node to the dialog body.
 proc addContent*(dialog: Dialog, node: Node) =
   dialog.content.addChild(node)
   dialog.dirty = true
 
+## Adds an action button to the dialog button row.
 proc addButton*(dialog: Dialog, button: Button) =
   dialog.buttonsRow.addChild(button)
   dialog.dirty = true
 
+## Opens the dialog and centers it in the viewport.
 proc open*(dialog: Dialog, viewportSize: Vec2) =
   dialog.isOpen = true
   dialog.visible = true
   dialog.centerInViewport(viewportSize)
   dialog.dirty = true
 
+## Closes the dialog and invokes `onClose` callback if set.
 proc closeDialog*(dialog: Dialog) =
   dialog.isOpen = false
   dialog.visible = false
   if not dialog.onClose.isNil:
     dialog.onClose()
 
+## Handles overlay click; returns true when dialog consumed it.
 proc handleOverlayClick*(dialog: Dialog): bool =
   if dialog.dismissOnOverlay and dialog.isOpen:
     dialog.closeDialog()

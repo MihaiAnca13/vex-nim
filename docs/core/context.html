@@ -129,8 +129,16 @@
   <li><a class="reference" href="#layout%2CRenderContext%2CNode" title="layout(ctx: RenderContext; root: Node)">layout(ctx: RenderContext; root: Node)</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">newHeadlessRenderContext
+  <li><a class="reference" href="#newHeadlessRenderContext%2CVec2" title="newHeadlessRenderContext(viewportSize: Vec2): RenderContext">newHeadlessRenderContext(viewportSize: Vec2): RenderContext</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">newRenderContext
   <li><a class="reference" href="#newRenderContext%2CVec2" title="newRenderContext(viewportSize: Vec2): RenderContext">newRenderContext(viewportSize: Vec2): RenderContext</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">onResize
+  <li><a class="reference" href="#onResize%2CRenderContext%2Cproc%28Vec2%29" title="onResize(ctx: RenderContext; callback: proc (newSize: Vec2))">onResize(ctx: RenderContext; callback: proc (newSize: Vec2))</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">rasterizeNode
@@ -141,8 +149,16 @@
   <li><a class="reference" href="#readAtlas%2CRenderContext" title="readAtlas(ctx: RenderContext): Image">readAtlas(ctx: RenderContext): Image</a></li>
 
 </ul>
+<ul class="simple nested-toc-section">renderToImage
+  <li><a class="reference" href="#renderToImage%2CRenderContext%2CNode" title="renderToImage(ctx: RenderContext; root: Node): Image">renderToImage(ctx: RenderContext; root: Node): Image</a></li>
+
+</ul>
 <ul class="simple nested-toc-section">resize
   <li><a class="reference" href="#resize%2CRenderContext%2CVec2" title="resize(ctx: RenderContext; newSize: Vec2)">resize(ctx: RenderContext; newSize: Vec2)</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">setRoot
+  <li><a class="reference" href="#setRoot%2CRenderContext%2CNode" title="setRoot(ctx: RenderContext; root: Node)">setRoot(ctx: RenderContext; root: Node)</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">uncacheNode
@@ -161,7 +177,7 @@
     
     <div id="tocRoot"></div>
     
-    <p class="module-desc">RenderContext re-export for convenience.Computes the intersection of two rectangles.Creates a new RenderContext with the specified viewport size.Checks if a texture with the given key exists.Returns the size of an image by key.<p>Returns a cached image by key.</p>
+    <p class="module-desc">RenderContext re-export for convenience.Computes the intersection of two rectangles.Creates a new RenderContext with the specified viewport size.Creates a render context without a Boxy backend for offscreen rendering.Checks if a texture with the given key exists.Returns the size of an image by key.<p>Returns a cached image by key.</p>
 <p>Raises KeyError if key not found.</p>
 <p>Returns a font, reading from disk if not cached.</p>
 <p>Fonts are cached after first load for performance.</p>
@@ -173,7 +189,9 @@ Removes a node's cached texture from Boxy and the cache.Clears all cached textur
 <p>Returns true if an event handler consumed the event.</p>
 <p>Draws a single node and its children.</p>
 <p>Handles culling, texture caching, z-index sorting, and recursive rendering. When node.clipChildren is true, children are clipped to the node's bounds.</p>
-Renders the entire scene graph.Updates the viewport size and invalidates layout.Lays out the scene graph for the current viewport size.Reads the current atlas as an image.</p>
+Renders the entire scene graph.Updates the viewport size, invokes callbacks, and invalidates layout.Sets the root node for automatic layout invalidation on resize.<p>Registers a callback to be invoked when the viewport is resized.</p>
+<p>The callback receives the new viewport size as an argument. Useful for responsive UI that adapts to window size changes.</p>
+Lays out the scene graph for the current viewport size.Renders the scene graph into a pixie <tt class="docutils literal"><span class="pre"><span class="Identifier">Image</span></span></tt> in headless mode.Reads the current atlas as an image.</p>
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
   <dl class="item">
@@ -225,7 +243,7 @@ Renders the entire scene graph.Updates the viewport size and invalidates layout.
 <div id="cacheTexture-procs-all">
   <div id="cacheTexture,RenderContext,Node">
   <dt><pre><span class="Keyword">proc</span> <a href="#cacheTexture%2CRenderContext%2CNode"><span class="Identifier">cacheTexture</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">PixieError</span><span class="Other">,</span> <span class="Identifier">BoxyError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">GLerror</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">PixieError</span><span class="Other">,</span> <span class="Identifier">BoxyError</span><span class="Other">,</span> <span class="Identifier">GLerror</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -250,7 +268,7 @@ Renders the entire scene graph.Updates the viewport size and invalidates layout.
 <div id="draw-procs-all">
   <div id="draw,RenderContext,Node">
   <dt><pre><span class="Keyword">proc</span> <a href="#draw%2CRenderContext%2CNode"><span class="Identifier">draw</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">root</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">BoxyError</span><span class="Other">,</span> <span class="Identifier">GLerror</span><span class="Other">,</span> <span class="Identifier">PixieError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">BoxyError</span><span class="Other">,</span> <span class="Identifier">GLerror</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">PixieError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -277,7 +295,7 @@ Renders the entire scene graph.Updates the viewport size and invalidates layout.
   <div id="drawNode,RenderContext,Node,Option[Rect]">
   <dt><pre><span class="Keyword">proc</span> <a href="#drawNode%2CRenderContext%2CNode%2COption%5BRect%5D"><span class="Identifier">drawNode</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">;</span>
               <span class="Identifier">clipRect</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">Rect</span><span class="Other">]</span> <span class="Other">=</span> <span class="Identifier">none</span><span class="Other">(</span><span class="Identifier">Rect</span><span class="Other">)</span><span class="Other">)</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">PixieError</span><span class="Other">,</span> <span class="Identifier">BoxyError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">GLerror</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">PixieError</span><span class="Other">,</span> <span class="Identifier">BoxyError</span><span class="Other">,</span> <span class="Identifier">GLerror</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
@@ -382,10 +400,34 @@ Renders the entire scene graph.Updates the viewport size and invalidates layout.
 </div>
 
 </div>
+<div id="newHeadlessRenderContext-procs-all">
+  <div id="newHeadlessRenderContext,Vec2">
+  <dt><pre><span class="Keyword">proc</span> <a href="#newHeadlessRenderContext%2CVec2"><span class="Identifier">newHeadlessRenderContext</span></a><span class="Other">(</span><span class="Identifier">viewportSize</span><span class="Other">:</span> <span class="Identifier">Vec2</span><span class="Other">)</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
 <div id="newRenderContext-procs-all">
   <div id="newRenderContext,Vec2">
   <dt><pre><span class="Keyword">proc</span> <a href="#newRenderContext%2CVec2"><span class="Identifier">newRenderContext</span></a><span class="Other">(</span><span class="Identifier">viewportSize</span><span class="Other">:</span> <span class="Identifier">Vec2</span><span class="Other">)</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">BoxyError</span><span class="Other">,</span> <span class="Identifier">GLerror</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="onResize-procs-all">
+  <div id="onResize,RenderContext,proc(Vec2)">
+  <dt><pre><span class="Keyword">proc</span> <a href="#onResize%2CRenderContext%2Cproc%28Vec2%29"><span class="Identifier">onResize</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">callback</span><span class="Other">:</span> <span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">newSize</span><span class="Other">:</span> <span class="Identifier">Vec2</span><span class="Other">)</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -418,10 +460,33 @@ Renders the entire scene graph.Updates the viewport size and invalidates layout.
 </div>
 
 </div>
+<div id="renderToImage-procs-all">
+  <div id="renderToImage,RenderContext,Node">
+  <dt><pre><span class="Keyword">proc</span> <a href="#renderToImage%2CRenderContext%2CNode"><span class="Identifier">renderToImage</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">root</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Image</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">PixieError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
 <div id="resize-procs-all">
   <div id="resize,RenderContext,Vec2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#resize%2CRenderContext%2CVec2"><span class="Identifier">resize</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">newSize</span><span class="Other">:</span> <span class="Identifier">Vec2</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#resize%2CRenderContext%2CVec2"><span class="Identifier">resize</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">newSize</span><span class="Other">:</span> <span class="Identifier">Vec2</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
+
+</div>
+<div id="setRoot-procs-all">
+  <div id="setRoot,RenderContext,Node">
+  <dt><pre><span class="Keyword">proc</span> <a href="#setRoot%2CRenderContext%2CNode"><span class="Identifier">setRoot</span></a><span class="Other">(</span><span class="Identifier">ctx</span><span class="Other">:</span> <a href="context.html#RenderContext"><span class="Identifier">RenderContext</span></a><span class="Other">;</span> <span class="Identifier">root</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -452,7 +517,7 @@ Renders the entire scene graph.Updates the viewport size and invalidates layout.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 08:31:49 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-02-06 13:29:06 UTC</small>
       </div>
     </div>
   </div>

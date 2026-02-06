@@ -1,0 +1,17 @@
+nimTitle	layout_overlay	debug/layout_overlay.html	module vex/debug/layout_overlay		0
+nim	DebugOverlay	debug/layout_overlay.html#DebugOverlay	type DebugOverlay		10
+nim	newDebugOverlay	debug/layout_overlay.html#newDebugOverlay	proc newDebugOverlay(): DebugOverlay		20
+nim	getDebugColor	debug/layout_overlay.html#getDebugColor,Node	proc getDebugColor(node: Node): Color		54
+nim	drawDebugBounds	debug/layout_overlay.html#drawDebugBounds,DebugOverlay,RenderContext,Image,Node	proc drawDebugBounds(overlay: DebugOverlay; ctx: RenderContext; image: Image;\n                node: Node)		63
+nim	drawDebugAnchor	debug/layout_overlay.html#drawDebugAnchor,DebugOverlay,RenderContext,Image,Node	proc drawDebugAnchor(overlay: DebugOverlay; ctx: RenderContext; image: Image;\n                node: Node)		84
+nim	drawDebugClipRegion	debug/layout_overlay.html#drawDebugClipRegion,DebugOverlay,RenderContext,Image,Node	proc drawDebugClipRegion(overlay: DebugOverlay; ctx: RenderContext; image: Image;\n                    node: Node)		101
+nim	drawDebugNode	debug/layout_overlay.html#drawDebugNode,DebugOverlay,RenderContext,Image,Node	proc drawDebugNode(overlay: DebugOverlay; ctx: RenderContext; image: Image;\n              node: Node)		122
+nim	draw	debug/layout_overlay.html#draw.e,DebugOverlay,RenderContext,Image	method draw(overlay: DebugOverlay; renderCtx: RenderContext; image: Image)		130
+nim	setEnabled	debug/layout_overlay.html#setEnabled,DebugOverlay,bool	proc setEnabled(overlay: DebugOverlay; enabled: bool)		140
+nim	setShowBounds	debug/layout_overlay.html#setShowBounds,DebugOverlay,bool	proc setShowBounds(overlay: DebugOverlay; show: bool)		145
+nim	setShowAnchors	debug/layout_overlay.html#setShowAnchors,DebugOverlay,bool	proc setShowAnchors(overlay: DebugOverlay; show: bool)		150
+nim	setShowLayoutInfo	debug/layout_overlay.html#setShowLayoutInfo,DebugOverlay,bool	proc setShowLayoutInfo(overlay: DebugOverlay; show: bool)		155
+nim	setShowClipRegions	debug/layout_overlay.html#setShowClipRegions,DebugOverlay,bool	proc setShowClipRegions(overlay: DebugOverlay; show: bool)		160
+nim	setShowHierarchy	debug/layout_overlay.html#setShowHierarchy,DebugOverlay,bool	proc setShowHierarchy(overlay: DebugOverlay; show: bool)		165
+nim	setTargetNode	debug/layout_overlay.html#setTargetNode,DebugOverlay,Node	proc setTargetNode(overlay: DebugOverlay; node: Node)		170
+nim	toggle	debug/layout_overlay.html#toggle,DebugOverlay	proc toggle(overlay: DebugOverlay)		175

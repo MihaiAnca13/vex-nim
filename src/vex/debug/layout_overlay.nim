@@ -6,6 +6,7 @@ import ../layout/alignment
 import ../layout/container
 
 type
+  ## Debug visualization overlay for layout bounds and anchors.
   DebugOverlay* = ref object of Node
     enabled*: bool
     showBounds*: bool
@@ -15,6 +16,7 @@ type
     showHierarchy*: bool
     targetNode*: Option[Node]
 
+## Creates a new debug overlay.
 proc newDebugOverlay*(): DebugOverlay =
   DebugOverlay(
     children: @[],
@@ -48,6 +50,7 @@ proc newDebugOverlay*(): DebugOverlay =
     targetNode: none(Node)
   )
 
+## Returns the debug color used for a given node kind.
 proc getDebugColor*(node: Node): Color =
   if node of HBox or node of VBox:
     color(1, 1, 0, 1)
@@ -56,6 +59,7 @@ proc getDebugColor*(node: Node): Color =
   else:
     color(0, 1, 0, 1)
 
+## Draws node bounds when bounds visualization is enabled.
 proc drawDebugBounds*(overlay: DebugOverlay, ctx: RenderContext, image: Image, node: Node) =
   if not overlay.showBounds:
     return
@@ -76,6 +80,7 @@ proc drawDebugBounds*(overlay: DebugOverlay, ctx: RenderContext, image: Image, n
   let localRect = rect(vec2(0, 0), node.size)
   renderCtx.strokeRect(localRect)
 
+## Draws anchor marker when anchor visualization is enabled.
 proc drawDebugAnchor*(overlay: DebugOverlay, ctx: RenderContext, image: Image, node: Node) =
   if not overlay.showAnchors:
     return
@@ -92,6 +97,7 @@ proc drawDebugAnchor*(overlay: DebugOverlay, ctx: RenderContext, image: Image, n
   circle.circle(center.x, center.y, 4.0)
   renderCtx.fill(circle)
 
+## Draws clip region overlay for clipping nodes.
 proc drawDebugClipRegion*(overlay: DebugOverlay, ctx: RenderContext, image: Image, node: Node) =
   if not overlay.showClipRegions or not node.clipChildren:
     return
@@ -112,6 +118,7 @@ proc drawDebugClipRegion*(overlay: DebugOverlay, ctx: RenderContext, image: Imag
   renderCtx.fillRect(localRect)
   renderCtx.strokeRect(localRect)
 
+## Draws all enabled debug visuals for a node and its descendants.
 proc drawDebugNode*(overlay: DebugOverlay, ctx: RenderContext, image: Image, node: Node) =
   overlay.drawDebugClipRegion(ctx, image, node)
   overlay.drawDebugBounds(ctx, image, node)
@@ -129,34 +136,42 @@ method draw*(overlay: DebugOverlay, renderCtx: RenderContext, image: Image) =
   for node in target.traverse:
     overlay.drawDebugNode(renderCtx, image, node)
 
+## Enables or disables debug overlay rendering.
 proc setEnabled*(overlay: DebugOverlay, enabled: bool) =
   overlay.enabled = enabled
   overlay.markDirty()
 
+## Toggles bounds visualization.
 proc setShowBounds*(overlay: DebugOverlay, show: bool) =
   overlay.showBounds = show
   overlay.markDirty()
 
+## Toggles anchor visualization.
 proc setShowAnchors*(overlay: DebugOverlay, show: bool) =
   overlay.showAnchors = show
   overlay.markDirty()
 
+## Toggles layout metadata visualization.
 proc setShowLayoutInfo*(overlay: DebugOverlay, show: bool) =
   overlay.showLayoutInfo = show
   overlay.markDirty()
 
+## Toggles clip region visualization.
 proc setShowClipRegions*(overlay: DebugOverlay, show: bool) =
   overlay.showClipRegions = show
   overlay.markDirty()
 
+## Toggles hierarchy visualization.
 proc setShowHierarchy*(overlay: DebugOverlay, show: bool) =
   overlay.showHierarchy = show
   overlay.markDirty()
 
+## Restricts overlay rendering to a specific subtree root.
 proc setTargetNode*(overlay: DebugOverlay, node: Node) =
   overlay.targetNode = some(node)
   overlay.markDirty()
 
+## Flips the overlay enabled state.
 proc toggle*(overlay: DebugOverlay) =
   overlay.enabled = not overlay.enabled
   overlay.markDirty()

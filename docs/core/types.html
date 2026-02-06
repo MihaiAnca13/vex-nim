@@ -104,7 +104,9 @@
   imageCache*: Table[string, Image] ## Cached images by key
   fontCache*: Table[string, Font] ## Cached fonts by path
   nextNodeId*: int           ## Texture key counter
-  viewportSize*: Vec2        ## Current viewport dimensions">RenderContext</a></li>
+  viewportSize*: Vec2        ## Current viewport dimensions
+  resizeCallbacks*: seq[proc (newSize: Vec2)] ## Callbacks invoked on resize
+  rootNode*: Node            ## Root node for layout invalidation">RenderContext</a></li>
 <li><a class="reference" href="#ScaleMode" title="ScaleMode = enum
   Stretch, Fit, Fill, KeepAspect">ScaleMode</a></li>
 <li><a class="reference" href="#SizeMode" title="SizeMode = enum
@@ -240,6 +242,7 @@
 <li>Texture cache for rasterized nodes</li>
 <li>Font and image caches</li>
 <li>Viewport dimensions</li>
+<li>Resize callbacks for responsive UI</li>
 </ul>
 EventType identifies the type of input event.ModifierKey represents keyboard modifier states.InputEvent represents a single input event.StackItem is used internally for traversal algorithms.Creates a new Node with default values.<p>Adds a child node to the parent.</p>
 <p>Raises assertion if child already has a different parent or if child is already a child of parent.</p>
@@ -330,7 +333,9 @@ Returns true if <tt class="docutils literal"><span class="pre"><span class="Iden
   <span class="Identifier">imageCache</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">Image</span><span class="Other">]</span> <span class="Comment">## Cached images by key</span>
   <span class="Identifier">fontCache</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">Font</span><span class="Other">]</span> <span class="Comment">## Cached fonts by path</span>
   <span class="Identifier">nextNodeId</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>           <span class="Comment">## Texture key counter</span>
-  <span class="Identifier">viewportSize</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Vec2</span>        <span class="Comment">## Current viewport dimensions</span></pre></dt>
+  <span class="Identifier">viewportSize</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Vec2</span>        <span class="Comment">## Current viewport dimensions</span>
+  <span class="Identifier">resizeCallbacks</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Keyword">proc</span> <span class="Other">(</span><span class="Identifier">newSize</span><span class="Other">:</span> <span class="Identifier">Vec2</span><span class="Other">)</span><span class="Other">]</span> <span class="Comment">## Callbacks invoked on resize</span>
+  <span class="Identifier">rootNode</span><span class="Operator">*</span><span class="Other">:</span> <a href="types.html#Node"><span class="Identifier">Node</span></a>            <span class="Comment">## Root node for layout invalidation</span></pre></dt>
   <dd>
     
     
@@ -629,7 +634,7 @@ Returns true if <tt class="docutils literal"><span class="pre"><span class="Iden
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2026-01-20 08:31:49 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2026-02-06 13:29:06 UTC</small>
       </div>
     </div>
   </div>

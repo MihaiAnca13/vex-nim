@@ -4,12 +4,14 @@ import ../layout/alignment
 import ../nodes/text
 
 type
+  ## Flow layout container that wraps items across lines.
   Flow* = ref object of Node
     spacing*: float32
     lineSpacing*: float32
     maxWidth*: float32
     horizontalAlign*: HorizontalAlign
 
+## Creates a new flow container. Set `maxWidth` to enable wrapping.
 proc newFlow*(maxWidth: float32 = 0.0): Flow =
   Flow(
     children: @[],
@@ -40,11 +42,13 @@ proc newFlow*(maxWidth: float32 = 0.0): Flow =
     horizontalAlign: AlignLeft
   )
 
+## Adds a child to the flow and marks layout dirty.
 proc addItem*(flow: Flow, child: Node) =
   flow.addChild(child)
   child.autoLayout = false
   flow.markDirty()
 
+## Measures children and computes wrapped flow positions.
 proc update*(flow: Flow, ctx: types.RenderContext = nil) =
   for child in flow.children:
     child.measure(ctx)

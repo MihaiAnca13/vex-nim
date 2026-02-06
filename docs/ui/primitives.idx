@@ -1,0 +1,34 @@
+nimTitle	primitives	ui/primitives.html	module vex/ui/primitives		0
+nim	NavBarItem	ui/primitives.html#NavBarItem	type NavBarItem		14
+nim	newNavBarItem	ui/primitives.html#newNavBarItem,string,Node	proc newNavBarItem(label: string; icon: Node = nil): NavBarItem		20
+nim	Card	ui/primitives.html#Card	type Card		51
+nim	DefaultFontPath	ui/primitives.html#DefaultFontPath	const DefaultFontPath		55
+nim	newCard	ui/primitives.html#newCard,string	proc newCard(title: string = ""): Card		58
+nim	setCardContent	ui/primitives.html#setCardContent,Card,Node	proc setCardContent(card: Card; content: Node)		108
+nim	SectionHeader	ui/primitives.html#SectionHeader	type SectionHeader		114
+nim	newSectionHeader	ui/primitives.html#newSectionHeader,string,string,float32,Color,Color	proc newSectionHeader(label: string; fontPath: string = "tests/data/DejaVuSans.ttf";\n                 fontSize: float32 = 12.0; color: Color = colGray;\n                 lineColor: Color = colGray): SectionHeader		120
+nim	Badge	ui/primitives.html#Badge	type Badge		173
+nim	newBadge	ui/primitives.html#newBadge,string,Color,Color,string,float32	proc newBadge(text: string; bgColor: Color = colBlue;\n         textColor: Color = color(1, 1, 1, 1);\n         fontPath: string = "tests/data/DejaVuSans.ttf";\n         fontSize: float32 = 11.0): Badge		178
+nim	Chip	ui/primitives.html#Chip	type Chip		226
+nim	newChip	ui/primitives.html#newChip,string,proc),Color,Color,string,float32	proc newChip(label: string; onClose: proc () = nil;\n        bgColor: Color = color(0.9, 0.9, 0.9, 1.0);\n        textColor: Color = color(0.3, 0.3, 0.3, 1.0);\n        fontPath: string = "tests/data/DejaVuSans.ttf"; fontSize: float32 = 12.0): Chip		232
+nim	LabelValueRow	ui/primitives.html#LabelValueRow	type LabelValueRow		290
+nim	newLabelValueRow	ui/primitives.html#newLabelValueRow,string,string,Color,Color,string,float32,float32	proc newLabelValueRow(label: string; value: string; labelColor: Color = colGray;\n                 valueColor: Color = color(0.2, 0.2, 0.2, 1.0);\n                 fontPath: string = "tests/data/DejaVuSans.ttf";\n                 labelSize: float32 = 12.0; valueSize: float32 = 14.0): LabelValueRow		295
+nim	setValue	ui/primitives.html#setValue,LabelValueRow,string	proc setValue(row: LabelValueRow; value: string)		344
+nim	NavBar	ui/primitives.html#NavBar	type NavBar		350
+nim	newNavBar	ui/primitives.html#newNavBar,Color,float32	proc newNavBar(bgColor: Color = color(0.95, 0.95, 0.95, 1.0); height: float32 = 48.0): NavBar		356
+nim	addNavItem	ui/primitives.html#addNavItem,NavBar,NavBarItem	proc addNavItem(nav: NavBar; item: NavBarItem)		397
+nim	setActiveItem	ui/primitives.html#setActiveItem,NavBar,NavBarItem	proc setActiveItem(nav: NavBar; item: NavBarItem)		404
+nim	measure	ui/primitives.html#measure.e,Card,	method measure(card: Card; ctx: types.RenderContext)		411
+nim	measure	ui/primitives.html#measure.e,SectionHeader,	method measure(header: SectionHeader; ctx: types.RenderContext)		415
+nim	measure	ui/primitives.html#measure.e,Badge,	method measure(badge: Badge; ctx: types.RenderContext)		419
+nim	measure	ui/primitives.html#measure.e,Chip,	method measure(chip: Chip; ctx: types.RenderContext)		424
+nim	measure	ui/primitives.html#measure.e,LabelValueRow,	method measure(row: LabelValueRow; ctx: types.RenderContext)		429
+nim	measure	ui/primitives.html#measure.e,NavBar,	method measure(nav: NavBar; ctx: types.RenderContext)		434
+nim	draw	ui/primitives.html#draw.e,Card,,Image	method draw(card: Card; renderCtx: types.RenderContext; image: Image)		440
+nim	draw	ui/primitives.html#draw.e,SectionHeader,,Image	method draw(header: SectionHeader; renderCtx: types.RenderContext; image: Image)		444
+nim	draw	ui/primitives.html#draw.e,Badge,,Image	method draw(badge: Badge; renderCtx: types.RenderContext; image: Image)		447
+nim	draw	ui/primitives.html#draw.e,Chip,,Image	method draw(chip: Chip; renderCtx: types.RenderContext; image: Image)		451
+nim	draw	ui/primitives.html#draw.e,LabelValueRow,,Image	method draw(row: LabelValueRow; renderCtx: types.RenderContext; image: Image)		455
+nim	draw	ui/primitives.html#draw.e,NavBar,,Image	method draw(nav: NavBar; renderCtx: types.RenderContext; image: Image)		458
+nimgrp	measure	ui/primitives.html#measure-methods-all	method		411
+nimgrp	draw	ui/primitives.html#draw-methods-all	method		440

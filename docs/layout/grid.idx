@@ -1,0 +1,6 @@
+nimTitle	grid	layout/grid.html	module vex/layout/grid		0
+nim	Grid	layout/grid.html#Grid	type Grid		7
+nim	newGrid	layout/grid.html#newGrid,int,int,float32,float32,float32,float32,bool,bool	proc newGrid(columns: int = 0; rows: int = 0; columnSpacing: float32 = 4.0;\n        rowSpacing: float32 = 4.0; cellWidth: float32 = 0.0;\n        cellHeight: float32 = 0.0; fillWidth: bool = false;\n        fillHeight: bool = false): Grid		18
+nim	addItem	layout/grid.html#addItem,Grid,Node	proc addItem(grid: Grid; child: Node)		62
+nim	update	layout/grid.html#update,Grid,ref RenderContext:ObjectType	proc update(grid: Grid; ctx: types.RenderContext = nil)		68
+nim	measure	layout/grid.html#measure.e,Grid,	method measure(grid: Grid; ctx: types.RenderContext)		126

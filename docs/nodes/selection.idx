@@ -1,0 +1,15 @@
+nimTitle	selection	nodes/selection.html	module vex/nodes/selection		0
+nim	SelectionStyleBorder	nodes/selection.html#SelectionStyleBorder	SelectionStyle.SelectionStyleBorder		12
+nim	SelectionStyleGlow	nodes/selection.html#SelectionStyleGlow	SelectionStyle.SelectionStyleGlow		12
+nim	SelectionStyleFill	nodes/selection.html#SelectionStyleFill	SelectionStyle.SelectionStyleFill		12
+nim	SelectionStyleDashed	nodes/selection.html#SelectionStyleDashed	SelectionStyle.SelectionStyleDashed		12
+nim	SelectionStyle	nodes/selection.html#SelectionStyle	enum SelectionStyle		12
+nim	SelectionOverlay	nodes/selection.html#SelectionOverlay	type SelectionOverlay		19
+nim	newSelectionOverlay	nodes/selection.html#newSelectionOverlay,SelectionStyle,Color,float32,float32	proc newSelectionOverlay(style: SelectionStyle = SelectionStyleBorder;\n                    color: Color = DefaultSelectionColor;\n                    borderWidth: float32 = DefaultBorderWidth;\n                    glowRadius: float32 = DefaultGlowRadius): SelectionOverlay		39
+nim	updateTransform	nodes/selection.html#updateTransform,SelectionOverlay	proc updateTransform(overlay: SelectionOverlay)		79
+nim	attachTo	nodes/selection.html#attachTo,SelectionOverlay,Node	proc attachTo(overlay: SelectionOverlay; target: Node)		82
+nim	show	nodes/selection.html#show,SelectionOverlay	proc show(overlay: SelectionOverlay)		105
+nim	hide	nodes/selection.html#hide,SelectionOverlay	proc hide(overlay: SelectionOverlay)		112
+nim	setStyle	nodes/selection.html#setStyle,SelectionOverlay,SelectionStyle	proc setStyle(overlay: SelectionOverlay; style: SelectionStyle)		117
+nim	setColor	nodes/selection.html#setColor,SelectionOverlay,Color	proc setColor(overlay: SelectionOverlay; color: Color)		123
+nim	draw	nodes/selection.html#draw.e,SelectionOverlay,RenderContext,Image	method draw(overlay: SelectionOverlay; renderCtx: RenderContext; image: Image)		252
