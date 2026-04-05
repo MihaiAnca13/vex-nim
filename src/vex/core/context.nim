@@ -193,21 +193,17 @@ proc cacheTexture*(ctx: RenderContext, node: Node): string =
 
 ## Removes a node's cached texture from Boxy and the cache.
 proc uncacheNode*(ctx: RenderContext, node: Node) =
-  if ctx.bxy.isNil:
-    return
   if ctx.nodeTextures.hasKey(node):
     let key = ctx.nodeTextures[node]
-    ctx.bxy.removeImage(key)
+    if not ctx.bxy.isNil:
+      ctx.bxy.removeImage(key)
     ctx.nodeTextures.del(node)
 
 ## Clears all cached textures.
 proc invalidateNodeCache*(ctx: RenderContext, node: Node) =
-  if ctx.bxy.isNil:
-    ctx.nodeTextures.clear()
-    ctx.nextNodeId = 0
-    return
-  for n, key in ctx.nodeTextures:
-    ctx.bxy.removeImage(key)
+  if not ctx.bxy.isNil:
+    for n, key in ctx.nodeTextures:
+      ctx.bxy.removeImage(key)
   ctx.nodeTextures.clear()
   ctx.nextNodeId = 0
 
